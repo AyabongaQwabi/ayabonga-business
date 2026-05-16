@@ -247,7 +247,7 @@ export default function AdminLeadDetail() {
           <Button type="button" onClick={() => void saveNotesAndStatus()} disabled={saving}>
             {saving ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" aria-hidden />
+                <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden />
                 Saving
               </>
             ) : (

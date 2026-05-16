@@ -174,7 +174,7 @@ export default function AdminLeads() {
 
       {loading ? (
         <p className="text-xs text-muted-foreground flex items-center gap-2">
-          <Loader2 className="w-3 h-3 animate-spin" aria-hidden />
+          <Loader2 className="w-3 h-3 animate-spin motion-reduce:animate-none" aria-hidden />
           Loading
         </p>
       ) : null}
