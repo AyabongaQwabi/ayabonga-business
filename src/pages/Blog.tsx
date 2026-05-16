@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type CSSProperties } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, Calendar, Clock, ArrowRight } from 'lucide-react';
@@ -15,6 +15,7 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '../lib/site-config';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { SiteFooter } from '../components/SiteFooter';
 import { authorPersonSchema } from '../lib/author-profile';
 
@@ -104,6 +105,7 @@ export default function Blog() {
       </nav>
 
       <main className="flex-1 max-w-3xl mx-auto px-6 py-16">
+        <ScrollReveal>
         <header className="mb-12">
           <h1 className="text-3xl font-bold text-foreground mb-4">Writing</h1>
           <p className="text-muted-foreground leading-relaxed mb-8">
@@ -173,11 +175,13 @@ export default function Blog() {
             )}
           </div>
         </header>
+        </ScrollReveal>
 
-        <div className="space-y-8">
-          {filteredPosts.map((post) => (
+        <ScrollReveal stagger className="space-y-8">
+          {filteredPosts.map((post, index) => (
             <article
               key={post.slug}
+              style={{ '--reveal-index': index } as CSSProperties}
               className="group p-6 -mx-6 rounded-lg hover:bg-card transition-colors border border-transparent hover:border-border"
             >
               <Link to={`/blog/${post.slug}`} className="block">
@@ -207,7 +211,7 @@ export default function Blog() {
               <BlogTaxonomy categories={post.categories} tags={post.tags} size="sm" />
             </article>
           ))}
-        </div>
+        </ScrollReveal>
 
         {filteredPosts.length === 0 && blogPosts.length > 0 && (
           <div className="text-center py-16 rounded-lg border border-dashed border-border">

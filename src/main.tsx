@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
+import Blog from './pages/Blog.tsx';
+import BlogPost from './pages/BlogPost.tsx';
 import { ScrollToTop } from './components/ScrollToTop.tsx';
 import { ViewTransitionHandler } from './components/ViewTransitionHandler.tsx';
 import GetAQuotePage from './pages/GetAQuotePage.tsx';
@@ -58,6 +60,8 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/pricing-strategy" element={<PricingStrategyPage />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/get-a-quote" element={<GetAQuotePage />} />
           <Route
             path="/app-development-cost-south-africa"

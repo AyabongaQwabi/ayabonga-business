@@ -23,6 +23,7 @@ import {
 } from '../lib/site-config';
 import { AuthorBio } from '../components/AuthorBio';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { SiteFooter } from '../components/SiteFooter';
 import {
   buildBlogPostingSchema,
@@ -327,6 +328,7 @@ function BlogPostView({ post }: { post: BlogPost }) {
             </ReactMarkdown>
           </div>
 
+          <ScrollReveal>
           <BlogCommercialCta
             variant={
               post.categories.some((c) =>
@@ -338,6 +340,7 @@ function BlogPostView({ post }: { post: BlogPost }) {
           />
 
           <AuthorBio />
+          </ScrollReveal>
 
           <section
             className='not-prose mt-16 border-t border-border pt-10'
