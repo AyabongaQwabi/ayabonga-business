@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
+import { ScrollToTop } from './components/ScrollToTop.tsx';
+import { ViewTransitionHandler } from './components/ViewTransitionHandler.tsx';
 import GetAQuotePage from './pages/GetAQuotePage.tsx';
 import PricingStrategyPage from './pages/PricingStrategyPage.tsx';
 import ServicesPage from './pages/Services.tsx';
@@ -33,6 +35,8 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <HelmetProvider>
       <BrowserRouter>
+        <ScrollToTop />
+        <ViewTransitionHandler />
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="/services" element={<ServicesPage />} />
