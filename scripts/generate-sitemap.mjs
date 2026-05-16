@@ -18,6 +18,7 @@ const pseoDataPath = path.join(root, 'src/data/pseo-pages.json');
 const comparisonsDataPath = path.join(root, 'src/data/comparisons.json');
 const localDevelopersPath = path.join(root, 'src/data/local-developers.json');
 const buyerIntentPath = path.join(root, 'src/data/buyer-intent-pages.ts');
+const partnershipPath = path.join(root, 'src/data/partnership-landing-pages.ts');
 
 
 const SITE_URL = (
@@ -31,6 +32,7 @@ function writeRobotsTxt() {
     'User-agent: *',
     'Allow: /',
     'Disallow: /blog',
+    'Disallow: /admin',
     '',
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     '',
@@ -116,6 +118,15 @@ async function main() {
     console.warn('generate-sitemap: could not read buyer-intent-pages.ts');
   }
 
+  let partnershipPaths = [];
+  try {
+    const raw = fs.readFileSync(partnershipPath, 'utf8');
+    const matches = [...raw.matchAll(/path:\s*'(\/[^']+)'/g)];
+    partnershipPaths = matches.map((m) => m[1]);
+  } catch {
+    console.warn('generate-sitemap: could not read partnership-landing-pages.ts');
+  }
+
   const links = [
     { url: '/', changefreq: 'weekly', priority: 1 },
     { url: '/services', changefreq: 'monthly', priority: 0.9 },
@@ -132,6 +143,11 @@ async function main() {
       url,
       changefreq: 'monthly',
       priority: url.includes('cost') ? 0.95 : 0.9,
+    })),
+    ...partnershipPaths.map((url) => ({
+      url,
+      changefreq: 'monthly',
+      priority: url.includes('technical-partnership') ? 0.95 : 0.9,
     })),
     { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
     ...pseoEntries.map((p) => ({

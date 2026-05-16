@@ -13,7 +13,7 @@ export function buildQuoteEmailText(body: SendQuoteRequestBody): string {
   const lines = [
     `Hi ${name.split(' ')[0]},`,
     '',
-    'Here is the project scope summary you saved from the quote tool on qwabi.co.za.',
+    `Here is the project scope summary you saved from the quote tool on ${new URL(SITE_URL).host}.`,
     '',
     `Stage: ${founderStageLabel(founderStage)}`,
     `Product type: ${quote.projectTypes.join(', ') || 'Not specified'}`,

@@ -14,6 +14,7 @@ import {
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
+import { LeadCaptureForm } from '../components/leads/LeadCaptureForm';
 
 const PAGE_TITLE = 'Technical Co-founder as a Service';
 const PAGE_DESCRIPTION =
@@ -228,6 +229,15 @@ export default function TechnicalCofounderPage() {
               </AccordionItem>
             ))}
           </Accordion>
+        </section>
+
+        <section className="mb-24 max-w-2xl mx-auto">
+          <LeadCaptureForm
+            formType="technical_cofounder"
+            sourcePage="/technical-cofounder"
+            headline="Request a Phase 1 build slot"
+            subhead="Share stage, timeline, and budget band. I reply within one business day."
+          />
         </section>
 
         {/* CTA */}

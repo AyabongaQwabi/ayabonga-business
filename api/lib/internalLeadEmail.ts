@@ -51,7 +51,7 @@ export function buildInternalLeadEmail(body: SendQuoteRequestBody): {
 } {
   const { label, reasons } = leadScore(body);
   const waText = encodeURIComponent(
-    `Hi ${body.name.split(' ')[0]}, I saw your quote on qwabi.co.za (${founderStageLabel(body.founderStage)}). Happy to review scope.`,
+    `Hi ${body.name.split(' ')[0]}, I saw your quote on ${new URL(SITE_URL).host} (${founderStageLabel(body.founderStage)}). Happy to review scope.`,
   );
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
 

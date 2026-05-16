@@ -292,8 +292,8 @@ export default function HomePage() {
           <section id="work" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Shipped work</h2>
             <p className="text-muted-foreground max-w-2xl mb-10">
-              Real products in market, not mockups. Collaborations include Simply, Warner Music
-              Africa, and Western Cape Labs.
+              Real products in market, not mockups. Collaborations include Warner Music Africa
+              and Western Cape Labs.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {projects.map((project) => (

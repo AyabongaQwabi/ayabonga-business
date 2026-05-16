@@ -15,7 +15,14 @@ import NotFound from './pages/NotFound.tsx';
 import About from './pages/About.tsx';
 import Privacy from './pages/Privacy.tsx';
 import BuyerIntentPage from './pages/BuyerIntentPage.tsx';
+import PartnershipLandingPage from './pages/PartnershipLandingPage.tsx';
+import AdminLogin from './pages/admin/AdminLogin.tsx';
+import AdminLeads from './pages/admin/AdminLeads.tsx';
+import AdminLeadDetail from './pages/admin/AdminLeadDetail.tsx';
+import AdminTemplates from './pages/admin/AdminTemplates.tsx';
+import { AdminLayout } from './components/admin/AdminLayout.tsx';
 import { buyerIntentPaths } from './data/buyer-intent-pages.ts';
+import { partnershipPaths } from './data/partnership-landing-pages.ts';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -46,6 +53,17 @@ createRoot(document.getElementById('root')!).render(
           {buyerIntentPaths.map((path) => (
             <Route key={path} path={path} element={<BuyerIntentPage />} />
           ))}
+          {partnershipPaths.map((path) => (
+            <Route key={path} path={path} element={<PartnershipLandingPage />} />
+          ))}
+          <Route path="/admin">
+            <Route index element={<AdminLogin />} />
+            <Route element={<AdminLayout />}>
+              <Route path="leads" element={<AdminLeads />} />
+              <Route path="leads/:id" element={<AdminLeadDetail />} />
+              <Route path="templates" element={<AdminTemplates />} />
+            </Route>
+          </Route>
           <Route path="/projects/espazza" element={<EspazzaProject />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

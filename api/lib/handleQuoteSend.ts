@@ -6,10 +6,13 @@ import {
   getFounderNurtureSequence,
   scheduleAtDaysFromNow,
 } from './founderNurtureEmails';
+import { persistQuoteLead } from './leads/captureLead';
 
 const FROM =
   process.env.RESEND_FROM_EMAIL || 'Ayabonga Qwabi <onboarding@qwabi.co.za>';
 const NOTIFY_TO = process.env.NOTIFY_EMAIL || 'ayabonga@qwabi.co.za';
+const SITE_HOST =
+  process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
 const AUDIENCE_ID =
   process.env.RESEND_AUDIENCE_ID || '5561a7a0-2f98-444a-93be-11440026e6f5';
 const LEADS_SEGMENT_ID =
@@ -179,7 +182,7 @@ export async function handleQuoteSend(
     const { error: quoteError } = await resend.emails.send({
       from: FROM,
       to: [body.email],
-      subject: 'Your project scope summary (qwabi.co.za)',
+      subject: `Your project scope summary (${new URL(SITE_HOST).host})`,
       html: buildQuoteEmailHtml(body),
       text: buildQuoteEmailText(body),
     });
@@ -207,6 +210,14 @@ export async function handleQuoteSend(
       text: internal.text,
       replyTo: body.email,
     });
+
+    try {
+      await persistQuoteLead(body);
+    } catch (persistErr) {
+      if (isDevLogEnv()) {
+        console.log('[send] Blob persist failed', persistErr);
+      }
+    }
 
     return { status: 200, body: { ok: true } };
   } catch (err) {
