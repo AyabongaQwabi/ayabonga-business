@@ -17,13 +17,26 @@ const blogDir = path.join(root, 'src/content/blog');
 const pseoDataPath = path.join(root, 'src/data/pseo-pages.json');
 const comparisonsDataPath = path.join(root, 'src/data/comparisons.json');
 const localDevelopersPath = path.join(root, 'src/data/local-developers.json');
+const buyerIntentPath = path.join(root, 'src/data/buyer-intent-pages.ts');
 
 
 const SITE_URL = (
   process.env.SITE_URL ||
   process.env.VITE_SITE_URL ||
-  'https://www.qwabi.co.za'
+  'https://business.qwabi.co.za'
 ).replace(/\/$/, '');
+
+function writeRobotsTxt() {
+  const lines = [
+    'User-agent: *',
+    'Allow: /',
+    'Disallow: /blog',
+    '',
+    `Sitemap: ${SITE_URL}/sitemap.xml`,
+    '',
+  ];
+  fs.writeFileSync(path.join(distDir, 'robots.txt'), lines.join('\n'), 'utf8');
+}
 
 function parseFrontmatterDate(raw) {
   const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
@@ -61,7 +74,7 @@ async function main() {
     process.exit(1);
   }
 
-  const blogEntries = collectBlogEntries();
+  const blogEntries = [];
   
   let pseoEntries = [];
   try {
@@ -94,6 +107,15 @@ async function main() {
     })),
   );
 
+  let buyerIntentPaths = [];
+  try {
+    const raw = fs.readFileSync(buyerIntentPath, 'utf8');
+    const matches = [...raw.matchAll(/path:\s*'(\/[^']+)'/g)];
+    buyerIntentPaths = matches.map((m) => m[1]);
+  } catch {
+    console.warn('generate-sitemap: could not read buyer-intent-pages.ts');
+  }
+
   const links = [
     { url: '/', changefreq: 'weekly', priority: 1 },
     { url: '/services', changefreq: 'monthly', priority: 0.9 },
@@ -106,14 +128,12 @@ async function main() {
     { url: '/editorial', changefreq: 'yearly', priority: 0.35 },
     { url: '/corrections', changefreq: 'yearly', priority: 0.3 },
     { url: '/get-a-quote', changefreq: 'monthly', priority: 0.85 },
-    { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
-    { url: '/blog', changefreq: 'weekly', priority: 0.9 },
-    ...blogEntries.map(({ slug, lastmod }) => ({
-      url: `/blog/${slug}`,
+    ...buyerIntentPaths.map((url) => ({
+      url,
       changefreq: 'monthly',
-      priority: 0.8,
-      lastmod,
+      priority: url.includes('cost') ? 0.95 : 0.9,
     })),
+    { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
     ...pseoEntries.map((p) => ({
       url: `/solutions/${p.slug}`,
       changefreq: 'monthly',
@@ -131,6 +151,7 @@ async function main() {
   const write = createWriteStream(outPath);
 
   await pipeline(Readable.from(links), sm, write);
+  writeRobotsTxt();
 
   console.log(
     `generate-sitemap: wrote ${links.length} URLs to ${outPath} (${SITE_URL})`,

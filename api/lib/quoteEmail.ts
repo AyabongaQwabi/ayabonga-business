@@ -2,7 +2,7 @@ import type { QuotePayload, SendQuoteRequestBody } from './types';
 import { escapeHtml, formatMoneyZar, founderStageLabel } from './format';
 import { EMAIL_BRAND, wrapBrandedEmail } from './emailLayout';
 
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://www.qwabi.co.za';
+const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
 
 function quoteAssumptionsNote(quote: QuotePayload): string {
   return `Estimates use R${quote.hourlyRateZar}/hr, ${quote.yearsExperience}+ years experience, ${quote.hoursPerDay} billable hours/day, ${quote.bufferPercent}% buffer. Ballpark only, not a fixed proposal.`;

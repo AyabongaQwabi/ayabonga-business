@@ -2,10 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "redirects": [
     {
-      "source": "/:path*",
-      "has": [{ "type": "host", "value": "qwabi.co.za" }],
-      "destination": "https://www.qwabi.co.za/:path*",
-      "permanent": true
+      "source": "/blog",
+      "destination": "/",
+      "permanent": false
+    },
+    {
+      "source": "/blog/:path*",
+      "destination": "/",
+      "permanent": false
     }
   ],
   "rewrites": [

@@ -1,6 +1,6 @@
 import { wrapBrandedEmail } from './emailLayout';
 
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://www.qwabi.co.za';
+const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
 
 export type NurtureEmail = {
   subject: string;

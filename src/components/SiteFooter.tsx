@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Brain, Calculator } from 'lucide-react';
+import { Calculator } from 'lucide-react';
 import { SITE_NAME } from '../lib/site-config';
 import { AUTHOR_JOB_TITLE } from '../lib/author-profile';
 
@@ -9,7 +9,13 @@ export function SiteFooter() {
       <div className="max-w-5xl mx-auto px-6 flex flex-col gap-6">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            {new Date().getFullYear()} {SITE_NAME}. {AUTHOR_JOB_TITLE}.
+            {new Date().getFullYear()} {SITE_NAME}. {AUTHOR_JOB_TITLE}.{' '}
+            <a
+              href="https://www.qwabi.co.za"
+              className="hover:text-foreground underline-offset-4 hover:underline"
+            >
+              Personal site
+            </a>
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             <Link
@@ -25,10 +31,16 @@ export function SiteFooter() {
               Services
             </Link>
             <Link
-              to="/blog"
+              to="/app-development-cost-south-africa"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              Writing
+              App costs
+            </Link>
+            <Link
+              to="/mvp-developer-south-africa"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              MVP builds
             </Link>
             <Link
               to="/get-a-quote"
@@ -37,24 +49,11 @@ export function SiteFooter() {
               <Calculator className="w-3.5 h-3.5" aria-hidden />
               Quote
             </Link>
-            <a
-              href="/llms.txt"
-              className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
-            >
-              <Brain className="w-3.5 h-3.5" aria-hidden />
-              llms.txt
-            </a>
           </div>
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground border-t border-border pt-4">
           <Link to="/privacy" className="hover:text-foreground transition-colors">
             Privacy
-          </Link>
-          <Link to="/editorial" className="hover:text-foreground transition-colors">
-            Editorial standards
-          </Link>
-          <Link to="/corrections" className="hover:text-foreground transition-colors">
-            Corrections
           </Link>
           <a
             href="https://github.com/ayabongaqwabi"

@@ -19,16 +19,14 @@ const STATIC_PRERENDER_ROUTES = [
   '/',
   '/about',
   '/privacy',
-  '/editorial',
-  '/corrections',
   '/services',
   '/technical-cofounder',
   '/get-a-quote',
-  '/blog',
   '/projects/espazza',
-  '/blog/sa-payment-gateways-tco-2026',
-  '/blog/build-ai-agents-libraries-2026',
-  '/blog/xhosa-meaningful-baby-name-ideas',
+  '/app-development-cost-south-africa',
+  '/mvp-developer-south-africa',
+  '/whatsapp-ai-chatbot-south-africa',
+  '/best-app-developers-south-africa',
 ];
 
 function collectDeveloperRoutes() {

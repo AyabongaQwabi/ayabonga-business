@@ -1,6 +1,6 @@
 import { escapeHtml } from './format';
 
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://www.qwabi.co.za';
+const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
 
 /** Matches site tokens: navy background, gold accent, cyan CTAs */
 export const EMAIL_BRAND = {
