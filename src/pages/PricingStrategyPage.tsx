@@ -14,6 +14,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
 import { SiteFooter } from '../components/SiteFooter';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
@@ -92,6 +93,7 @@ export default function PricingStrategyPage() {
       </nav>
 
       <main className="flex-1 max-w-6xl mx-auto px-6">
+        <ScrollReveal>
         <header className="pt-14 pb-12 md:pt-20 md:pb-16 max-w-3xl">
           <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
             Subscription-first partnership
@@ -106,7 +108,9 @@ export default function PricingStrategyPage() {
             load, not with how many pages a brochure has.
           </p>
         </header>
+        </ScrollReveal>
 
+        <ScrollReveal>
         <section className="py-12 border-t border-border">
           <h2 className="text-2xl md:text-3xl font-bold mb-8">How retainers are sized</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -229,6 +233,7 @@ export default function PricingStrategyPage() {
             </p>
           </div>
         </section>
+        </ScrollReveal>
       </main>
 
       <SiteFooter />

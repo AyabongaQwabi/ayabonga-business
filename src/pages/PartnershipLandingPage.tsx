@@ -1,7 +1,8 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, MessageCircle } from 'lucide-react';
-import { useId, useState } from 'react';
+import { FaqAccordionItem } from '../components/FaqAccordionItem';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { LeadCaptureForm } from '../components/leads/LeadCaptureForm';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import { SiteFooter } from '../components/SiteFooter';
@@ -21,39 +22,6 @@ import {
 } from '../lib/entity-schema';
 import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false);
-  const panelId = useId();
-
-  return (
-    <div className="border border-border rounded-xl overflow-hidden bg-card">
-      <button
-        type="button"
-        id={`${panelId}-trigger`}
-        aria-controls={panelId}
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-muted/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-        aria-expanded={open}
-      >
-        <span className="font-semibold text-foreground">{question}</span>
-        <span className="text-muted-foreground text-xl leading-none" aria-hidden>
-          {open ? '−' : '+'}
-        </span>
-      </button>
-      {open ? (
-        <p
-          id={panelId}
-          role="region"
-          aria-labelledby={`${panelId}-trigger`}
-          className="px-5 pb-4 text-muted-foreground leading-relaxed"
-        >
-          {answer}
-        </p>
-      ) : null}
-    </div>
-  );
-}
 
 export default function PartnershipLandingPage() {
   const { pathname } = useLocation();
@@ -129,6 +97,7 @@ export default function PartnershipLandingPage() {
       <FloatingWhatsApp />
 
       <main className="flex-1 max-w-3xl mx-auto px-6 py-10 md:py-14 w-full">
+        <ScrollReveal>
         <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
           {page.eyebrow}
         </p>
@@ -147,6 +116,7 @@ export default function PartnershipLandingPage() {
             </li>
           ))}
         </ul>
+        </ScrollReveal>
 
         {page.sections.map((section) => (
           <section key={section.id} id={section.id} className="mb-10 scroll-mt-24">
@@ -176,14 +146,16 @@ export default function PartnershipLandingPage() {
           subhead={page.formSubhead}
         />
 
+        <ScrollReveal>
         <section className="mt-12">
           <h2 className="text-2xl font-bold mb-4">FAQ</h2>
           <div className="space-y-3">
             {page.faqs.map((faq) => (
-              <FaqItem key={faq.question} question={faq.question} answer={faq.answer} />
+              <FaqAccordionItem key={faq.question} question={faq.question} answer={faq.answer} />
             ))}
           </div>
         </section>
+        </ScrollReveal>
 
         <section className="mt-12 p-6 rounded-2xl bg-muted/30 border border-border flex flex-col sm:flex-row gap-3">
           <a

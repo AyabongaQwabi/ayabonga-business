@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, ArrowRight, MapPin, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { PageHero } from '../components/PageHero';
 import { easternCapeHubPath } from '../lib/local-developers';
 import { HERO_IMAGES } from '../lib/hero-images';
@@ -65,6 +66,7 @@ export default function ServicesPage() {
       </nav>
 
       <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
+        <ScrollReveal>
         <PageHero
           className="mb-16"
           eyebrow="Engineering services · South Africa"
@@ -283,6 +285,7 @@ export default function ServicesPage() {
             <Link to="/get-a-quote" className="text-primary hover:underline underline-offset-4">See how I scope and price work</Link>.
           </p>
         </footer>
+        </ScrollReveal>
       </main>
     </div>
   );

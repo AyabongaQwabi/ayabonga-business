@@ -17,7 +17,7 @@ export function SiteFooter() {
             {new Date().getFullYear()} {SITE_NAME}. {AUTHOR_JOB_TITLE}.{' '}
             <a
               href="https://www.qwabi.co.za"
-              className="hover:text-foreground underline-offset-4 hover:underline"
+              className="interactive-link hover:underline underline-offset-4"
             >
               Personal site
             </a>
@@ -25,63 +25,63 @@ export function SiteFooter() {
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
             <Link
               to="/about"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               About
             </Link>
             <Link
               to={APP_DEVELOPMENT_COST_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               App development cost
             </Link>
             <Link
               to={PRICING_STRATEGY_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               Retainer pricing
             </Link>
             <Link
               to="/services"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               Services
             </Link>
             <Link
               to="/mobile-app-development-south-africa"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               Mobile apps
             </Link>
             <Link
               to="/custom-software-development-south-africa"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               Custom software
             </Link>
             <Link
               to="/technical-cofounder"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               Technical co-founder
             </Link>
             <Link
               to={QUOTE_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="interactive-link text-muted-foreground"
             >
               {QUOTE_TOOL_LABEL}
             </Link>
           </div>
         </div>
         <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-muted-foreground border-t border-border pt-4">
-          <Link to="/privacy" className="hover:text-foreground transition-colors">
+          <Link to="/privacy" className="interactive-link text-muted-foreground">
             Privacy
           </Link>
           <a
             href="https://github.com/ayabongaqwabi"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
+            className="interactive-link text-muted-foreground"
           >
             GitHub
           </a>
@@ -89,7 +89,7 @@ export function SiteFooter() {
             href="https://www.linkedin.com/in/ayabongaqwabi"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-foreground transition-colors"
+            className="interactive-link text-muted-foreground"
           >
             LinkedIn
           </a>

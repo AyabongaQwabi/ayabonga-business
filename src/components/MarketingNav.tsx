@@ -88,7 +88,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
 
         <button
           type="button"
-          className="lg:hidden p-2 text-muted-foreground hover:text-foreground"
+          className="lg:hidden p-2 text-muted-foreground hover:text-foreground transition-colors motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-md"
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label={open ? 'Close menu' : 'Open menu'}
@@ -97,17 +97,21 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
         </button>
       </div>
 
-      {open ? (
-        <nav
-          className="lg:hidden border-t border-border bg-background/98 backdrop-blur-md px-6 py-4 flex flex-col gap-3"
-          aria-label="Mobile"
-        >
+      <nav
+        className={`lg:hidden border-t border-border bg-background/98 backdrop-blur-md px-6 flex flex-col gap-3 overflow-hidden transition-[opacity,transform,max-height] duration-200 ease-out motion-reduce:transition-none ${
+          open
+            ? 'max-h-[32rem] opacity-100 translate-y-0 py-4'
+            : 'max-h-0 opacity-0 -translate-y-2 py-0 pointer-events-none border-t-transparent'
+        }`}
+        aria-label="Mobile"
+        aria-hidden={!open}
+      >
           {navLinks.map((item) =>
             'to' in item ? (
               <Link
                 key={item.label}
                 to={item.to}
-                className="text-left text-sm text-muted-foreground hover:text-foreground py-1"
+                className="text-left text-sm text-muted-foreground hover:text-foreground py-1 transition-colors motion-reduce:transition-none"
                 onClick={() => setOpen(false)}
               >
                 {item.label}
@@ -117,7 +121,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
                 key={item.label}
                 type="button"
                 onClick={() => goSection(item.href.replace('#', ''))}
-                className="text-left text-sm text-muted-foreground hover:text-foreground py-1"
+                className="text-left text-sm text-muted-foreground hover:text-foreground py-1 transition-colors motion-reduce:transition-none"
               >
                 {item.label}
               </button>
@@ -125,7 +129,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
           )}
           <Link
             to={QUOTE_PAGE}
-            className="text-left text-sm text-muted-foreground hover:text-foreground py-1"
+            className="text-left text-sm text-muted-foreground hover:text-foreground py-1 transition-colors motion-reduce:transition-none"
             onClick={() => setOpen(false)}
           >
             {QUOTE_TOOL_LABEL}
@@ -138,7 +142,6 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
             {PARTNERSHIP_CTA_LABEL}
           </Link>
         </nav>
-      ) : null}
     </header>
   );
 }

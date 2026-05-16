@@ -14,6 +14,7 @@ import {
   AccordionTrigger,
 } from '../components/ui/accordion';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { PageHero } from '../components/PageHero';
 import { PricingTable } from '../components/PricingTable';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
@@ -156,6 +157,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
           ]}
         />
 
+        <ScrollReveal>
         <PageHero
           className="pt-4 mb-12 md:mb-14"
           eyebrow="South Africa · ZAR · 2026"
@@ -181,7 +183,9 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             </Link>
           </div>
         </PageHero>
+        </ScrollReveal>
 
+        <ScrollReveal>
         <section className="pb-14 border-t border-border pt-12" aria-labelledby="trust-heading">
           <h2 id="trust-heading" className="text-2xl font-bold text-foreground mb-8">
             What honest pricing looks like
@@ -362,6 +366,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             ))}
           </ul>
         </section>
+        </ScrollReveal>
       </main>
 
       <SiteFooter />

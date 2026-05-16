@@ -12,7 +12,7 @@ type HomeHeroProps = {
 };
 
 const ctaBase =
-  'inline-flex items-center justify-center gap-2 min-h-[44px] px-5 py-3 rounded-xl font-semibold text-sm md:text-base transition-all duration-200 motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+  'interactive-button inline-flex items-center justify-center gap-2 min-h-[44px] px-5 py-3 rounded-xl font-semibold text-sm md:text-base';
 
 export function HomeHero({ proofPoints }: HomeHeroProps) {
   return (

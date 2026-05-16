@@ -31,7 +31,7 @@ export function CostGuideTeaser() {
           <Link
             key={hash}
             to={`${APP_DEVELOPMENT_COST_PAGE}#${hash}`}
-            className="group flex flex-col p-5 rounded-2xl border border-border bg-card hover:border-primary/40 transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="interactive-card group flex flex-col p-5 rounded-2xl border border-border bg-card hover:border-primary/40"
           >
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Ballpark build

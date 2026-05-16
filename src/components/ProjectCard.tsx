@@ -14,7 +14,7 @@ interface ProjectCardProps {
 }
 
 const cardClassName =
-  'group block overflow-hidden rounded-xl glass-dark hover:glass-gold hover:glow-primary transition-all duration-500 border border-white/5 hover:border-primary/50 motion-reduce:transition-none';
+  'interactive-card group block overflow-hidden rounded-xl glass-dark hover:glass-gold hover:glow-primary transition-all duration-500 border border-white/5 hover:border-primary/50 motion-reduce:transition-none';
 
 function ProjectThumbnail({
   imageUrl,

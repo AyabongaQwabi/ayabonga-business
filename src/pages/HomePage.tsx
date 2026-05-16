@@ -30,6 +30,7 @@ import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import { PartnershipCard } from '../components/PartnershipCard';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
 import { SiteFooter } from '../components/SiteFooter';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { PARTNERSHIP_PILLARS } from '../data/pricing-strategy';
 import {
   absoluteUrl,
@@ -266,6 +267,7 @@ export default function HomePage() {
         <main className="max-w-6xl mx-auto px-6">
           <HomeHero proofPoints={proofPoints} />
 
+          <ScrollReveal>
           <section id="services" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Software development services</h2>
             <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
@@ -278,7 +280,7 @@ export default function HomePage() {
                 <Link
                   key={title}
                   to={link}
-                  className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="interactive-card group p-6 rounded-2xl bg-card border border-border hover:border-primary/40"
                 >
                   <ServiceIllustration
                     variant={illustration}
@@ -294,7 +296,9 @@ export default function HomePage() {
               ))}
             </div>
           </section>
+          </ScrollReveal>
 
+          <ScrollReveal>
           <section id="partnership" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">How the partnership works</h2>
             <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
@@ -318,6 +322,7 @@ export default function HomePage() {
               })}
             </div>
           </section>
+          </ScrollReveal>
 
           <section id="build-costs" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">What builds typically cost</h2>
@@ -349,6 +354,7 @@ export default function HomePage() {
             <RetainerPricingCards showSystemExamples={false} />
           </section>
 
+          <ScrollReveal>
           <section id="build" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Projects I build and maintain</h2>
             <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
@@ -361,7 +367,7 @@ export default function HomePage() {
                 <Link
                   key={title}
                   to={link}
-                  className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  className="interactive-card group p-6 rounded-2xl bg-card border border-border hover:border-primary/40"
                 >
                   <Icon className="w-8 h-8 text-primary mb-4" aria-hidden />
                   <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
@@ -392,6 +398,7 @@ export default function HomePage() {
               </Link>
             </p>
           </section>
+          </ScrollReveal>
 
           <section className="py-16 border-t border-border">
             <div className="grid lg:grid-cols-2 gap-10 items-start">
@@ -427,6 +434,7 @@ export default function HomePage() {
             </div>
           </section>
 
+          <ScrollReveal>
           <section id="work" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Custom software in production</h2>
             <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
@@ -451,7 +459,9 @@ export default function HomePage() {
               ))}
             </div>
           </section>
+          </ScrollReveal>
 
+          <ScrollReveal>
           <section id="contact" className="py-16 md:py-24 border-t border-border scroll-mt-24">
             <div className="max-w-2xl mx-auto text-center">
               <img
@@ -497,6 +507,7 @@ export default function HomePage() {
               </p>
             </div>
           </section>
+          </ScrollReveal>
         </main>
 
         <SiteFooter />

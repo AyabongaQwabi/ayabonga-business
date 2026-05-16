@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Calculator, ChevronDown, MessageCircle } from 'lucide-react';
-import { useId, useState } from 'react';
+import { ArrowLeft, Calculator, MessageCircle } from 'lucide-react';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
+import { FaqAccordionItem } from '../components/FaqAccordionItem';
+import { ScrollReveal } from '../components/ScrollReveal';
 import { LeadMagnetCard } from '../components/LeadMagnetCard';
 import { PricingTable } from '../components/PricingTable';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
@@ -26,40 +27,6 @@ import {
 } from '../lib/entity-schema';
 import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
-
-function FaqItem({ question, answer }: { question: string; answer: string }) {
-  const [open, setOpen] = useState(false);
-  const panelId = useId();
-
-  return (
-    <div className="border border-border rounded-xl overflow-hidden bg-card">
-        <button
-          type="button"
-          id={`${panelId}-trigger`}
-          aria-controls={panelId}
-          onClick={() => setOpen((v) => !v)}
-          className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left hover:bg-muted/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          aria-expanded={open}
-        >
-          <span className="font-semibold text-foreground">{question}</span>
-          <ChevronDown
-            className={`w-5 h-5 shrink-0 text-muted-foreground transition-transform duration-200 motion-reduce:transition-none ${open ? 'rotate-180' : ''}`}
-            aria-hidden
-          />
-        </button>
-        {open ? (
-          <p
-            id={panelId}
-            role="region"
-            aria-labelledby={`${panelId}-trigger`}
-            className="px-5 pb-4 text-muted-foreground leading-relaxed"
-          >
-            {answer}
-          </p>
-        ) : null}
-    </div>
-  );
-}
 
 export default function BuyerIntentPage() {
   const { pathname } = useLocation();
@@ -160,6 +127,7 @@ export default function BuyerIntentPage() {
           ]}
         />
 
+        <ScrollReveal>
         <PageHero
           className="mb-14"
           eyebrow={page.eyebrow}
@@ -187,6 +155,7 @@ export default function BuyerIntentPage() {
             </Link>
           </div>
         </PageHero>
+        </ScrollReveal>
 
         {page.pricingTables?.length ? (
           <section className="mb-16 space-y-10" aria-labelledby="pricing-tables-heading">
@@ -218,6 +187,7 @@ export default function BuyerIntentPage() {
           </div>
         ) : null}
 
+        <ScrollReveal>
         <div className="space-y-12">
           {page.sections.map((section) => (
             <section key={section.id} id={section.id} className="scroll-mt-24">
@@ -245,17 +215,20 @@ export default function BuyerIntentPage() {
             </section>
           ))}
         </div>
+        </ScrollReveal>
 
+        <ScrollReveal>
         <section className="mt-16 pt-12 border-t border-border" aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="text-2xl font-bold text-foreground mb-6">
             Frequently asked questions
           </h2>
           <div className="space-y-3">
             {page.faqs.map((faq) => (
-              <FaqItem key={faq.question} question={faq.question} answer={faq.answer} />
+              <FaqAccordionItem key={faq.question} question={faq.question} answer={faq.answer} />
             ))}
           </div>
         </section>
+        </ScrollReveal>
 
         <section className="mt-14 p-8 rounded-2xl bg-primary/5 border border-primary/15">
           <h2 className="text-xl font-bold text-foreground mb-2">{page.ctaHeadline}</h2>
