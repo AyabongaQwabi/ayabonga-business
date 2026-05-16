@@ -2,7 +2,7 @@ import type { SendQuoteRequestBody } from './types';
 import { formatMoneyZar, founderStageLabel } from './format';
 import { buildQuoteEmailText } from './quoteEmail';
 
-const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://www.qwabi.co.za';
+const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
 const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || '27603116777';
 
 function leadScore(body: SendQuoteRequestBody): { label: string; reasons: string[] } {

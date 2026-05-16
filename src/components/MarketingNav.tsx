@@ -2,17 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calculator, Menu, X } from 'lucide-react';
 import { QUOTE_PAGE } from '../lib/site-config';
-import { isBusinessSite } from '../lib/site-variant';
 
 const navLinks = [
   { label: 'What I build', href: '#build' },
   { label: 'Work', href: '#work' },
   { label: 'Pricing', to: '/app-development-cost-south-africa' },
   { label: 'Services', to: '/services' },
-  ...(isBusinessSite
-    ? [{ label: 'MVP builds', to: '/mvp-developer-south-africa' as const }]
-    : [{ label: 'Writing', to: '/blog' as const }]),
-];
+  { label: 'MVP builds', to: '/mvp-developer-south-africa' },
+] as const;
 
 type MarketingNavProps = {
   onNavigateSection?: (id: string) => void;
@@ -42,14 +39,12 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-2 group" onClick={() => setOpen(false)}>
           <span className="w-2 h-2 rounded-full bg-primary group-hover:scale-110 transition-transform" />
-          <span className="font-bold text-foreground tracking-tight">
-            {isBusinessSite ? 'Qwabi Engineering' : 'Ayabonga Qwabi'}
-          </span>
+          <span className="font-bold text-foreground tracking-tight">Qwabi Engineering</span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-7 text-sm" aria-label="Primary">
           {navLinks.map((item) =>
-            'to' in item && item.to ? (
+            'to' in item ? (
               <Link
                 key={item.label}
                 to={item.to}
@@ -61,7 +56,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
               <button
                 key={item.label}
                 type="button"
-                onClick={() => goSection((item as { href: string }).href.replace('#', ''))}
+                onClick={() => goSection(item.href.replace('#', ''))}
                 className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 {item.label}
@@ -97,7 +92,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
           aria-label="Mobile"
         >
           {navLinks.map((item) =>
-            'to' in item && item.to ? (
+            'to' in item ? (
               <Link
                 key={item.label}
                 to={item.to}
@@ -110,7 +105,7 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
               <button
                 key={item.label}
                 type="button"
-                onClick={() => goSection((item as { href: string }).href.replace('#', ''))}
+                onClick={() => goSection(item.href.replace('#', ''))}
                 className="text-left text-sm text-muted-foreground hover:text-foreground py-1"
               >
                 {item.label}

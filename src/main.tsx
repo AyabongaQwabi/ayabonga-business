@@ -3,8 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App.tsx';
-import Blog from './pages/Blog.tsx';
-import BlogPost from './pages/BlogPost.tsx';
 import GetAQuotePage from './pages/GetAQuotePage.tsx';
 import ServicesPage from './pages/Services.tsx';
 import TechnicalCofounderPage from './pages/TechnicalCofounder.tsx';
@@ -16,11 +14,8 @@ import EspazzaProject from './pages/EspazzaProject.tsx';
 import NotFound from './pages/NotFound.tsx';
 import About from './pages/About.tsx';
 import Privacy from './pages/Privacy.tsx';
-import Editorial from './pages/Editorial.tsx';
-import Corrections from './pages/Corrections.tsx';
 import BuyerIntentPage from './pages/BuyerIntentPage.tsx';
 import { buyerIntentPaths } from './data/buyer-intent-pages.ts';
-import { isBusinessSite } from './lib/site-variant.ts';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -47,14 +42,6 @@ createRoot(document.getElementById('root')!).render(
           />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<Privacy />} />
-          <Route path="/editorial" element={<Editorial />} />
-          <Route path="/corrections" element={<Corrections />} />
-          {!isBusinessSite ? (
-            <>
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-            </>
-          ) : null}
           <Route path="/get-a-quote" element={<GetAQuotePage />} />
           {buyerIntentPaths.map((path) => (
             <Route key={path} path={path} element={<BuyerIntentPage />} />

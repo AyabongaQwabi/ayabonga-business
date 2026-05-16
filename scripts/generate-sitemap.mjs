@@ -20,19 +20,17 @@ const localDevelopersPath = path.join(root, 'src/data/local-developers.json');
 const buyerIntentPath = path.join(root, 'src/data/buyer-intent-pages.ts');
 
 
-const isBusinessSite = process.env.VITE_SITE_VARIANT === 'business';
-
 const SITE_URL = (
   process.env.SITE_URL ||
   process.env.VITE_SITE_URL ||
-  (isBusinessSite ? 'https://business.qwabi.co.za' : 'https://www.qwabi.co.za')
+  'https://business.qwabi.co.za'
 ).replace(/\/$/, '');
 
 function writeRobotsTxt() {
   const lines = [
     'User-agent: *',
     'Allow: /',
-    ...(isBusinessSite ? ['Disallow: /blog'] : []),
+    'Disallow: /blog',
     '',
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     '',
@@ -76,7 +74,7 @@ async function main() {
     process.exit(1);
   }
 
-  const blogEntries = isBusinessSite ? [] : collectBlogEntries();
+  const blogEntries = [];
   
   let pseoEntries = [];
   try {
@@ -136,17 +134,6 @@ async function main() {
       priority: url.includes('cost') ? 0.95 : 0.9,
     })),
     { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
-    ...(isBusinessSite
-      ? []
-      : [
-          { url: '/blog', changefreq: 'weekly', priority: 0.9 },
-          ...blogEntries.map(({ slug, lastmod }) => ({
-            url: `/blog/${slug}`,
-            changefreq: 'monthly',
-            priority: 0.8,
-            lastmod,
-          })),
-        ]),
     ...pseoEntries.map((p) => ({
       url: `/solutions/${p.slug}`,
       changefreq: 'monthly',

@@ -1,13 +1,10 @@
-import { BUSINESS_SITE_ORIGIN, isBusinessSite } from './site-variant';
-
 const envSite =
   typeof import.meta !== 'undefined' && import.meta.env?.VITE_SITE_URL
     ? String(import.meta.env.VITE_SITE_URL).replace(/\/$/, '')
     : '';
 
 /** Canonical site URL (no trailing slash). Set `VITE_SITE_URL` for previews/staging. */
-export const SITE_ORIGIN =
-  envSite || (isBusinessSite ? BUSINESS_SITE_ORIGIN : 'https://www.qwabi.co.za');
+export const SITE_ORIGIN = envSite || 'https://business.qwabi.co.za';
 
 export const SITE_NAME = 'Ayabonga Qwabi';
 
