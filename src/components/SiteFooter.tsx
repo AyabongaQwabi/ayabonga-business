@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Calculator } from 'lucide-react';
-import { SITE_NAME } from '../lib/site-config';
+import {
+  APP_DEVELOPMENT_COST_PAGE,
+  PRICING_STRATEGY_PAGE,
+  QUOTE_PAGE,
+  QUOTE_TOOL_LABEL,
+} from '../lib/site-config';
 import { AUTHOR_JOB_TITLE } from '../lib/author-profile';
+import { SITE_NAME } from '../lib/site-config';
 
 export function SiteFooter() {
   return (
@@ -25,29 +30,46 @@ export function SiteFooter() {
               About
             </Link>
             <Link
+              to={APP_DEVELOPMENT_COST_PAGE}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              App development cost
+            </Link>
+            <Link
+              to={PRICING_STRATEGY_PAGE}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Retainer pricing
+            </Link>
+            <Link
               to="/services"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               Services
             </Link>
             <Link
-              to="/app-development-cost-south-africa"
+              to="/mobile-app-development-south-africa"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              App costs
+              Mobile apps
             </Link>
             <Link
-              to="/mvp-developer-south-africa"
+              to="/custom-software-development-south-africa"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              MVP builds
+              Custom software
             </Link>
             <Link
-              to="/get-a-quote"
-              className="text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-1"
+              to="/technical-cofounder"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
-              <Calculator className="w-3.5 h-3.5" aria-hidden />
-              Quote
+              Technical co-founder
+            </Link>
+            <Link
+              to={QUOTE_PAGE}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {QUOTE_TOOL_LABEL}
             </Link>
           </div>
         </div>

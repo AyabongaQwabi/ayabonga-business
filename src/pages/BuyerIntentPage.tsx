@@ -11,6 +11,7 @@ import { buyerIntentPagesByPath } from '../data/buyer-intent-pages';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
+  APP_DEVELOPMENT_COST_PAGE,
   QUOTE_PAGE,
   SITE_ORIGIN,
   TWITTER_HANDLE,
@@ -203,7 +204,12 @@ export default function BuyerIntentPage() {
 
         {page.showLeadMagnet ? (
           <div className="mb-16">
-            <LeadMagnetCard />
+            <LeadMagnetCard
+              title="Free App Development Cost Guide"
+              description="You are already reading it. Bookmark this page or share it with a co-founder comparing quotes."
+              ctaLabel="Jump to pricing tables"
+              to={`${APP_DEVELOPMENT_COST_PAGE}#pricing-tables-heading`}
+            />
           </div>
         ) : null}
 

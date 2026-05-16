@@ -3,26 +3,38 @@ import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   ArrowRight,
-  Calculator,
+  Bot,
+  Building2,
   CheckCircle2,
+  Code2,
+  Globe,
   MessageCircle,
+  RefreshCw,
   Shield,
   Smartphone,
   Store,
   Stethoscope,
+  Wrench,
   Workflow,
 } from 'lucide-react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 import ProjectCard from '../components/ProjectCard';
+import { CostGuideTeaser } from '../components/CostGuideTeaser';
 import { MarketingNav } from '../components/MarketingNav';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
-import { LeadMagnetCard } from '../components/LeadMagnetCard';
+import { PartnershipCard } from '../components/PartnershipCard';
+import { RetainerPricingCards } from '../components/RetainerPricingCards';
 import { SiteFooter } from '../components/SiteFooter';
+import { PARTNERSHIP_PILLARS } from '../data/pricing-strategy';
 import {
   absoluteUrl,
+  APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
+  PARTNERSHIP_CTA_LABEL,
+  PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
+  QUOTE_TOOL_LABEL,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
@@ -33,52 +45,93 @@ import {
 } from '../lib/entity-schema';
 
 const HOME_TITLE =
-  'Custom App Developer South Africa | Ecommerce, Marketplaces & MVPs';
+  'Software Development Company South Africa | App & Web Development';
 const HOME_DESCRIPTION =
-  'Senior AI and cloud engineer for South African founders. Ecommerce apps, marketplaces, fintech, health systems, WhatsApp bots, and MVPs. WhatsApp or scoped quote.';
+  'South African app development company for mobile app development, web development, and custom software. Ecommerce, business systems, AI, and long-term technical ownership from one senior engineer.';
+
+const servicesOverview = [
+  {
+    icon: Smartphone,
+    title: 'Mobile app development',
+    copy: 'Android and iOS with React Native, Flutter, or native when NFC and performance demand it. Store releases, push, and payments included in scope.',
+    link: '/mobile-app-development-south-africa',
+  },
+  {
+    icon: Globe,
+    title: 'Web development South Africa',
+    copy: 'Fast marketing sites, customer portals, and admin dashboards on modern stacks. Built for local connectivity and mobile-first users.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#websites`,
+  },
+  {
+    icon: Building2,
+    title: 'Business systems',
+    copy: 'Custom software for CRM, payroll, inventory, HR, fleet, and approvals. Replace spreadsheets with role-based tools your team will use.',
+    link: '/custom-software-development-south-africa',
+  },
+  {
+    icon: Store,
+    title: 'Ecommerce & marketplaces',
+    copy: 'Catalog, checkout, vendor payouts, and ops dashboards. Paystack, PayFast, and Ozow wired in from day one.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#ecommerce`,
+  },
+  {
+    icon: Bot,
+    title: 'AI & automation',
+    copy: 'WhatsApp bots, grounded assistants, and workflow automation with human handoff when the model should not guess.',
+    link: '/whatsapp-ai-chatbot-south-africa',
+  },
+  {
+    icon: Code2,
+    title: 'Bespoke software',
+    copy: 'Greenfield MVPs, app rescues, and product evolution when off-the-shelf tools do not fit how your business runs.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#mvp-startup`,
+  },
+];
 
 const buildTypes = [
   {
     icon: Store,
-    title: 'Ecommerce & marketplaces',
-    copy: 'Catalog, checkout, vendor payouts, and ops dashboards. Laundry Marketplace is a live reference.',
-    link: '/app-development-cost-south-africa#ecommerce',
+    title: 'Ecommerce & marketplace development',
+    copy: 'Multi-sided products with payouts, disputes, and ops tooling. Laundry Marketplace is a live South African reference.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#marketplace`,
   },
   {
     icon: Smartphone,
-    title: 'Android & iOS apps',
-    copy: 'React Native, Flutter, or native when NFC and performance demand it. UTap shipped campus wallet patterns.',
-    link: '/app-development-cost-south-africa#mobile',
+    title: 'Mobile app development',
+    copy: 'Cross-platform or native apps for fintech, campus wallets, and field teams. UTap shipped NFC campus access patterns.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#mobile`,
   },
   {
-    icon: Stethoscope,
-    title: 'Health & patient systems',
-    copy: 'Bookings, occupational health, staff workflows. ClinicPlus covers mining-sector clinic access.',
-    link: '/app-development-cost-south-africa#health',
+    icon: Globe,
+    title: 'Web platforms & portals',
+    copy: 'Customer-facing web apps and internal portals with auth, reporting, and integrations to your existing stack.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#websites`,
   },
   {
     icon: Workflow,
     title: 'Business operations software',
-    copy: 'Replace spreadsheets with role-based tools, approvals, and integrations your team actually uses.',
-    link: '/app-development-cost-south-africa#business-ops',
+    copy: 'CRM, payroll hooks, inventory, HR workflows, and fleet tracking in one custom software build.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#business-ops`,
   },
   {
-    icon: MessageCircle,
-    title: 'WhatsApp AI & automation',
-    copy: 'Lead capture and support where your customers already chat. Grounded bots, human handoff.',
-    link: '/whatsapp-ai-chatbot-south-africa',
+    icon: Stethoscope,
+    title: 'Health & patient systems',
+    copy: 'Bookings, occupational health, and staff workflows with POPIA-aware design. ClinicPlus serves mining-sector clinics.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#health`,
   },
   {
     icon: Shield,
     title: 'Fintech & payments',
-    copy: 'Paystack, PayFast, Ozow, Yoco. Webhooks, reconciliation, and failed-payment paths built in.',
-    link: '/app-development-cost-south-africa#fintech',
+    copy: 'Paystack, PayFast, Ozow, Yoco. Webhooks, reconciliation, and failed-payment paths built in, not bolted on later.',
+    link: `${APP_DEVELOPMENT_COST_PAGE}#fintech`,
   },
 ];
 
 const serviceLinks = [
-  { label: 'App development cost (2026)', path: '/app-development-cost-south-africa' },
-  { label: 'MVP developer South Africa', path: '/mvp-developer-south-africa' },
+  { label: 'Mobile app development (ZA)', path: '/mobile-app-development-south-africa' },
+  { label: 'Custom software development (ZA)', path: '/custom-software-development-south-africa' },
+  { label: 'App development cost guide (2026)', path: APP_DEVELOPMENT_COST_PAGE },
+  { label: 'Retainer pricing & philosophy', path: PRICING_STRATEGY_PAGE },
   { label: 'Technical co-founder (TaaS)', path: '/technical-cofounder' },
   { label: 'All engineering services', path: '/services' },
 ];
@@ -86,37 +139,46 @@ const serviceLinks = [
 const projects = [
   {
     title: 'Laundry Marketplace',
-    description: 'Multi-sided laundry marketplace: customers, providers, and operations.',
+    category: 'Ecommerce & marketplace',
+    description:
+      'Multi-sided laundry marketplace app development: customers, providers, payouts, and operations in production.',
     url: 'https://laundry.qwabi.co.za',
     tech: ['Next.js', 'Marketplace', 'Payments'],
   },
   {
     title: 'ClinicPlus',
-    description: 'Occupational health bookings for mining companies in Witbank.',
+    category: 'Health & business systems',
+    description:
+      'Custom software for occupational health bookings and clinic access for mining companies in Witbank.',
     url: 'https://clinicplusbookings.co.za',
     tech: ['React', 'Health', 'Bookings'],
   },
   {
     title: 'UTap',
-    description: 'University NFC wallet for campus access and payments.',
+    category: 'Mobile app development',
+    description:
+      'Mobile app development for a university NFC wallet: campus access and payments on iOS and Android.',
     url: 'https://utaptech.co.za',
     tech: ['React Native', 'NFC', 'Fintech'],
   },
   {
     title: 'Queens Connect',
-    description: 'Community AI assistant for Queenstown with local context.',
+    category: 'AI & web',
+    description:
+      'Community AI assistant with local context for Queenstown, built as a web experience with WhatsApp-ready patterns.',
     url: 'https://queensconnect.qwabi.co.za',
-    tech: ['AI', 'WhatsApp-ready patterns'],
+    tech: ['AI', 'Next.js', 'Local data'],
   },
 ];
 
 const proofPoints = [
-  '10+ years shipping production software in South Africa',
-  'Fintech, marketplaces, and health bookings in portfolio',
-  'One senior engineer on your build, not a bait-and-switch agency bench',
-  'Honest scope: what ships in v1 vs what waits',
-  'Local payments and POPIA-aware design by default',
+  'Software development company South Africa with 10+ years in production',
+  'Mobile app development, web development, and custom business systems',
+  'One senior engineer accountable for architecture and delivery',
+  'Local payments, POPIA-aware patterns, and post-launch ownership',
 ];
+
+const partnershipIcons = [RefreshCw, Wrench, Shield] as const;
 
 export default function HomePage() {
   const scrollTo = useCallback((id: string) => {
@@ -133,7 +195,7 @@ export default function HomePage() {
         <meta name="description" content={HOME_DESCRIPTION} />
         <meta
           name="keywords"
-          content="app development cost south africa, mvp developer south africa, ecommerce app developer south africa, marketplace app developer, custom software developer south africa, whatsapp chatbot developer south africa"
+          content="app development company, mobile app development, custom software development, web development south africa, software development company south africa, ecommerce app development, business systems software"
         />
         <link rel="canonical" href={absoluteUrl('/')} />
         <meta property="og:type" content="website" />
@@ -160,11 +222,17 @@ export default function HomePage() {
               buildWebSiteSchema(),
               {
                 '@type': 'ProfessionalService',
-                name: 'Ayabonga Qwabi — App & Software Development',
+                name: 'Ayabonga Qwabi — Software Development South Africa',
                 url: absoluteUrl('/'),
                 areaServed: { '@type': 'Country', name: 'South Africa' },
                 description: HOME_DESCRIPTION,
                 provider: { '@id': `${absoluteUrl('/')}#person` },
+                serviceType: [
+                  'Mobile app development',
+                  'Web development',
+                  'Custom software development',
+                  'Ecommerce development',
+                ],
               },
             ],
           })}
@@ -176,21 +244,23 @@ export default function HomePage() {
         <FloatingWhatsApp />
 
         <main className="max-w-6xl mx-auto px-6">
-          <section className="pt-28 pb-16 md:pt-36 md:pb-24">
+          <section className="pt-28 pb-16 md:pt-36 md:pb-20">
             <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-              Senior technical partner · South Africa
+              App development company · South Africa
             </p>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance max-w-4xl">
-              Business-right app development for founders who cannot afford a rebuild
+              Mobile, web, and custom software development for South African businesses
             </h1>
             <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-              I am Ayabonga Qwabi, an AI Specialist and Cloud Architect with 10+ years in production
-              software. I build ecommerce platforms, marketplaces, mobile apps, health systems,
-              fintech integrations, and MVPs without agency overhead or the junior dev lottery.
+              I am Ayabonga Qwabi, a senior product engineer and software development partner.
+              I run an app development company focused on mobile app development, web development
+              South Africa teams can rely on, and custom software for ecommerce, business systems,
+              and AI. After launch I stay on monthly retainers so you are not left with a once-off
+              build and no owner.
             </p>
 
             <ul className="mt-8 grid sm:grid-cols-2 gap-3 max-w-2xl">
-              {proofPoints.slice(0, 4).map((point) => (
+              {proofPoints.map((point) => (
                 <li key={point} className="flex gap-2 text-sm text-muted-foreground">
                   <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" aria-hidden />
                   <span>{point}</span>
@@ -206,31 +276,108 @@ export default function HomePage() {
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#25D366] text-white rounded-xl font-semibold hover:bg-[#128C7E] transition-colors shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <MessageCircle className="w-5 h-5" aria-hidden />
-                WhatsApp me
+                Discuss your product
               </a>
               <Link
-                to={QUOTE_PAGE}
+                to={APP_DEVELOPMENT_COST_PAGE}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                <Calculator className="w-5 h-5" aria-hidden />
-                Get a scoped quote
+                View development cost ranges
+                <ArrowRight className="w-4 h-4" aria-hidden />
               </Link>
               <Link
-                to="/app-development-cost-south-africa"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-border rounded-xl font-semibold hover:border-primary/40 bg-card transition-colors"
+                to={PRICING_STRATEGY_PAGE}
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-border rounded-xl font-semibold text-foreground hover:border-primary/40 hover:bg-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
-                2026 cost guide
-                <ArrowRight className="w-4 h-4" aria-hidden />
+                {PARTNERSHIP_CTA_LABEL}
               </Link>
             </div>
           </section>
 
-          <section id="build" className="py-16 border-t border-border scroll-mt-24">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">What I build</h2>
+          <section id="services" className="py-16 border-t border-border scroll-mt-24">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Software development services</h2>
             <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
-              From startup MVPs to operations software for established businesses. If it runs on
-              phones, browsers, or WhatsApp, and it must survive real South African users, I have
-              likely shipped something adjacent before.
+              Full-stack delivery from one senior engineer: mobile apps, web development South Africa
+              businesses need, and custom software for operations teams. Pick a lane below or combine
+              them in one product roadmap.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {servicesOverview.map(({ icon: Icon, title, copy, link }) => (
+                <Link
+                  key={title}
+                  to={link}
+                  className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <Icon className="w-8 h-8 text-primary mb-4" aria-hidden />
+                  <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    {title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{copy}</p>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section id="partnership" className="py-16 border-t border-border scroll-mt-24">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">How the partnership works</h2>
+            <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
+              You get a single accountable senior engineer, not a rotating agency bench. Work is
+              continuous: stabilise what you have, ship what you need next, and keep the system
+              reliable while the business moves.
+            </p>
+            <div className="grid md:grid-cols-3 gap-4">
+              {PARTNERSHIP_PILLARS.map(({ title, copy }, index) => {
+                const Icon = partnershipIcons[index] ?? Shield;
+                return (
+                  <div
+                    key={title}
+                    className="p-6 rounded-2xl border border-border bg-card hover:border-primary/30 transition-colors"
+                  >
+                    <Icon className="w-8 h-8 text-primary mb-4" aria-hidden />
+                    <h3 className="font-semibold text-foreground mb-2">{title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{copy}</p>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <section id="build-costs" className="py-16 border-t border-border scroll-mt-24">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">What builds typically cost</h2>
+            <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
+              Ballpark ZAR ranges for greenfield work in South Africa. Use these to sanity-check
+              quotes, then open the full guide for timelines, tiers, and scope notes.
+            </p>
+            <CostGuideTeaser />
+          </section>
+
+          <section id="pricing" className="py-16 border-t border-border scroll-mt-24">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
+              <div className="max-w-2xl">
+                <h2 className="text-2xl md:text-3xl font-bold mb-3">Monthly retainer tiers</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  After launch, most clients move to retainers for maintenance, features, and
+                  integrations. Pricing scales with system complexity and how fast your product must
+                  evolve.
+                </p>
+              </div>
+              <Link
+                to={PRICING_STRATEGY_PAGE}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline underline-offset-4 shrink-0"
+              >
+                Full pricing philosophy
+                <ArrowRight className="w-4 h-4" aria-hidden />
+              </Link>
+            </div>
+            <RetainerPricingCards showSystemExamples={false} />
+          </section>
+
+          <section id="build" className="py-16 border-t border-border scroll-mt-24">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Projects I build and maintain</h2>
+            <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
+              Custom software development across startups and established businesses. If it runs on
+              phones, browsers, or WhatsApp, and it must survive real South African users and
+              payments, I have likely shipped something adjacent before.
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {buildTypes.map(({ icon: Icon, title, copy, link }) => (
@@ -248,9 +395,23 @@ export default function HomePage() {
               ))}
             </div>
             <p className="mt-8 text-sm text-muted-foreground">
-              Also: bespoke custom apps, portfolio sites, app rescues, and scaling existing products.{' '}
+              Need WhatsApp AI or a full cost breakdown?{' '}
+              <Link
+                to="/whatsapp-ai-chatbot-south-africa"
+                className="text-primary hover:underline underline-offset-4"
+              >
+                WhatsApp AI chatbots
+              </Link>
+              {' · '}
+              <Link
+                to={APP_DEVELOPMENT_COST_PAGE}
+                className="text-primary hover:underline underline-offset-4"
+              >
+                App development cost guide
+              </Link>
+              {' · '}
               <Link to="/services" className="text-primary hover:underline underline-offset-4">
-                View all services
+                All services
               </Link>
             </p>
           </section>
@@ -259,17 +420,17 @@ export default function HomePage() {
             <div className="grid lg:grid-cols-2 gap-10 items-start">
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                  Technical cofounder energy without giving up equity
+                  Technical co-founder energy without giving up equity
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-4">
-                  You get one accountable senior engineer across product decisions, architecture,
-                  and delivery. I tell you what is realistic for budget and timeline before you sign,
-                  including hidden costs like admin tools, payment edge cases, and post-launch
-                  maintenance.
+                  You get product decisions, architecture, and delivery from one person who stays
+                  after launch. I tell you what is realistic for budget and timeline before you
+                  commit, including post-launch maintenance and integration risk.
                 </p>
                 <p className="text-muted-foreground leading-relaxed mb-6">
-                  Cheap quotes often mean junior execution and a paid rewrite six months later. I
-                  would rather scope an honest MVP than promise a full marketplace at R50k.
+                  Cheap once-off quotes often mean junior execution and a paid rewrite six months
+                  later. I would rather scope an honest MVP and a retainer that matches operational
+                  reality.
                 </p>
                 <ul className="space-y-2">
                   {serviceLinks.map((item) => (
@@ -285,29 +446,39 @@ export default function HomePage() {
                   ))}
                 </ul>
               </div>
-              <LeadMagnetCard />
+              <PartnershipCard />
             </div>
           </section>
 
           <section id="work" className="py-16 border-t border-border scroll-mt-24">
-            <h2 className="text-2xl md:text-3xl font-bold mb-3">Shipped work</h2>
-            <p className="text-muted-foreground max-w-2xl mb-10">
-              Real products in market, not mockups. Collaborations include Warner Music Africa
-              and Western Cape Labs.
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">Custom software in production</h2>
+            <p className="text-muted-foreground max-w-2xl mb-10 leading-relaxed">
+              Shipped mobile app development and web development projects in South Africa, not
+              mockups. Collaborations include Warner Music Africa and Western Cape Labs.
             </p>
             <div className="grid md:grid-cols-2 gap-4">
               {projects.map((project) => (
-                <ProjectCard key={project.title} {...project} />
+                <div key={project.title} className="flex flex-col gap-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-primary">
+                    {project.category}
+                  </p>
+                  <ProjectCard
+                    title={project.title}
+                    description={project.description}
+                    url={project.url}
+                    tech={project.tech}
+                  />
+                </div>
               ))}
             </div>
           </section>
 
           <section id="contact" className="py-16 md:py-24 border-t border-border scroll-mt-24">
             <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Tell me what you are building</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Start a technical partnership</h2>
               <p className="text-muted-foreground mb-8 leading-relaxed">
-                Send a voice note on WhatsApp or use the quote tool. I reply with whether I am a fit,
-                a rough budget band, and what I would put in phase one.
+                Tell me what you run today, what is fragile, and where the product needs to go. I
+                will reply with fit, a retainer band or build range, and what I would tackle first.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <a
@@ -320,12 +491,22 @@ export default function HomePage() {
                   WhatsApp
                 </a>
                 <Link
-                  to={QUOTE_PAGE}
+                  to={APP_DEVELOPMENT_COST_PAGE}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors"
                 >
-                  Get a quote
+                  Development cost guide
                 </Link>
               </div>
+              <p className="mt-8 text-sm text-muted-foreground">
+                Planning a greenfield build?{' '}
+                <Link
+                  to={QUOTE_PAGE}
+                  className="text-primary hover:underline underline-offset-4"
+                >
+                  {QUOTE_TOOL_LABEL}
+                </Link>{' '}
+                gives a rough scope ballpark. Retainers are agreed after we review your stack.
+              </p>
             </div>
           </section>
         </main>

@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Calculator, Menu, X } from 'lucide-react';
-import { QUOTE_PAGE } from '../lib/site-config';
+import { Menu, X } from 'lucide-react';
+import {
+  APP_DEVELOPMENT_COST_PAGE,
+  PARTNERSHIP_CTA_LABEL,
+  PRICING_STRATEGY_PAGE,
+  QUOTE_PAGE,
+  QUOTE_TOOL_LABEL,
+} from '../lib/site-config';
 
 const navLinks = [
-  { label: 'What I build', href: '#build' },
+  { label: 'Services', href: '#services' },
+  { label: 'Partnership', href: '#partnership' },
+  { label: 'App costs', to: APP_DEVELOPMENT_COST_PAGE },
+  { label: 'Retainers', to: PRICING_STRATEGY_PAGE },
   { label: 'Work', href: '#work' },
-  { label: 'Pricing', to: '/app-development-cost-south-africa' },
-  { label: 'Services', to: '/services' },
-  { label: 'MVP builds', to: '/mvp-developer-south-africa' },
 ] as const;
 
 type MarketingNavProps = {
@@ -68,10 +74,15 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
         <div className="hidden lg:flex items-center gap-3">
           <Link
             to={QUOTE_PAGE}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border bg-card text-sm font-semibold hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            <Calculator className="w-4 h-4 text-primary" aria-hidden />
-            Get a quote
+            {QUOTE_TOOL_LABEL}
+          </Link>
+          <Link
+            to={PRICING_STRATEGY_PAGE}
+            className="inline-flex items-center px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            {PARTNERSHIP_CTA_LABEL}
           </Link>
         </div>
 
@@ -114,11 +125,17 @@ export function MarketingNav({ onNavigateSection }: MarketingNavProps) {
           )}
           <Link
             to={QUOTE_PAGE}
-            className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-semibold"
+            className="text-left text-sm text-muted-foreground hover:text-foreground py-1"
             onClick={() => setOpen(false)}
           >
-            <Calculator className="w-4 h-4" aria-hidden />
-            Get a quote
+            {QUOTE_TOOL_LABEL}
+          </Link>
+          <Link
+            to={PRICING_STRATEGY_PAGE}
+            className="mt-2 inline-flex items-center justify-center px-4 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-semibold"
+            onClick={() => setOpen(false)}
+          >
+            {PARTNERSHIP_CTA_LABEL}
           </Link>
         </nav>
       ) : null}

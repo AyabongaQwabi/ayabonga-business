@@ -12,7 +12,7 @@ export const DEFAULT_PAGE_TITLE =
   'Custom App Developer South Africa | Ayabonga Qwabi';
 
 export const DEFAULT_PAGE_DESCRIPTION =
-  'Senior app and software developer in South Africa. Ecommerce, marketplaces, fintech, health apps, WhatsApp bots, and MVPs. WhatsApp or scoped quote.';
+  'Senior product engineer and long-term technical partner in South Africa. Monthly retainers for maintenance, feature delivery, integrations, and scalable product evolution.';
 
 export const DEFAULT_OG_IMAGE =
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/634131924_4362348684012184_2809328754212142225_n%20%281%29-n9dEY5Noh5Y0nxfTCK3TwAMABTs8KG.jpg';
@@ -23,8 +23,17 @@ export const TWITTER_HANDLE = '@ayabongaqwabi';
 export const WHATSAPP_NUMBER = '27603116777';
 export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Ayabonga, I found your site and I'd like to chat.")}`;
 
-/** The /get-a-quote page — only link here when the user explicitly wants pricing detail. */
+/** Retainer pricing philosophy and tiers. */
+export const PRICING_STRATEGY_PAGE = '/pricing-strategy';
+
+/** 2026 ZAR app development cost guide (SEO landing). */
+export const APP_DEVELOPMENT_COST_PAGE = '/app-development-cost-south-africa';
+
+/** Optional project scope estimator (secondary to partnership conversation). */
 export const QUOTE_PAGE = '/get-a-quote';
+
+export const PARTNERSHIP_CTA_LABEL = 'Start a technical partnership';
+export const QUOTE_TOOL_LABEL = 'Project scope estimator';
 
 /** Disqus site shortname (https://disqus.com/admin/settings/general/) */
 export const DISQUS_SHORTNAME = 'qwabi';

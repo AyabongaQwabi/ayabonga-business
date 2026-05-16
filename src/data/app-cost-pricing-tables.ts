@@ -84,20 +84,22 @@ export const appCostPricingTables: PricingTableBlock[] = [
   },
   {
     id: 'mobile',
-    title: 'Android & iOS apps',
+    title: 'Mobile app development (MVP vs full product)',
     intro:
-      'Native (Kotlin/Swift) costs more than one cross-platform codebase (React Native / Flutter). Pick based on NFC, performance, and long-term team skills.',
+      'To create a mobile app in South Africa, decide whether you need a learning MVP or a store-ready product. Native (Kotlin/Swift) costs more than one cross-platform codebase (React Native / Flutter). Pick based on NFC, performance, and who maintains it after launch.',
     tiers: [
       {
-        name: 'One platform MVP',
+        name: 'MVP (one platform)',
         rangeZar: 'R100k – R250k',
-        summary: 'React Native or Flutter, API backend, auth, core screens only.',
+        summary:
+          'React Native or Flutter, API backend, auth, core screens. Enough to test demand, not full ops tooling.',
         timeline: '6–10 weeks',
       },
       {
-        name: 'iOS + Android production',
+        name: 'Full product (iOS + Android)',
         rangeZar: 'R250k – R600k',
-        summary: 'Both stores, push, offline basics, analytics, release pipeline.',
+        summary:
+          'Both stores, push, offline basics, analytics, release pipeline, admin visibility.',
         timeline: '10–16 weeks',
       },
       {
@@ -105,6 +107,32 @@ export const appCostPricingTables: PricingTableBlock[] = [
         rangeZar: 'R500k – R1m+',
         summary: 'NFC wallets (UTap-style), BLE, background location, strict performance.',
         timeline: '4–8 months',
+      },
+    ],
+  },
+  {
+    id: 'web-apps',
+    title: 'Web applications (SaaS, portals, dashboards)',
+    intro:
+      'Browser-first products: customer portals, internal tools with rich UI, and subscription SaaS. Often pairs with a lighter mobile wrapper later.',
+    tiers: [
+      {
+        name: 'Web MVP',
+        rangeZar: 'R90k – R220k',
+        summary: 'Auth, core workflows, responsive UI, basic admin, one environment.',
+        timeline: '6–10 weeks',
+      },
+      {
+        name: 'Production web app',
+        rangeZar: 'R220k – R550k',
+        summary: 'Roles, integrations, reporting, staging/prod, monitoring hooks.',
+        timeline: '10–18 weeks',
+      },
+      {
+        name: 'Multi-tenant SaaS',
+        rangeZar: 'R550k – R1.1m+',
+        summary: 'Tenant isolation, billing, feature flags, heavier compliance or SSO.',
+        timeline: '4–9 months',
       },
     ],
   },
@@ -235,8 +263,35 @@ export const appCostPricingTables: PricingTableBlock[] = [
     ],
   },
   {
+    id: 'maintenance',
+    title: 'Post-launch maintenance retainers (monthly)',
+    intro:
+      'After launch, budget for security patches, dependency updates, small features, and incident response. Retainers scale with complexity; see tier cards below for Essential, Growth, and Ecosystem bands.',
+    tiers: [
+      {
+        name: 'Essential',
+        rangeZar: 'from R18 000 / mo',
+        summary: 'MVPs, marketing sites, light internal tools with predictable upkeep.',
+        timeline: 'Ongoing',
+      },
+      {
+        name: 'Growth',
+        rangeZar: 'from R45 000 / mo',
+        summary: 'Active products with payments, integrations, and monthly feature work.',
+        timeline: 'Ongoing',
+      },
+      {
+        name: 'Ecosystem',
+        rangeZar: 'from R85 000 / mo',
+        summary: 'Marketplaces, multi-app platforms, high release cadence and cloud load.',
+        timeline: 'Ongoing',
+      },
+    ],
+    note: 'Greenfield build pricing above is separate from monthly partnership retainers.',
+  },
+  {
     id: 'fintech',
-    title: 'Fintech & payment gateway integration',
+    title: 'Payment gateway integration South Africa',
     intro:
       'South Africa: Paystack, PayFast, Ozow, Stitch, Yoco. Each adds webhooks, reconciliation, and failed-payment handling.',
     tiers: [

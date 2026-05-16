@@ -183,6 +183,16 @@ export default function ServicesPage() {
           <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
             {[
               {
+                title: 'Mobile app development',
+                path: '/mobile-app-development-south-africa',
+                desc: 'Android, iOS, startup MVPs, and store-ready delivery.',
+              },
+              {
+                title: 'Custom software development',
+                path: '/custom-software-development-south-africa',
+                desc: 'CRM, HR, inventory, property, and ops systems.',
+              },
+              {
                 title: 'App development cost (2026)',
                 path: '/app-development-cost-south-africa',
                 desc: 'MVP vs production, hidden costs, and rewrite risk.',

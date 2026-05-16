@@ -11,7 +11,7 @@
 
 **Product type:** Senior Engineering Service / Technical Partnership.
 
-**Business model:** Project-based builds (Phase 1 fixed price) with optional equity stakes and iteration retainers.
+**Business model:** Monthly engineering retainers (Essential, Growth, Ecosystem) for ongoing ownership, plus optional greenfield Phase 1 builds and project scope estimator for new ideas.
 
 ## Target Audience
 **Target companies:** Solo founders (non-technical), Early-stage startups, and Established SMEs looking to digitize or scale operations.
@@ -123,7 +123,7 @@
 
 ## Goals
 **Business goal:** Sell engineering services to founders and agencies.
-**Conversion action:** Get a project quote / Hire for Phase 1.
+**Conversion action:** Start a technical partnership conversation (WhatsApp) / Review retainer tiers.
 
 ## SEO & Local Discovery (priority)
 **Primary intent:** Be found when people search for developers, engineers, and cloud help in South Africa, with **dominance in the Eastern Cape** first, then national head terms.

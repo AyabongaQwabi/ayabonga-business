@@ -19,6 +19,7 @@ const comparisonsDataPath = path.join(root, 'src/data/comparisons.json');
 const localDevelopersPath = path.join(root, 'src/data/local-developers.json');
 const buyerIntentPath = path.join(root, 'src/data/buyer-intent-pages.ts');
 const partnershipPath = path.join(root, 'src/data/partnership-landing-pages.ts');
+const serviceLandingPath = path.join(root, 'src/data/service-landing-pages.ts');
 
 
 const SITE_URL = (
@@ -127,10 +128,21 @@ async function main() {
     console.warn('generate-sitemap: could not read partnership-landing-pages.ts');
   }
 
+  let serviceLandingPaths = [];
+  try {
+    const raw = fs.readFileSync(serviceLandingPath, 'utf8');
+    const matches = [...raw.matchAll(/path:\s*'(\/[^']+)'/g)];
+    serviceLandingPaths = matches.map((m) => m[1]);
+  } catch {
+    console.warn('generate-sitemap: could not read service-landing-pages.ts');
+  }
+
   const links = [
     { url: '/', changefreq: 'weekly', priority: 1 },
     { url: '/services', changefreq: 'monthly', priority: 0.9 },
     { url: '/technical-cofounder', changefreq: 'monthly', priority: 0.95 },
+    { url: '/pricing-strategy', changefreq: 'monthly', priority: 0.96 },
+    { url: '/app-development-cost-south-africa', changefreq: 'monthly', priority: 0.97 },
     { url: '/developers/eastern-cape', changefreq: 'weekly', priority: 0.92 },
     { url: '/developers/south-africa', changefreq: 'weekly', priority: 0.9 },
     ...localPageLinks,
@@ -138,11 +150,16 @@ async function main() {
     { url: '/privacy', changefreq: 'yearly', priority: 0.3 },
     { url: '/editorial', changefreq: 'yearly', priority: 0.35 },
     { url: '/corrections', changefreq: 'yearly', priority: 0.3 },
-    { url: '/get-a-quote', changefreq: 'monthly', priority: 0.85 },
+    { url: '/get-a-quote', changefreq: 'monthly', priority: 0.7 },
     ...buyerIntentPaths.map((url) => ({
       url,
       changefreq: 'monthly',
       priority: url.includes('cost') ? 0.95 : 0.9,
+    })),
+    ...serviceLandingPaths.map((url) => ({
+      url,
+      changefreq: 'monthly',
+      priority: 0.93,
     })),
     ...partnershipPaths.map((url) => ({
       url,
