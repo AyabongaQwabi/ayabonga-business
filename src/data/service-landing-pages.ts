@@ -10,6 +10,7 @@ import {
   Warehouse,
 } from 'lucide-react';
 import type { PricingTableBlock } from '../components/PricingTable';
+import { HERO_IMAGES } from '../lib/hero-images';
 
 export type ServiceLandingService = {
   icon: LucideIcon;
@@ -44,6 +45,8 @@ export type ServiceLandingPageConfig = {
   eyebrow: string;
   h1: string;
   heroSubhead: string;
+  heroImage?: string;
+  heroImageAlt?: string;
   serviceType: string;
   services: ServiceLandingService[];
   processSteps: ServiceLandingProcessStep[];
@@ -234,6 +237,8 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     h1: 'Mobile App Development South Africa',
     heroSubhead:
       'I build Android and iOS products as a senior engineer, not a hand-off agency. You get store-ready apps, APIs, admin tooling, and honest ZAR ranges before you commit.',
+    heroImage: HERO_IMAGES.mobileApp,
+    heroImageAlt: 'Mobile app development workspace with smartphone and laptop',
     serviceType: 'Mobile application development',
     services: [
       {
@@ -361,6 +366,8 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     h1: 'Custom Software Development South Africa',
     heroSubhead:
       'Replace spreadsheets and broken off-the-shelf tools with software that matches how your team works. I design, build, and stay responsible for CRM, ops, HR, inventory, and industry-specific platforms.',
+    heroImage: HERO_IMAGES.customSoftware,
+    heroImageAlt: 'Business team using custom operations software on desktop',
     serviceType: 'Custom business software development',
     services: [
       {

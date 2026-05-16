@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, CheckCircle2, AlertCircle, TrendingUp, Code, GraduationCap, Rocket } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, AlertCircle, TrendingUp, Code, Rocket } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -14,7 +14,9 @@ import {
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
+import { PageHero } from '../components/PageHero';
 import { LeadCaptureForm } from '../components/leads/LeadCaptureForm';
+import { HERO_IMAGES } from '../lib/hero-images';
 
 const PAGE_TITLE = 'Technical Co-founder as a Service';
 const PAGE_DESCRIPTION =
@@ -91,32 +93,19 @@ export default function TechnicalCofounderPage() {
       </nav>
 
       <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
-        <header className="mb-16 grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
-              <GraduationCap className="w-3.5 h-3.5" />
-              <span>Technical Co-founder as a Service (TaaS)</span>
-            </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
+        <PageHero
+          className="mb-16"
+          eyebrow="Technical Co-founder as a Service (TaaS)"
+          title={
+            <>
               Technical Co-founder in South Africa,{' '}
               <span className="text-primary">without the equity split.</span>
-            </h1>
-            <p className="text-xl text-muted-foreground leading-relaxed">
-              Finding a technical co-founder in South Africa is hard. Managing a junior developer is risky.
-              Hiring an agency is slow. With Technical Co-founder as a Service, you get a senior product
-              engineer who owns architecture, delivery, and launch from day one, not a rotating bench of
-              juniors or account managers.
-            </p>
-          </div>
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-primary/50 to-emerald-500/50 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
-            <img 
-              src="/hero-taas.png" 
-              alt="Technical co-founder as a Service for South African founders"
-              className="relative rounded-2xl shadow-2xl border border-white/10"
-            />
-          </div>
-        </header>
+            </>
+          }
+          subtitle="Finding a technical co-founder in South Africa is hard. Managing a junior developer is risky. Hiring an agency is slow. With TaaS you get a senior product engineer who owns architecture, delivery, and launch from day one."
+          imageSrc={HERO_IMAGES.ayabongaDesk}
+          imageAlt="Ayabonga Qwabi at desk, technical co-founder for South African founders"
+        />
 
         {/* The Problem */}
         <section className="mb-24 grid md:grid-cols-2 gap-12 items-center">

@@ -7,7 +7,9 @@ import { LeadMagnetCard } from '../components/LeadMagnetCard';
 import { PricingTable } from '../components/PricingTable';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import { SiteFooter } from '../components/SiteFooter';
+import { PageHero } from '../components/PageHero';
 import { buyerIntentPagesByPath } from '../data/buyer-intent-pages';
+import { heroImageForBuyerIntentPath } from '../lib/hero-images';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
@@ -68,6 +70,8 @@ export default function BuyerIntentPage() {
   }
 
   const canonical = absoluteUrl(page.path);
+  const heroSrc = heroImageForBuyerIntentPath(page.path, page.heroImage);
+  const heroAlt = page.heroImageAlt ?? `${page.h1} in South Africa`;
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'Services', path: '/services' },
@@ -156,15 +160,15 @@ export default function BuyerIntentPage() {
           ]}
         />
 
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-          {page.eyebrow}
-        </p>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-5">
-          {page.h1}
-        </h1>
-        <p className="text-lg text-muted-foreground leading-relaxed mb-12">{page.heroSubhead}</p>
-
-        <div className="flex flex-col sm:flex-row gap-3 mb-14">
+        <PageHero
+          className="mb-14"
+          eyebrow={page.eyebrow}
+          title={page.h1}
+          subtitle={page.heroSubhead}
+          imageSrc={heroSrc}
+          imageAlt={heroAlt}
+        >
+          <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -181,7 +185,8 @@ export default function BuyerIntentPage() {
               <Calculator className="w-5 h-5 text-primary" aria-hidden />
               Scope and estimate
             </Link>
-        </div>
+          </div>
+        </PageHero>
 
         {page.pricingTables?.length ? (
           <section className="mb-16 space-y-10" aria-labelledby="pricing-tables-heading">

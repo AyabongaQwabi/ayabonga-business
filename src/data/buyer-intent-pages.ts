@@ -1,4 +1,5 @@
 import type { PricingTableBlock } from '../components/PricingTable';
+import { HERO_IMAGES } from '../lib/hero-images';
 
 export type BuyerIntentSection = {
   id: string;
@@ -21,6 +22,9 @@ export type BuyerIntentPage = {
   eyebrow: string;
   h1: string;
   heroSubhead: string;
+  /** Optional hero image path or URL (defaults to path-based stock hero). */
+  heroImage?: string;
+  heroImageAlt?: string;
   sections: BuyerIntentSection[];
   pricingTables?: PricingTableBlock[];
   showLeadMagnet?: boolean;
@@ -48,6 +52,8 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     h1: 'MVP Developer in South Africa',
     heroSubhead:
       'Build your first real version without agency overhead or the junior dev lottery. One senior engineer owns architecture, delivery, and the tradeoffs that keep you out of a rebuild.',
+    heroImage: HERO_IMAGES.mvpDeveloper,
+    heroImageAlt: 'Founders planning an MVP on laptops in a modern workspace',
     serviceType: 'MVP and startup product development',
     sections: [
       {
@@ -241,6 +247,8 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     h1: 'How to Choose an App Developer in South Africa',
     heroSubhead:
       'Skip the listicle SEO. Here is how to compare freelancers, agencies, and senior partners so you hire for outcomes, not buzzwords.',
+    heroImage: HERO_IMAGES.chooseDeveloper,
+    heroImageAlt: 'Team reviewing app development options in South Africa',
     serviceType: 'App development consulting and delivery',
     sections: [
       {

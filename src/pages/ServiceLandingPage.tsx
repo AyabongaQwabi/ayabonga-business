@@ -8,7 +8,9 @@ import { PricingTable } from '../components/PricingTable';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import ProjectCard from '../components/ProjectCard';
 import { SiteFooter } from '../components/SiteFooter';
+import { PageHero } from '../components/PageHero';
 import { serviceLandingPagesByPath } from '../data/service-landing-pages';
+import { heroImageForServicePath } from '../lib/hero-images';
 import {
   absoluteUrl,
   APP_DEVELOPMENT_COST_PAGE,
@@ -69,6 +71,8 @@ export default function ServiceLandingPage() {
   }
 
   const canonical = absoluteUrl(page.path);
+  const heroSrc = heroImageForServicePath(page.path, page.heroImage);
+  const heroAlt = page.heroImageAlt ?? `${page.h1} for South African businesses`;
   const breadcrumbSchema = buildBreadcrumbSchema([
     { name: 'Home', path: '/' },
     { name: 'Services', path: '/services' },
@@ -159,15 +163,15 @@ export default function ServiceLandingPage() {
           ]}
         />
 
-        <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-          {page.eyebrow}
-        </p>
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground leading-tight mb-5">
-          {page.h1}
-        </h1>
-        <p className="text-lg text-muted-foreground leading-relaxed mb-10">{page.heroSubhead}</p>
-
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 mb-16">
+        <PageHero
+          className="mb-16"
+          eyebrow={page.eyebrow}
+          title={page.h1}
+          subtitle={page.heroSubhead}
+          imageSrc={heroSrc}
+          imageAlt={heroAlt}
+        >
+          <div className="flex flex-col sm:flex-row flex-wrap gap-3">
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -190,7 +194,8 @@ export default function ServiceLandingPage() {
           >
             Free cost guide
           </Link>
-        </div>
+          </div>
+        </PageHero>
 
         <section className="mb-16" aria-labelledby="services-heading">
           <h2 id="services-heading" className="text-2xl font-bold text-foreground mb-3">

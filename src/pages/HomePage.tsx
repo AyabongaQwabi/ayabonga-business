@@ -5,7 +5,6 @@ import {
   ArrowRight,
   Bot,
   Building2,
-  CheckCircle2,
   Code2,
   Globe,
   MessageCircle,
@@ -20,6 +19,11 @@ import {
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Analytics } from '@vercel/analytics/react';
 import ProjectCard from '../components/ProjectCard';
+import { HomeHero } from '../components/HomeHero';
+import {
+  ServiceIllustration,
+  type ServiceIllustrationVariant,
+} from '../components/ServiceIllustration';
 import { CostGuideTeaser } from '../components/CostGuideTeaser';
 import { MarketingNav } from '../components/MarketingNav';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
@@ -31,7 +35,6 @@ import {
   absoluteUrl,
   APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
-  PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
   QUOTE_TOOL_LABEL,
@@ -43,48 +46,61 @@ import {
   buildOrganizationSchema,
   buildWebSiteSchema,
 } from '../lib/entity-schema';
+import { AUTHOR_HEADSHOT, projectThumbnail } from '../lib/marketing-images';
 
 const HOME_TITLE =
   'Software Development Company South Africa | App & Web Development';
 const HOME_DESCRIPTION =
   'South African app development company for mobile app development, web development, and custom software. Ecommerce, business systems, AI, and long-term technical ownership from one senior engineer.';
 
-const servicesOverview = [
+const servicesOverview: {
+  icon: typeof Smartphone;
+  title: string;
+  copy: string;
+  link: string;
+  illustration: ServiceIllustrationVariant;
+}[] = [
   {
     icon: Smartphone,
     title: 'Mobile app development',
     copy: 'Android and iOS with React Native, Flutter, or native when NFC and performance demand it. Store releases, push, and payments included in scope.',
     link: '/mobile-app-development-south-africa',
+    illustration: 'mobile',
   },
   {
     icon: Globe,
     title: 'Web development South Africa',
     copy: 'Fast marketing sites, customer portals, and admin dashboards on modern stacks. Built for local connectivity and mobile-first users.',
     link: `${APP_DEVELOPMENT_COST_PAGE}#websites`,
+    illustration: 'web',
   },
   {
     icon: Building2,
     title: 'Business systems',
     copy: 'Custom software for CRM, payroll, inventory, HR, fleet, and approvals. Replace spreadsheets with role-based tools your team will use.',
     link: '/custom-software-development-south-africa',
+    illustration: 'business',
   },
   {
     icon: Store,
     title: 'Ecommerce & marketplaces',
     copy: 'Catalog, checkout, vendor payouts, and ops dashboards. Paystack, PayFast, and Ozow wired in from day one.',
     link: `${APP_DEVELOPMENT_COST_PAGE}#ecommerce`,
+    illustration: 'ecommerce',
   },
   {
     icon: Bot,
     title: 'AI & automation',
     copy: 'WhatsApp bots, grounded assistants, and workflow automation with human handoff when the model should not guess.',
     link: '/whatsapp-ai-chatbot-south-africa',
+    illustration: 'ai',
   },
   {
     icon: Code2,
     title: 'Bespoke software',
     copy: 'Greenfield MVPs, app rescues, and product evolution when off-the-shelf tools do not fit how your business runs.',
     link: `${APP_DEVELOPMENT_COST_PAGE}#mvp-startup`,
+    illustration: 'bespoke',
   },
 ];
 
@@ -144,6 +160,7 @@ const projects = [
       'Multi-sided laundry marketplace app development: customers, providers, payouts, and operations in production.',
     url: 'https://laundry.qwabi.co.za',
     tech: ['Next.js', 'Marketplace', 'Payments'],
+    imageUrl: projectThumbnail('Laundry Marketplace', 'https://laundry.qwabi.co.za'),
   },
   {
     title: 'ClinicPlus',
@@ -152,6 +169,7 @@ const projects = [
       'Custom software for occupational health bookings and clinic access for mining companies in Witbank.',
     url: 'https://clinicplusbookings.co.za',
     tech: ['React', 'Health', 'Bookings'],
+    imageUrl: projectThumbnail('ClinicPlus', 'https://clinicplusbookings.co.za'),
   },
   {
     title: 'UTap',
@@ -160,6 +178,7 @@ const projects = [
       'Mobile app development for a university NFC wallet: campus access and payments on iOS and Android.',
     url: 'https://utaptech.co.za',
     tech: ['React Native', 'NFC', 'Fintech'],
+    imageUrl: projectThumbnail('UTap', 'https://utaptech.co.za'),
   },
   {
     title: 'Queens Connect',
@@ -168,6 +187,7 @@ const projects = [
       'Community AI assistant with local context for Queenstown, built as a web experience with WhatsApp-ready patterns.',
     url: 'https://queensconnect.qwabi.co.za',
     tech: ['AI', 'Next.js', 'Local data'],
+    imageUrl: projectThumbnail('Queens Connect', 'https://queensconnect.qwabi.co.za'),
   },
 ];
 
@@ -244,55 +264,7 @@ export default function HomePage() {
         <FloatingWhatsApp />
 
         <main className="max-w-6xl mx-auto px-6">
-          <section className="pt-28 pb-16 md:pt-36 md:pb-20">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-              App development company · South Africa
-            </p>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-balance max-w-4xl">
-              Mobile, web, and custom software development for South African businesses
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-              I am Ayabonga Qwabi, a senior product engineer and software development partner.
-              I run an app development company focused on mobile app development, web development
-              South Africa teams can rely on, and custom software for ecommerce, business systems,
-              and AI. After launch I stay on monthly retainers so you are not left with a once-off
-              build and no owner.
-            </p>
-
-            <ul className="mt-8 grid sm:grid-cols-2 gap-3 max-w-2xl">
-              {proofPoints.map((point) => (
-                <li key={point} className="flex gap-2 text-sm text-muted-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0 mt-0.5" aria-hidden />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#25D366] text-white rounded-xl font-semibold hover:bg-[#128C7E] transition-colors shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                <MessageCircle className="w-5 h-5" aria-hidden />
-                Discuss your product
-              </a>
-              <Link
-                to={APP_DEVELOPMENT_COST_PAGE}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-primary text-primary-foreground rounded-xl font-semibold hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                View development cost ranges
-                <ArrowRight className="w-4 h-4" aria-hidden />
-              </Link>
-              <Link
-                to={PRICING_STRATEGY_PAGE}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 border border-border rounded-xl font-semibold text-foreground hover:border-primary/40 hover:bg-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-              >
-                {PARTNERSHIP_CTA_LABEL}
-              </Link>
-            </div>
-          </section>
+          <HomeHero proofPoints={proofPoints} />
 
           <section id="services" className="py-16 border-t border-border scroll-mt-24">
             <h2 className="text-2xl md:text-3xl font-bold mb-3">Software development services</h2>
@@ -302,12 +274,17 @@ export default function HomePage() {
               them in one product roadmap.
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {servicesOverview.map(({ icon: Icon, title, copy, link }) => (
+              {servicesOverview.map(({ icon: Icon, title, copy, link, illustration }) => (
                 <Link
                   key={title}
                   to={link}
                   className="group p-6 rounded-2xl bg-card border border-border hover:border-primary/40 transition-all duration-200 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
+                  <ServiceIllustration
+                    variant={illustration}
+                    alt={`Illustration for ${title}`}
+                    className="mb-4"
+                  />
                   <Icon className="w-8 h-8 text-primary mb-4" aria-hidden />
                   <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
                     {title}
@@ -467,6 +444,8 @@ export default function HomePage() {
                     description={project.description}
                     url={project.url}
                     tech={project.tech}
+                    imageUrl={project.imageUrl}
+                    imageAlt={`${project.title} website preview`}
                   />
                 </div>
               ))}
@@ -475,6 +454,15 @@ export default function HomePage() {
 
           <section id="contact" className="py-16 md:py-24 border-t border-border scroll-mt-24">
             <div className="max-w-2xl mx-auto text-center">
+              <img
+                src={AUTHOR_HEADSHOT}
+                alt="Ayabonga Qwabi, senior product engineer and software development partner"
+                width={112}
+                height={112}
+                loading="lazy"
+                decoding="async"
+                className="w-28 h-28 rounded-full object-cover mx-auto mb-6 border-2 border-primary/40 shadow-lg ring-4 ring-primary/10"
+              />
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Start a technical partnership</h2>
               <p className="text-muted-foreground mb-8 leading-relaxed">
                 Tell me what you run today, what is fragile, and where the product needs to go. I

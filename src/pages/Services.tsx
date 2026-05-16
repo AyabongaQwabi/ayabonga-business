@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { ArrowLeft, ArrowRight, MapPin, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
+import { PageHero } from '../components/PageHero';
 import { easternCapeHubPath } from '../lib/local-developers';
+import { HERO_IMAGES } from '../lib/hero-images';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
@@ -63,14 +65,18 @@ export default function ServicesPage() {
       </nav>
 
       <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
-        <header className="mb-16 max-w-3xl">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight">
-            Senior Product Engineering <span className="text-primary">at 5x Speed.</span>
-          </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            I don't just build apps. I build businesses. By leveraging AI force multipliers and a "Team of One" workflow, I deliver production-ready software without the agency overhead.
-          </p>
-        </header>
+        <PageHero
+          className="mb-16"
+          eyebrow="Engineering services · South Africa"
+          title={
+            <>
+              Senior Product Engineering <span className="text-primary">at 5x Speed.</span>
+            </>
+          }
+          subtitle='I do not just build apps. I build businesses. With AI force multipliers and a "team of one" workflow, I deliver production-ready software without agency overhead.'
+          imageSrc={HERO_IMAGES.servicesHub}
+          imageAlt="Senior product engineer workspace for South African software delivery"
+        />
 
         {/* Persona Sections */}
         <section className="grid md:grid-cols-3 gap-8 mb-24">

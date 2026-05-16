@@ -14,6 +14,7 @@ import {
   AccordionTrigger,
 } from '../components/ui/accordion';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
+import { PageHero } from '../components/PageHero';
 import { PricingTable } from '../components/PricingTable';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
@@ -155,17 +156,13 @@ export default function AppDevelopmentCostSouthAfricaPage() {
           ]}
         />
 
-        <header className="pt-4 pb-12 md:pb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-            South Africa · ZAR · 2026
-          </p>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight text-balance">
-            {APP_DEVELOPMENT_COST_H1}
-          </h1>
-          <p className="mt-6 text-lg text-muted-foreground leading-relaxed max-w-3xl">
-            {APP_DEVELOPMENT_COST_HERO}
-          </p>
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+        <PageHero
+          className="pt-4 mb-12 md:mb-14"
+          eyebrow="South Africa · ZAR · 2026"
+          title={APP_DEVELOPMENT_COST_H1}
+          subtitle={APP_DEVELOPMENT_COST_HERO}
+        >
+          <div className="flex flex-col sm:flex-row gap-3">
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -183,7 +180,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
               Get a scoped estimate
             </Link>
           </div>
-        </header>
+        </PageHero>
 
         <section className="pb-14 border-t border-border pt-12" aria-labelledby="trust-heading">
           <h2 id="trust-heading" className="text-2xl font-bold text-foreground mb-8">
