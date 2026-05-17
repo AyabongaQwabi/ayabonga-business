@@ -21,10 +21,7 @@ export function LeadMagnetCard({
     <aside className="p-6 md:p-8 rounded-2xl border border-primary/20 bg-primary/5">
       <h2 className="text-lg font-bold text-foreground">{title}</h2>
       <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{description}</p>
-      <Link
-        to={to}
-        className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      >
+      <Link to={to} className="btn-primary mt-4 min-h-[44px] text-sm">
         {ctaLabel}
         <ArrowRight className="w-4 h-4" aria-hidden />
       </Link>

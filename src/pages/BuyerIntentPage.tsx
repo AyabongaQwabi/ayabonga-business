@@ -1,13 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Calculator, MessageCircle } from 'lucide-react';
+import { Calculator, MessageCircle } from 'lucide-react';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
 import { FaqAccordionItem } from '../components/FaqAccordionItem';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { LeadMagnetCard } from '../components/LeadMagnetCard';
 import { PricingTable } from '../components/PricingTable';
-import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
-import { SiteFooter } from '../components/SiteFooter';
+import { PageShell } from '../components/layout/PageShell';
 import { PageHero } from '../components/PageHero';
 import { buyerIntentPagesByPath } from '../data/buyer-intent-pages';
 import { heroImageForBuyerIntentPath } from '../lib/hero-images';
@@ -68,7 +67,7 @@ export default function BuyerIntentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
+    <>
       <Helmet>
         <title>{page.metaTitle}</title>
         <meta name="description" content={page.metaDescription} />
@@ -86,40 +85,12 @@ export default function BuyerIntentPage() {
         <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" aria-hidden />
-              Home
-            </Link>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-              <Link
-                to="/services"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Services
-              </Link>
-              <Link
-                to={QUOTE_PAGE}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Get a quote
-              </Link>
-            </div>
-          </div>
-      </nav>
-
-      <FloatingWhatsApp />
-
-      <main
-        className={`flex-1 mx-auto px-6 py-10 md:py-14 w-full ${
+      <PageShell
+        mainClassName={`flex-1 mx-auto w-full px-6 pt-[4.5rem] pb-10 md:pb-14 ${
           page.pricingTables?.length ? 'max-w-4xl' : 'max-w-3xl'
         }`}
       >
-        <PageBreadcrumbs
+                <PageBreadcrumbs
           items={[
             { label: 'Home', to: '/' },
             { label: 'Services', to: '/services' },
@@ -283,9 +254,7 @@ export default function BuyerIntentPage() {
             })}
           </ul>
         </section>
-      </main>
-
-      <SiteFooter />
-    </div>
+      </PageShell>
+    </>
   );
 }

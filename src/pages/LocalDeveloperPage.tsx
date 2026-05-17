@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { PageShell } from '../components/layout/PageShell';
 import {
-  ArrowLeft,
   CheckCircle2,
   ChevronRight,
   Cloud,
@@ -76,7 +76,7 @@ export default function LocalDeveloperPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{ogTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -98,19 +98,8 @@ export default function LocalDeveloperPage() {
         <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-5xl mx-auto px-6 py-4">
-          <Link
-            to={easternCapeHubPath()}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Eastern Cape developers</span>
-          </Link>
-        </div>
-      </nav>
+      <PageShell mainClassName="max-w-5xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">
 
-      <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
         <header className="mb-12 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
             <RoleIcon className="w-3.5 h-3.5" aria-hidden />
@@ -208,10 +197,9 @@ export default function LocalDeveloperPage() {
             <ChevronRight className="w-4 h-4" />
           </Link>
         </section>
-      </main>
 
-      <footer className="border-t border-border py-6">
-        <nav className="max-w-5xl mx-auto px-6 text-sm text-muted-foreground" aria-label="Breadcrumb">
+        <footer className="border-t border-border pt-10 mt-4">
+        <nav className="text-sm text-muted-foreground" aria-label="Breadcrumb">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
               <Link to="/" className="hover:text-foreground">
@@ -241,6 +229,7 @@ export default function LocalDeveloperPage() {
           </ol>
         </nav>
       </footer>
-    </div>
+      </PageShell>
+    </>
   );
 }

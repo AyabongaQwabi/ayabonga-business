@@ -1,6 +1,7 @@
 import { Link, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, ChevronRight, MapPin, MessageCircle } from 'lucide-react';
+import { PageShell } from '../components/layout/PageShell';
+import { ChevronRight, MapPin, MessageCircle } from 'lucide-react';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
@@ -63,7 +64,7 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
   const roles = getAllRoles();
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{ogTitle}</title>
         <meta name="description" content={region.description} />
@@ -81,19 +82,8 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
         <script type="application/ld+json">{JSON.stringify(buildHubSchema(region, canonical))}</script>
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Home</span>
-          </Link>
-        </div>
-      </nav>
+      <PageShell mainClassName="max-w-6xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">
 
-      <main className="max-w-6xl mx-auto px-6 py-12 md:py-20">
         <header className="mb-12 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
             <MapPin className="w-3.5 h-3.5" aria-hidden />
@@ -128,7 +118,7 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
                     <ChevronRight className="w-4 h-4 text-primary shrink-0" />
                     <span>
                       <span className="text-foreground font-medium">{role.label}</span>
-                      {' — '}
+                      {': '}
                       {role.shortFocus}
                     </span>
                   </li>
@@ -180,7 +170,7 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
                         {item.label}
                       </Link>
                       <span className="text-muted-foreground ml-1 hidden sm:inline">
-                        — {buildLocalPageTitle(role, city).replace(role.label + ' in ', '')}
+                        · {buildLocalPageTitle(role, city).replace(role.label + ' in ', '')}
                       </span>
                     </li>
                   );
@@ -222,7 +212,7 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
             Get a quote
           </Link>
         </section>
-      </main>
-    </div>
+      </PageShell>
+    </>
   );
 }

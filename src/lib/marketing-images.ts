@@ -34,8 +34,8 @@ export const SERVICE_ILLUSTRATIONS = {
 } as const;
 
 export const PROJECT_THUMBNAILS: Record<string, string> = {
-  'Laundry Marketplace': '/images/projects/laundry-marketplace.jpg',
-  ClinicPlus: '/images/projects/clinicplus.jpg',
+  'Laundry Marketplace': '/images/saas.webp',
+  ClinicPlus: '/images/clinicplus.jpg',
   UTap: '/images/projects/utap.jpg',
   'Queens Connect': '/images/projects/queens-connect.jpg',
 };

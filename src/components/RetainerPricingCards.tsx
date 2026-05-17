@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react';
 import { RETAINER_TIERS, type RetainerTier } from '../data/pricing-strategy';
 import { WHATSAPP_NUMBER } from '../lib/site-config';
+import { cn } from '../lib/utils';
 
 type RetainerPricingCardsProps = {
   showSystemExamples?: boolean;
@@ -19,40 +20,47 @@ export function RetainerPricingCards({ showSystemExamples = true }: RetainerPric
       {RETAINER_TIERS.map((tier) => (
         <article
           key={tier.id}
-          className={`relative flex flex-col rounded-2xl border p-6 md:p-7 transition-all duration-200 motion-reduce:transition-none ${
+          className={cn(
+            'relative flex flex-col rounded-2xl border p-5 md:p-6 transition-all duration-200 motion-reduce:transition-none',
             tier.highlighted
-              ? 'border-primary/50 bg-primary/5 shadow-[0_0_40px_-12px_rgba(255,215,0,0.25)] lg:scale-[1.02] motion-reduce:lg:scale-100'
-              : 'border-border bg-card hover:border-primary/30'
-          }`}
+              ? 'border-accent-gold/55 bg-surface-raised ring-1 ring-accent-gold/30 lg:scale-[1.02] motion-reduce:lg:scale-100'
+              : 'border-surface-border bg-surface-raised hover:border-accent-gold/25',
+          )}
         >
           {tier.highlighted ? (
-            <span className="absolute -top-3 left-6 px-3 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+            <span className="mb-4 inline-flex self-start rounded-full bg-accent-gold px-3 py-1 text-xs font-semibold text-text-inverse">
               Most common
             </span>
           ) : null}
 
-          <header className="mb-5">
-            <h3 className="text-xl font-bold text-foreground">{tier.name}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{tier.tagline}</p>
+          <header
+            className={cn(
+              'mb-5 rounded-xl',
+              tier.highlighted &&
+                '-mx-1 -mt-1 mb-5 border border-accent-gold/20 bg-accent-gold/10 px-4 py-4 md:px-5',
+            )}
+          >
+            <h3 className="font-display text-xl font-bold text-text-primary">{tier.name}</h3>
+            <p className="mt-1 text-sm text-text-secondary">{tier.tagline}</p>
             <p className="mt-4">
-              <span className="text-3xl font-bold text-foreground tracking-tight">
+              <span className="font-display text-3xl font-bold tracking-tight text-text-primary">
                 {tier.monthlyFromZar}
               </span>
-              <span className="text-muted-foreground text-sm"> / month</span>
+              <span className="text-sm text-text-secondary"> / month</span>
             </p>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">
+            <p className="mt-2 text-xs leading-relaxed text-text-muted">
               From. Final retainer depends on technical review.
             </p>
           </header>
 
-          <p className="text-sm text-muted-foreground leading-relaxed mb-4">{tier.bestFor}</p>
+          <p className="mb-4 text-sm leading-relaxed text-text-secondary">{tier.bestFor}</p>
 
           {showSystemExamples ? (
             <div className="mb-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">
                 Typical systems
               </p>
-              <ul className="text-sm text-muted-foreground space-y-1.5">
+              <ul className="space-y-1.5 text-sm text-text-secondary">
                 {tier.systemExamples.map((example) => (
                   <li key={example} className="leading-relaxed">
                     {example}
@@ -62,10 +70,10 @@ export function RetainerPricingCards({ showSystemExamples = true }: RetainerPric
             </div>
           ) : null}
 
-          <ul className="space-y-2.5 mb-6 flex-1">
+          <ul className="mb-6 flex-1 space-y-2.5">
             {tier.includes.map((item) => (
-              <li key={item} className="flex gap-2 text-sm text-foreground/90">
-                <Check className="w-4 h-4 text-primary shrink-0 mt-0.5" aria-hidden />
+              <li key={item} className="flex gap-2 text-sm text-text-primary/90">
+                <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent-gold" aria-hidden />
                 <span>{item}</span>
               </li>
             ))}
@@ -75,11 +83,12 @@ export function RetainerPricingCards({ showSystemExamples = true }: RetainerPric
             href={tierWhatsAppHref(tier)}
             target="_blank"
             rel="noopener noreferrer"
-            className={`inline-flex items-center justify-center w-full py-3 rounded-xl text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+            className={cn(
+              'inline-flex w-full items-center justify-center rounded-xl py-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold focus-visible:ring-offset-2 focus-visible:ring-offset-surface-base',
               tier.highlighted
-                ? 'bg-primary text-primary-foreground hover:bg-primary/90'
-                : 'border border-border bg-background hover:border-primary/40'
-            }`}
+                ? 'btn-primary min-h-[44px]'
+                : 'border border-surface-border bg-surface-base text-text-primary hover:border-accent-gold/40',
+            )}
           >
             Discuss {tier.name}
           </a>

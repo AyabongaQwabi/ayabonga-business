@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft } from 'lucide-react';
 import GetAQuote from '../components/GetAQuote.jsx';
-import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
+import { PageShell } from '../components/layout/PageShell';
 import {
   absoluteUrl,
   APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
+  PARTNERSHIP_CTA_LABEL,
+  PRICING_STRATEGY_PAGE,
   SITE_NAME,
   TWITTER_HANDLE,
   WHATSAPP_URL,
@@ -23,7 +24,7 @@ const PAGE_DESCRIPTION = `Optional ballpark for greenfield builds: feature selec
 
 export default function GetAQuotePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{`${PAGE_TITLE} | ${SITE_NAME}`}</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -42,57 +43,73 @@ export default function GetAQuotePage() {
         <meta name="robots" content="index, follow" />
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to home</span>
-          </Link>
-        </div>
-      </nav>
-
-      <FloatingWhatsApp label="Questions? WhatsApp me" />
-
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 md:py-14">
+      <PageShell
+        className="bg-surface-base text-text-primary font-technical"
+        mainClassName="container flex-1 pt-[4.5rem] pb-10 md:pb-14"
+        whatsappLabel="Questions? WhatsApp me"
+      >
         <header className="mb-10 max-w-3xl">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
-            Optional · greenfield builds
+          <p className="section-label mb-3">Optional · greenfield builds</p>
+          <h1
+            className="font-display font-bold text-text-primary mb-4"
+            style={{
+              fontSize: 'var(--type-display-md)',
+              lineHeight: 'var(--leading-heading)',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {PAGE_TITLE}
+          </h1>
+          <p
+            className="text-text-secondary leading-relaxed"
+            style={{ fontSize: 'var(--type-body-md)', lineHeight: 'var(--leading-body)' }}
+          >
+            {PAGE_DESCRIPTION}
           </p>
-          <h1 className="text-3xl font-bold text-foreground mb-3">{PAGE_TITLE}</h1>
-          <p className="text-muted-foreground leading-relaxed">{PAGE_DESCRIPTION}</p>
-          <p className="text-sm text-muted-foreground mt-4 leading-relaxed">
+          <p
+            className="text-text-secondary mt-4 leading-relaxed"
+            style={{ fontSize: 'var(--type-body-sm)' }}
+          >
             Not sure which features matter yet? Start with the{' '}
             <Link
               to={APP_DEVELOPMENT_COST_PAGE}
-              className="text-primary hover:underline underline-offset-4"
+              className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
             >
               free app development cost guide
             </Link>
             , then return here for a ballpark. For live products and long-term ownership, see{' '}
-            <Link to="/pricing-strategy" className="text-primary hover:underline underline-offset-4">
+            <Link
+              to={PRICING_STRATEGY_PAGE}
+              className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
+            >
               retainer pricing
             </Link>
             .
           </p>
-          <p className="text-sm text-muted-foreground mt-3 leading-relaxed">
+          <p
+            className="text-text-secondary mt-3 leading-relaxed"
+            style={{ fontSize: 'var(--type-body-sm)' }}
+          >
             Prefer a conversation?{' '}
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline underline-offset-4"
+              className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
             >
               Message on WhatsApp
             </a>{' '}
             with your idea in one paragraph. I reply with fit and next steps.
           </p>
+          <p className="mt-6">
+            <Link to={PRICING_STRATEGY_PAGE} className="btn-outline">
+              {PARTNERSHIP_CTA_LABEL}
+            </Link>
+          </p>
         </header>
 
         <GetAQuote />
-      </main>
-    </div>
+      </PageShell>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  ArrowLeft,
   ArrowRight,
   Calculator,
   CheckCircle2,
@@ -14,12 +13,10 @@ import {
   AccordionTrigger,
 } from '../components/ui/accordion';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
-import { ScrollReveal } from '../components/ScrollReveal';
 import { PageHero } from '../components/PageHero';
 import { PricingTable } from '../components/PricingTable';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
-import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
-import { SiteFooter } from '../components/SiteFooter';
+import { PageShell } from '../components/layout/PageShell';
 import { appCostPricingTables } from '../data/app-cost-pricing-tables';
 import {
   APP_DEVELOPMENT_COST_FAQS,
@@ -84,7 +81,7 @@ const pageSchema = {
 
 export default function AppDevelopmentCostSouthAfricaPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
+    <>
       <Helmet>
         <title>{`${APP_DEVELOPMENT_COST_META_TITLE} | ${SITE_NAME}`}</title>
         <meta name="description" content={APP_DEVELOPMENT_COST_META_DESCRIPTION} />
@@ -111,44 +108,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
         <script type="application/ld+json">{JSON.stringify(pageSchema)}</script>
       </Helmet>
 
-      <nav className="border-b border-border bg-background/95 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" aria-hidden />
-            Home
-          </Link>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            <Link
-              to="/services"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Services
-            </Link>
-            <Link
-              to={QUOTE_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Get a quote
-            </Link>
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#25D366] text-white text-sm font-semibold hover:bg-[#128C7E] transition-colors"
-            >
-              <MessageCircle className="w-4 h-4" aria-hidden />
-              Contact
-            </a>
-          </div>
-        </div>
-      </nav>
-
-      <FloatingWhatsApp />
-
-      <main className="flex-1 max-w-4xl mx-auto px-6 py-10 md:py-14 w-full">
+      <PageShell mainClassName="flex-1 max-w-4xl mx-auto w-full px-6 pt-[4.5rem] pb-10 md:pb-14">
         <PageBreadcrumbs
           items={[
             { label: 'Home', to: '/' },
@@ -157,7 +117,6 @@ export default function AppDevelopmentCostSouthAfricaPage() {
           ]}
         />
 
-        <ScrollReveal>
         <PageHero
           className="pt-4 mb-12 md:mb-14"
           eyebrow="South Africa · ZAR · 2026"
@@ -183,10 +142,8 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             </Link>
           </div>
         </PageHero>
-        </ScrollReveal>
 
-        <ScrollReveal>
-        <section className="pb-14 border-t border-border pt-12" aria-labelledby="trust-heading">
+        <section className="pb-14 border-t border-surface-border pt-12" aria-labelledby="trust-heading">
           <h2 id="trust-heading" className="text-2xl font-bold text-foreground mb-8">
             What honest pricing looks like
           </h2>
@@ -194,7 +151,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             {APP_DEVELOPMENT_COST_TRUST_POINTS.map(({ title, copy }) => (
               <div
                 key={title}
-                className="p-5 rounded-2xl border border-border bg-card hover:border-primary/25 transition-colors"
+                className="p-5 rounded-2xl border border-surface-border bg-surface-raised hover:border-accent-gold/30 transition-colors"
               >
                 <CheckCircle2 className="w-6 h-6 text-primary mb-3" aria-hidden />
                 <h3 className="font-semibold text-foreground mb-2">{title}</h3>
@@ -205,7 +162,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
         </section>
 
         <section
-          className="pb-16 space-y-10 border-t border-border pt-12"
+          className="pb-16 space-y-10 border-t border-surface-border pt-12"
           aria-labelledby="pricing-tables-heading"
         >
           <div>
@@ -252,7 +209,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
 
         <section
           id="retainer-cards"
-          className="pb-16 border-t border-border pt-12 scroll-mt-24"
+          className="pb-16 border-t border-surface-border pt-12 scroll-mt-24"
           aria-labelledby="retainer-heading"
         >
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
@@ -366,10 +323,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             ))}
           </ul>
         </section>
-        </ScrollReveal>
-      </main>
-
-      <SiteFooter />
-    </div>
+      </PageShell>
+    </>
   );
 }

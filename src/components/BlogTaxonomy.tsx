@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { FolderOpen, Tag } from 'lucide-react';
+import { resolveTechLogo } from '../data/tech-logos';
+import { TechLogo } from './shared/TechLogo';
 
 type Props = {
   categories: string[];
@@ -44,15 +46,19 @@ export function BlogTaxonomy({ categories, tags, size = 'md' }: Props) {
         <div className="flex flex-wrap items-start gap-2">
           <Tag className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-1" aria-hidden />
           <div className="flex flex-wrap gap-1.5">
-            {tags.map((t) => (
-              <Link
-                key={t}
-                to={`/blog?tag=${encodeURIComponent(t)}`}
-                className={chipBase(size, false, 'tag')}
-              >
-                {t}
-              </Link>
-            ))}
+            {tags.map((t) => {
+              const tech = resolveTechLogo(t);
+              return (
+                <Link
+                  key={t}
+                  to={`/blog?tag=${encodeURIComponent(t)}`}
+                  className={chipBase(size, false, 'tag')}
+                >
+                  {tech ? <TechLogo name={t} title={t} /> : null}
+                  {t}
+                </Link>
+              );
+            })}
           </div>
         </div>
       )}
@@ -68,11 +74,13 @@ type FilterChipProps = {
 };
 
 export function BlogFilterChip({ label, to, active, variant }: FilterChipProps) {
+  const tech = variant === 'tag' ? resolveTechLogo(label) : null;
   return (
     <Link
       to={to}
       className={chipBase('sm', active, variant)}
     >
+      {tech ? <TechLogo name={label} title={label} /> : null}
       {label}
     </Link>
   );

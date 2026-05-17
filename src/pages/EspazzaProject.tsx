@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, ExternalLink, Music, MessageCircle } from 'lucide-react';
+import { PageShell } from '../components/layout/PageShell';
+import { ExternalLink, Music, MessageCircle } from 'lucide-react';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
@@ -38,7 +39,7 @@ export default function EspazzaProject() {
   });
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{`${PAGE_TITLE} | ${SITE_NAME}`}</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -58,19 +59,7 @@ export default function EspazzaProject() {
         <script type="application/ld+json">{projectJsonLd}</script>
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-3xl mx-auto px-6 py-4">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" aria-hidden />
-            Back to home
-          </Link>
-        </div>
-      </nav>
-
-      <main className="max-w-3xl mx-auto px-6 py-16">
+      <PageShell mainClassName="max-w-3xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-16">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
           <Music className="w-4 h-4" aria-hidden />
           Project
@@ -125,7 +114,7 @@ export default function EspazzaProject() {
             Hire me for product work
           </Link>
         </div>
-      </main>
-    </div>
+      </PageShell>
+    </>
   );
 }

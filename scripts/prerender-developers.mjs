@@ -19,12 +19,16 @@ const STATIC_PRERENDER_ROUTES = [
   '/',
   '/about',
   '/privacy',
+  '/editorial',
   '/services',
   '/technical-cofounder',
   '/pricing-strategy',
   '/get-a-quote',
+  '/blog',
   '/projects/espazza',
   '/app-development-cost-south-africa',
+  '/mobile-app-development-south-africa',
+  '/custom-software-development-south-africa',
   '/mvp-developer-south-africa',
   '/whatsapp-ai-chatbot-south-africa',
   '/best-app-developers-south-africa',
@@ -126,10 +130,33 @@ function startPreview() {
   });
 }
 
+const PRERENDER_SELECTOR = '#main-content h1, main h1, h1';
+const GOTO_TIMEOUT_MS = 90_000;
+const CONTENT_TIMEOUT_MS = 90_000;
+
+/** Scroll-reveal and lazy routes can hide content in headless until chunks load. */
+async function waitForPrerenderContent(page) {
+  await page.waitForFunction(
+    (selector) => {
+      const main = document.querySelector('#main-content');
+      if (!main || main.getAttribute('aria-busy') === 'true') return false;
+
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach((el) => {
+        el.classList.add('is-visible');
+      });
+
+      const heading = document.querySelector(selector);
+      return Boolean(heading?.textContent?.trim());
+    },
+    { timeout: CONTENT_TIMEOUT_MS },
+    PRERENDER_SELECTOR,
+  );
+}
+
 async function prerenderRoute(page, baseUrl, route) {
   const url = `${baseUrl}${route}`;
-  await page.goto(url, { waitUntil: 'networkidle0', timeout: 60_000 });
-  await page.waitForSelector('h1', { timeout: 15_000 });
+  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: GOTO_TIMEOUT_MS });
+  await waitForPrerenderContent(page);
   const html = await page.content();
   const outFile = routeToHtmlPath(route);
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
@@ -156,6 +183,17 @@ async function main() {
     const browser = await launchBrowser();
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
+    await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }]);
+    await page.evaluateOnNewDocument(() => {
+      window.__PRERENDER__ = true;
+      const revealAll = () => {
+        document.querySelectorAll('.reveal, .reveal-stagger').forEach((el) => {
+          el.classList.add('is-visible');
+        });
+      };
+      document.addEventListener('DOMContentLoaded', revealAll);
+      window.addEventListener('load', revealAll);
+    });
 
     for (const route of routes) {
       const outFile = await prerenderRoute(page, preview.baseUrl, route);

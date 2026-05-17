@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { PageShell } from '../components/layout/PageShell';
 import { 
   CheckCircle2, 
   XCircle, 
@@ -36,7 +37,7 @@ const DynamicComparisonPage = () => {
   const metaDescription = `Comparing ${page.target} with senior technical co-founder services. ${page.verdict}`;
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
+    <>
       <Helmet>
         <title>{`${page.title} | ${SITE_NAME}`}</title>
         <meta name="description" content={metaDescription} />
@@ -69,8 +70,9 @@ const DynamicComparisonPage = () => {
         </script>
       </Helmet>
 
+      <PageShell mainClassName="flex-1">
       {/* Hero Section */}
-      <div className="relative pt-32 pb-20 px-6 lg:px-8 overflow-hidden">
+      <div className="relative pt-12 pb-20 px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.1),transparent_50%)]" />
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-8 uppercase tracking-widest">
@@ -211,7 +213,8 @@ const DynamicComparisonPage = () => {
           </nav>
         </div>
       </div>
-    </div>
+      </PageShell>
+    </>
   );
 };
 

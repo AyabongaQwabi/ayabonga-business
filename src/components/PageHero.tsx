@@ -54,9 +54,7 @@ export function PageHero({
       >
         <div className={`relative z-10 ${hasImage ? 'min-w-0' : 'max-w-3xl'}`}>
           {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">
-              {eyebrow}
-            </p>
+            <p className="section-label mb-4">{eyebrow}</p>
           ) : null}
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight text-balance">
             {title}

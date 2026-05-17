@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, CheckCircle2, AlertCircle, TrendingUp, Code, Rocket } from 'lucide-react';
+import { PageShell } from '../components/layout/PageShell';
+import { ArrowRight, CheckCircle2, AlertCircle, TrendingUp, Code, Rocket } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -46,7 +47,7 @@ const TAAS_FAQ = [
 
 export default function TechnicalCofounderPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{PAGE_OG_TITLE}</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -80,19 +81,8 @@ export default function TechnicalCofounderPage() {
         </script>
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-5xl mx-auto px-6 py-4">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to home</span>
-          </Link>
-        </div>
-      </nav>
+      <PageShell mainClassName="max-w-5xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">
 
-      <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
         <PageHero
           className="mb-16"
           eyebrow="Technical Co-founder as a Service (TaaS)"
@@ -135,14 +125,14 @@ export default function TechnicalCofounderPage() {
                 to="/vs/technical-cofounder-vs-agency"
                 className="text-primary font-bold hover:underline inline-flex items-center gap-2"
               >
-                Why TaaS beats traditional agencies <ArrowLeft className="w-4 h-4 rotate-180" />
+                Why TaaS beats traditional agencies <ArrowRight className="w-4 h-4" aria-hidden />
               </Link>
               <p className="text-sm text-muted-foreground">
                 <Link
-                  to="/blog/hidden-cost-junior-mvp"
+                  to="/app-development-cost-south-africa"
                   className="hover:text-foreground underline underline-offset-4"
                 >
-                  What the Junior Dev Lottery costs your runway
+                  What cheap MVPs actually cost your runway
                 </Link>
               </p>
             </div>
@@ -254,7 +244,7 @@ export default function TechnicalCofounderPage() {
             </p>
           </div>
         </section>
-      </main>
-    </div>
+      </PageShell>
+    </>
   );
 }

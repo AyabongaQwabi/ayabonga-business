@@ -66,6 +66,17 @@ import { buildQuoteExportPayload } from '@/lib/buildQuoteExportPayload';
 import { parseApiJsonResponse } from '@/lib/parseApiJsonResponse';
 import { cn } from '@/lib/utils';
 
+const formInputCls = (hasError) => cn('form-input min-h-[44px]', hasError && 'error');
+
+function FieldError({ id, message }) {
+  if (!message) return null;
+  return (
+    <p id={id} className="form-field-error" role="alert">
+      {message}
+    </p>
+  );
+}
+
 const FOUNDER_STAGE_OPTIONS = [
   { value: 'idea', label: 'Idea / pre-build' },
   { value: 'mvp', label: 'Building MVP' },
@@ -152,9 +163,9 @@ const CROSS_CUTTING_LABEL = 'Cross-cutting / Common';
 
 const PROJECT_TYPE_HINTS = {
   'Fintech / Personal Finance App':
-    'Banking, savings groups, loans, wallets — money made simple',
+    'Banking, savings groups, loans, wallets. Money made simple.',
   'On-Demand Service / Gig Economy App':
-    'Uber, SweepSouth style — book and track local services',
+    'Uber, SweepSouth style. Book and track local services.',
   'Healthcare / Telemedicine App':
     'Video consultations, appointments, patient records',
   'Food Delivery / Restaurant App': 'Menus, orders, drivers, and delivery tracking',
@@ -323,6 +334,11 @@ export default function GetAQuote({ trustStats = null }) {
   });
   const [submitLoading, setSubmitLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({
+    name: '',
+    email: '',
+    projectDetails: '',
+  });
 
   useEffect(() => {
     try {
@@ -385,19 +401,38 @@ export default function GetAQuote({ trustStats = null }) {
 
   const handleBuildRequestSubmit = async (e) => {
     e.preventDefault();
-    if (!buildRequestForm.name?.trim() || !buildRequestForm.email?.trim()) {
-      setSubmitError('Please enter your name and email.');
+    const nextFieldErrors = { name: '', email: '', projectDetails: '' };
+    const name = buildRequestForm.name?.trim() ?? '';
+    const email = buildRequestForm.email?.trim() ?? '';
+    const notes = buildRequestForm.projectDetails?.trim() ?? '';
+
+    if (!name) nextFieldErrors.name = 'Enter your name.';
+    if (!email) {
+      nextFieldErrors.email = 'Enter your email.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      nextFieldErrors.email = 'Enter a valid email address.';
+    }
+    if (notes.length < 30) {
+      nextFieldErrors.projectDetails =
+        'Add a short project brief (30+ characters): who it is for, what success looks like in 90 days.';
+    }
+
+    setFieldErrors(nextFieldErrors);
+
+    if (nextFieldErrors.name || nextFieldErrors.email || nextFieldErrors.projectDetails) {
+      setSubmitError(null);
+      const firstInvalidId = nextFieldErrors.name
+        ? 'build-name'
+        : nextFieldErrors.email
+          ? 'build-email'
+          : 'build-details';
+      requestAnimationFrame(() => {
+        document.getElementById(firstInvalidId)?.focus();
+      });
       return;
     }
     if (!totals.hasFeatures) {
       setSubmitError('Select at least one feature before emailing your quote.');
-      return;
-    }
-    const notes = buildRequestForm.projectDetails?.trim() ?? '';
-    if (notes.length < 30) {
-      setSubmitError(
-        'Add a short project brief (30+ characters): who it is for, what success looks like in 90 days.',
-      );
       return;
     }
     setSubmitError(null);
@@ -531,14 +566,14 @@ export default function GetAQuote({ trustStats = null }) {
 
   function renderStage1() {
     return (
-      <Card className="w-full max-w-4xl mx-auto border-border/80 bg-gradient-to-b from-card via-card to-secondary/25 shadow-xl shadow-black/30">
+      <Card className="w-full max-w-4xl mx-auto border-border/80 bg-gradient-to-b from-card via-card to-secondary/25">
         <CardHeader className="border-b border-border/60 bg-secondary/20">
           <CardTitle className="text-xl text-foreground flex items-center gap-2">
             <LayoutGrid className="h-5 w-5 text-primary" aria-hidden />
             What kind of project are you building?
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Pick one or more that best match your idea — or choose &quot;Custom /
+            Pick one or more that best match your idea, or choose &quot;Custom /
             Mixed&quot; if your app combines several things.
           </CardDescription>
         </CardHeader>
@@ -571,7 +606,7 @@ export default function GetAQuote({ trustStats = null }) {
                     }
                   }}
                   className={cn(
-                    'rounded-lg border-2 p-4 text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background min-h-[44px]',
+                    'rounded-lg border-2 p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] min-h-[44px]',
                     isSelected
                       ? 'border-primary bg-primary/15 text-foreground shadow-[inset_0_1px_0_0_hsl(var(--primary)/0.25)] ring-1 ring-primary/35'
                       : 'border-border bg-secondary/40 text-foreground hover:border-primary/45 hover:bg-secondary/70'
@@ -722,7 +757,7 @@ export default function GetAQuote({ trustStats = null }) {
                                 <PopoverContent align="end" className="max-w-xs">
                                   <p className="text-sm">{feature.survey_question}</p>
                                   <p className="text-xs text-muted-foreground mt-1">
-                                    Baseline: {feature.days_to_complete ?? '—'} days (mid-level). Your
+                                    Baseline: {feature.days_to_complete ?? 'n/a'} days (mid-level). Your
                                     estimate depends on your experience and rate.
                                   </p>
                                   <p className="text-xs text-muted-foreground">
@@ -777,21 +812,39 @@ export default function GetAQuote({ trustStats = null }) {
 
     const complexityCopy =
       complexityPerc <= 20
-        ? 'Straightforward scope — good to go.'
+        ? 'Straightforward scope. Good to go.'
         : complexityPerc <= 40
-          ? 'Moderate complexity — well within reach.'
+          ? 'Moderate complexity. Well within reach.'
           : complexityPerc <= 60
-            ? 'Substantial scope — plan accordingly.'
+            ? 'Substantial scope. Plan accordingly.'
             : complexityPerc <= 80
-              ? 'High complexity — consider phasing.'
-              : 'Very high complexity — break into phases.';
+              ? 'High complexity. Consider phasing.'
+              : 'Very high complexity. Break into phases.';
 
     return (
       <div className="w-full max-w-4xl mx-auto space-y-6">
-        <Card>
+        {totals.hasFeatures ? (
+          <div
+            className="rounded-xl border border-surface-border bg-surface-raised p-6 md:p-8"
+            aria-live="polite"
+            aria-atomic="true"
+          >
+            <p className="section-label mb-2">Estimated ballpark</p>
+            <p className="quote-price-result">{formatMoney(totals.adjusted_price, currency)}</p>
+            <p className="mt-3 text-sm text-text-secondary">
+              ~{Math.round(desiredTimeNum)} days at your timeline ·{' '}
+              {selectedFeatures.length} features selected
+            </p>
+            <p className="mt-1 text-xs text-text-muted">
+              Display currency: {currency}. Figures are indicative until we review scope together.
+            </p>
+          </div>
+        ) : null}
+
+        <Card className="border-surface-border bg-surface-raised">
           <CardHeader>
-            <CardTitle className="text-xl text-cyan-800 flex items-center gap-2">
-              <Calendar className="h-5 w-5" aria-hidden />
+            <CardTitle className="text-xl text-text-primary flex items-center gap-2">
+              <Calendar className="h-5 w-5 text-accent-gold" aria-hidden />
               Timeline
             </CardTitle>
             <CardDescription>
@@ -800,8 +853,10 @@ export default function GetAQuote({ trustStats = null }) {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Label htmlFor="buildTime">Desired build time (days)</Label>
-            <Input
+            <Label htmlFor="buildTime" className="text-text-primary">
+              Desired build time (days)
+            </Label>
+            <input
               id="buildTime"
               type="number"
               min={1}
@@ -811,10 +866,10 @@ export default function GetAQuote({ trustStats = null }) {
               placeholder={String(
                 totals.hasFeatures ? Math.max(1, Math.round(totals.estimated_days)) : 1
               )}
-              className="mt-2 max-w-[120px]"
+              className={cn(formInputCls(false), 'mt-2 max-w-[10rem]')}
               aria-describedby="buildTime-hint"
             />
-            <p id="buildTime-hint" className="text-xs text-muted-foreground mt-1">
+            <p id="buildTime-hint" className="text-xs text-text-muted mt-1">
               Our estimate: {Math.round(totals.estimated_days)} days. Max discount
               timeline: {maxDesiredTimeForDiscount} days (price floor applies beyond).
             </p>
@@ -853,7 +908,7 @@ export default function GetAQuote({ trustStats = null }) {
 
             {isRush && (
               <div
-                className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800"
+                className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-text-primary"
                 role="alert"
               >
                 Faster delivery increases cost; we&apos;ve applied a rush multiplier.
@@ -889,7 +944,7 @@ export default function GetAQuote({ trustStats = null }) {
                     {breakdown.map((row) => (
                       <TableRow key={row.id}>
                         <TableCell className="font-medium">{row.name}</TableCell>
-                        <TableCell>{row.complexity ?? '—'}</TableCell>
+                        <TableCell>{row.complexity ?? 'n/a'}</TableCell>
                         <TableCell>{row.adjusted_days.toFixed(1)}</TableCell>
                         <TableCell>
                           {Math.round(row.adjusted_days * (parseInt(hoursPerDay, 10) || HOURS_PER_DAY))}
@@ -972,27 +1027,37 @@ export default function GetAQuote({ trustStats = null }) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleBuildRequestSubmit} className="space-y-4">
+              <form onSubmit={handleBuildRequestSubmit} className="space-y-4" noValidate>
                 <div>
-                  <Label htmlFor="build-name">Name *</Label>
-                  <Input
+                  <Label htmlFor="build-name" className="text-text-primary">
+                    Name *
+                  </Label>
+                  <input
                     id="build-name"
+                    name="name"
+                    autoComplete="name"
                     value={buildRequestForm.name}
-                    onChange={(e) =>
-                      setBuildRequestForm((p) => ({ ...p, name: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setBuildRequestForm((p) => ({ ...p, name: e.target.value }));
+                      if (fieldErrors.name) setFieldErrors((f) => ({ ...f, name: '' }));
+                    }}
                     placeholder="Your name"
-                    className="mt-1 min-h-[44px]"
+                    className={cn(formInputCls(Boolean(fieldErrors.name)), 'mt-1')}
+                    aria-invalid={fieldErrors.name ? 'true' : undefined}
+                    aria-describedby={fieldErrors.name ? 'build-name-error' : undefined}
                     required
                   />
+                  <FieldError id="build-name-error" message={fieldErrors.name} />
                 </div>
                 <div>
-                  <Label htmlFor="build-stage">Where is the product today? *</Label>
+                  <Label htmlFor="build-stage" className="text-text-primary">
+                    Where is the product today? *
+                  </Label>
                   <select
                     id="build-stage"
                     value={founderStage}
                     onChange={(e) => setFounderStage(e.target.value)}
-                    className="mt-1 w-full min-h-[44px] rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className={cn(formInputCls(false), 'mt-1')}
                     required
                   >
                     {FOUNDER_STAGE_OPTIONS.map((opt) => (
@@ -1003,49 +1068,67 @@ export default function GetAQuote({ trustStats = null }) {
                   </select>
                 </div>
                 <div>
-                  <Label htmlFor="build-email">Email *</Label>
-                  <Input
+                  <Label htmlFor="build-email" className="text-text-primary">
+                    Email *
+                  </Label>
+                  <input
                     id="build-email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
                     value={buildRequestForm.email}
-                    onChange={(e) =>
-                      setBuildRequestForm((p) => ({ ...p, email: e.target.value }))
-                    }
+                    onChange={(e) => {
+                      setBuildRequestForm((p) => ({ ...p, email: e.target.value }));
+                      if (fieldErrors.email) setFieldErrors((f) => ({ ...f, email: '' }));
+                    }}
                     placeholder="your@email.com"
-                    className="mt-1 min-h-[44px]"
+                    className={cn(formInputCls(Boolean(fieldErrors.email)), 'mt-1')}
+                    aria-invalid={fieldErrors.email ? 'true' : undefined}
+                    aria-describedby={fieldErrors.email ? 'build-email-error' : undefined}
                     required
                   />
+                  <FieldError id="build-email-error" message={fieldErrors.email} />
                 </div>
                 <div>
-                  <Label htmlFor="build-details">Project brief *</Label>
+                  <Label htmlFor="build-details" className="text-text-primary">
+                    Project brief *
+                  </Label>
                   <textarea
                     id="build-details"
+                    name="projectDetails"
                     value={buildRequestForm.projectDetails}
-                    onChange={(e) =>
+                    onChange={(e) => {
                       setBuildRequestForm((p) => ({
                         ...p,
                         projectDetails: e.target.value,
-                      }))
-                    }
+                      }));
+                      if (fieldErrors.projectDetails) {
+                        setFieldErrors((f) => ({ ...f, projectDetails: '' }));
+                      }
+                    }}
                     placeholder="Who is it for, what must work in the next 90 days, and what have you already tried? (30+ characters)"
                     rows={4}
                     required
                     minLength={30}
-                    className="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    className={cn(
+                      formInputCls(Boolean(fieldErrors.projectDetails)),
+                      'mt-1 min-h-[120px]',
+                    )}
+                    aria-invalid={fieldErrors.projectDetails ? 'true' : undefined}
+                    aria-describedby={
+                      fieldErrors.projectDetails ? 'build-details-error' : undefined
+                    }
                   />
+                  <FieldError id="build-details-error" message={fieldErrors.projectDetails} />
                 </div>
-                {submitError && (
-                  <p className="text-sm text-red-600" role="alert">
+                {submitError ? (
+                  <p className="form-field-error" role="alert">
                     {submitError}
                   </p>
-                )}
-                <Button
-                  type="submit"
-                  disabled={submitLoading}
-                  className="bg-cyan-600 hover:bg-cyan-700 min-h-[44px]"
-                >
+                ) : null}
+                <button type="submit" disabled={submitLoading} className="btn-primary min-h-[44px]">
                   {submitLoading ? 'Sending...' : 'Send quote to my inbox'}
-                </Button>
+                </button>
               </form>
             </CardContent>
           </Card>
@@ -1069,7 +1152,7 @@ export default function GetAQuote({ trustStats = null }) {
 
   return (
     <div className="relative pb-24">
-      <div className="sticky top-0 z-10 bg-background/95 backdrop-blur py-3 border-b mb-6">
+      <div className="sticky top-0 z-10 bg-surface-base/95 backdrop-blur py-3 border-b border-surface-border mb-6">
         <ProgressSteps
           steps={WIZARD_STEPS}
           currentStep={wizardStep}
@@ -1109,7 +1192,7 @@ export default function GetAQuote({ trustStats = null }) {
 
       {showMiniSummary && (
         <div
-          className="fixed bottom-0 left-0 right-0 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-sm z-20 bg-card border shadow-lg rounded-lg p-4 sm:rounded-xl"
+          className="fixed bottom-0 left-0 right-0 sm:left-auto sm:right-6 sm:bottom-6 sm:max-w-sm z-20 bg-card border border-border rounded-lg p-4 sm:rounded-xl"
           role="complementary"
           aria-label="Quote summary"
         >

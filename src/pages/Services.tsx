@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, ArrowRight, MapPin, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
+import { ArrowRight, MapPin, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
+import { PageShell } from '../components/layout/PageShell';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { PageHero } from '../components/PageHero';
 import { easternCapeHubPath } from '../lib/local-developers';
@@ -18,7 +19,7 @@ const PAGE_DESCRIPTION = 'Senior Product Engineering at 5x Speed. I provide Tech
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans">
+    <>
       <Helmet>
         <title>{`${PAGE_TITLE} | ${SITE_NAME}`}</title>
         <meta name="description" content={PAGE_DESCRIPTION} />
@@ -32,40 +33,7 @@ export default function ServicesPage() {
         <meta name="robots" content="index, follow" />
       </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to home</span>
-          </Link>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            <Link
-              to={easternCapeHubPath()}
-              className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <MapPin className="w-3.5 h-3.5 text-primary" aria-hidden />
-              <span>Eastern Cape developers</span>
-            </Link>
-            <Link
-              to="/technical-cofounder"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              TaaS
-            </Link>
-            <Link
-              to="/get-a-quote"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Get a quote
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-5xl mx-auto px-6 py-12 md:py-20">
+      <PageShell mainClassName="max-w-5xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">
         <ScrollReveal>
         <PageHero
           className="mb-16"
@@ -286,7 +254,7 @@ export default function ServicesPage() {
           </p>
         </footer>
         </ScrollReveal>
-      </main>
-    </div>
+      </PageShell>
+    </>
   );
 }

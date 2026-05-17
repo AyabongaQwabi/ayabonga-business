@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { PageShell } from '../components/layout/PageShell';
 import { 
   Wallet, 
   Truck, 
@@ -54,7 +55,7 @@ const DynamicServicePage = () => {
   const metaDescription = `Are you an ${page.audience} in ${page.location}? ${page.solution}. Senior technical leadership for your ${page.industry} startup.`;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans selection:bg-emerald-500/30">
+    <>
       <Helmet>
         <title>{`${page.title} | ${SITE_NAME}`}</title>
         <meta name="description" content={metaDescription} />
@@ -89,8 +90,9 @@ const DynamicServicePage = () => {
         </script>
       </Helmet>
 
+      <PageShell className="bg-background text-foreground" mainClassName="flex-1">
       {/* Hero Section */}
-      <div className="relative pt-32 pb-20 px-6 lg:px-8">
+      <div className="relative pt-12 pb-20 px-6 lg:px-8">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,215,0,0.05),transparent_50%)]" />
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-white/10 text-primary text-sm font-medium mb-8 glow-primary">
@@ -251,7 +253,8 @@ const DynamicServicePage = () => {
           </nav>
         </div>
       </div>
-    </div>
+      </PageShell>
+    </>
   );
 };
 

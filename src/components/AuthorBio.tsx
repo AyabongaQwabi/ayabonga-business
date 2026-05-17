@@ -48,12 +48,6 @@ export function AuthorBio() {
             >
               About me
             </Link>
-            <Link
-              to={AUTHOR_BIO_LINKS.writing}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              More writing
-            </Link>
             <a
               href={AUTHOR_BIO_LINKS.whatsapp}
               target="_blank"

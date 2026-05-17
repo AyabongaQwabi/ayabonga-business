@@ -26,7 +26,6 @@ export const AUTHOR_SHORT_BIO =
 
 export const AUTHOR_BIO_LINKS = {
   about: '/about',
-  writing: '/blog',
   whatsapp: WHATSAPP_URL,
   linkedin: 'https://www.linkedin.com/in/ayabongaqwabi',
   email: `mailto:${AUTHOR_EMAIL}`,

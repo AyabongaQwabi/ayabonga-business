@@ -1,15 +1,14 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowLeft, Calculator, MessageCircle } from 'lucide-react';
+import { Calculator, MessageCircle } from 'lucide-react';
 import { FaqAccordionItem } from '../components/FaqAccordionItem';
-import { ScrollReveal } from '../components/ScrollReveal';
 import { PageBreadcrumbs } from '../components/PageBreadcrumbs';
 import { LeadMagnetCard } from '../components/LeadMagnetCard';
 import { PricingTable } from '../components/PricingTable';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 import ProjectCard from '../components/ProjectCard';
-import { SiteFooter } from '../components/SiteFooter';
 import { PageHero } from '../components/PageHero';
+import { SupportingPageShell } from '../components/SupportingPageShell';
 import { serviceLandingPagesByPath } from '../data/service-landing-pages';
 import { heroImageForServicePath } from '../lib/hero-images';
 import {
@@ -69,60 +68,24 @@ export default function ServiceLandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans flex flex-col">
-      <Helmet>
-        <title>{page.metaTitle}</title>
-        <meta name="description" content={page.metaDescription} />
-        <meta name="keywords" content={page.keywords.join(', ')} />
-        <link rel="canonical" href={canonical} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={canonical} />
-        <meta property="og:title" content={page.metaTitle} />
-        <meta property="og:description" content={page.metaDescription} />
-        <meta property="og:image" content={DEFAULT_OG_IMAGE} />
-        <meta property="og:locale" content="en_ZA" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content={TWITTER_HANDLE} />
-        <meta name="robots" content="index, follow" />
-        <script type="application/ld+json">{JSON.stringify(serviceSchema)}</script>
-      </Helmet>
+    <>
+      <SupportingPageShell
+        title={page.metaTitle}
+        description={page.metaDescription}
+        canonicalPath={page.path}
+        contentWidth="wide"
+        ogImage={DEFAULT_OG_IMAGE}
+        jsonLd={serviceSchema}
+      >
+        <Helmet>
+          <meta name="keywords" content={page.keywords.join(', ')} />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:site" content={TWITTER_HANDLE} />
+        </Helmet>
 
-      <nav className="border-b border-border">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" aria-hidden />
-            Home
-          </Link>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
-            <Link
-              to="/services"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Services
-            </Link>
-            <Link
-              to={APP_DEVELOPMENT_COST_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Cost guide
-            </Link>
-            <Link
-              to={QUOTE_PAGE}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Get a quote
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <FloatingWhatsApp />
-
-      <main className="flex-1 max-w-4xl mx-auto px-6 py-10 md:py-14 w-full">
-        <PageBreadcrumbs
+        <div className="w-full">
+                <PageBreadcrumbs
           items={[
             { label: 'Home', to: '/' },
             { label: 'Services', to: '/services' },
@@ -130,7 +93,30 @@ export default function ServiceLandingPage() {
           ]}
         />
 
-        <ScrollReveal>
+        <nav
+          className="mb-10 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm"
+          aria-label="Related pages"
+        >
+          <Link to="/services" className="text-primary font-medium hover:underline underline-offset-4">
+            All services
+          </Link>
+          <span className="text-text-muted" aria-hidden>
+            ·
+          </span>
+          <Link
+            to={APP_DEVELOPMENT_COST_PAGE}
+            className="text-primary font-medium hover:underline underline-offset-4"
+          >
+            Cost guide
+          </Link>
+          <span className="text-text-muted" aria-hidden>
+            ·
+          </span>
+          <Link to={QUOTE_PAGE} className="text-primary font-medium hover:underline underline-offset-4">
+            Get a quote
+          </Link>
+        </nav>
+
         <PageHero
           className="mb-16"
           eyebrow={page.eyebrow}
@@ -149,25 +135,19 @@ export default function ServiceLandingPage() {
             <MessageCircle className="w-5 h-5" aria-hidden />
             Message on WhatsApp
           </a>
-          <Link
-            to={QUOTE_PAGE}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-card border border-border rounded-xl font-semibold hover:border-primary/50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            <Calculator className="w-5 h-5 text-primary" aria-hidden />
+          <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
+            <Calculator className="w-5 h-5 shrink-0" aria-hidden />
             Scope and estimate
           </Link>
-          <Link
-            to={APP_DEVELOPMENT_COST_PAGE}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold text-primary hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-xl"
-          >
+          <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-outline min-h-[44px] text-sm">
             Free cost guide
           </Link>
           </div>
         </PageHero>
-        </ScrollReveal>
 
         <section className="mb-16" aria-labelledby="services-heading">
-          <h2 id="services-heading" className="text-2xl font-bold text-foreground mb-3">
+          <p className="section-label mb-3">Capabilities</p>
+          <h2 id="services-heading" className="font-display text-2xl font-bold text-text-primary mb-3">
             What I build
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed mb-8">
@@ -180,7 +160,7 @@ export default function ServiceLandingPage() {
               return (
                 <article
                   key={service.title}
-                  className="p-5 rounded-2xl border border-border bg-card hover:border-primary/30 transition-colors"
+                  className="service-card p-5"
                 >
                   <Icon className="w-8 h-8 text-primary mb-3" aria-hidden />
                   <h3 className="font-semibold text-foreground mb-2">{service.title}</h3>
@@ -260,8 +240,7 @@ export default function ServiceLandingPage() {
           </div>
         </section>
 
-        <ScrollReveal>
-        <section className="mb-16 pt-4 border-t border-border" aria-labelledby="faq-heading">
+        <section className="mb-16 pt-4 border-t border-surface-border" aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="text-2xl font-bold text-foreground mb-6">
             Frequently asked questions
           </h2>
@@ -285,16 +264,10 @@ export default function ServiceLandingPage() {
               <MessageCircle className="w-5 h-5" aria-hidden />
               WhatsApp
             </a>
-            <Link
-              to={QUOTE_PAGE}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card border border-border rounded-xl font-semibold hover:border-primary/50 transition-colors"
-            >
+            <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
               Get a quote
             </Link>
-            <Link
-              to={APP_DEVELOPMENT_COST_PAGE}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-primary hover:underline underline-offset-4"
-            >
+            <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-outline min-h-[44px] text-sm">
               Cost guide
             </Link>
           </div>
@@ -317,10 +290,8 @@ export default function ServiceLandingPage() {
             ))}
           </ul>
         </section>
-        </ScrollReveal>
-      </main>
-
-      <SiteFooter />
-    </div>
+        </div>
+      </SupportingPageShell>
+    </>
   );
 }

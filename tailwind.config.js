@@ -3,52 +3,70 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        display: ['Outfit', 'sans-serif'],
+        technical: ['Space Grotesk', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        sans: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        surface: {
+          base: 'var(--color-surface-base)',
+          raised: 'var(--color-surface-raised)',
+          overlay: 'var(--color-surface-overlay)',
+          border: 'var(--color-surface-border)',
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+        text: {
+          primary: 'var(--color-text-primary)',
+          secondary: 'var(--color-text-secondary)',
+          muted: 'var(--color-text-muted)',
+          inverse: 'var(--color-text-inverse)',
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: 'var(--color-accent-emerald)',
+          foreground: 'var(--color-text-primary)',
+          gold: 'var(--color-accent-gold)',
+          emerald: 'var(--color-accent-emerald)',
+        },
+        /* Legacy aliases for existing pages until later redesign phases */
+        border: 'var(--color-surface-border)',
+        input: 'var(--color-surface-border)',
+        ring: 'var(--color-accent-gold)',
+        background: 'var(--color-surface-base)',
+        foreground: 'var(--color-text-primary)',
+        primary: {
+          DEFAULT: 'var(--color-accent-gold)',
+          foreground: 'var(--color-text-inverse)',
+        },
+        secondary: {
+          DEFAULT: 'var(--color-surface-raised)',
+          foreground: 'var(--color-text-primary)',
+        },
+        destructive: {
+          DEFAULT: 'var(--color-error)',
+          foreground: 'var(--color-text-primary)',
+        },
+        muted: {
+          DEFAULT: 'var(--color-surface-raised)',
+          foreground: 'var(--color-text-secondary)',
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: 'var(--color-surface-raised)',
+          foreground: 'var(--color-text-primary)',
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: 'var(--color-surface-raised)',
+          foreground: 'var(--color-text-primary)',
         },
+        success: 'var(--color-success)',
+        warning: 'var(--color-warning)',
+        error: 'var(--color-error)',
+        info: 'var(--color-info)',
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
-      borderColor: {
-        DEFAULT: "hsl(var(--border))",
-      },
-      fontFamily: {
-        sans: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
-        mono: ['JetBrains Mono', 'monospace'],
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
       keyframes: {
         'accordion-down': {
@@ -68,6 +86,10 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-up': 'fade-up 0.4s ease-out both',
+      },
+      maxWidth: {
+        blog: '680px',
+        prose: '720px',
       },
     },
   },
