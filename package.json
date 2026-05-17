@@ -10,7 +10,8 @@
     "prerender:developers": "node scripts/prerender-developers.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
-    "leads:seed": "node scripts/leads/seed-blob.mjs"
+    "leads:seed": "node scripts/leads/seed-blob.mjs",
+    "logo:lookup": "node scripts/lookup-logo.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
