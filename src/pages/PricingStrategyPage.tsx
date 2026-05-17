@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '../components/ui/accordion';
+import { BuildToRetainerBridge } from '../components/BuildToRetainerBridge';
 import { RetainerPricingCards } from '../components/RetainerPricingCards';
 import { PageShell } from '../components/layout/PageShell';
 import {
@@ -154,6 +155,10 @@ export default function PricingStrategyPage() {
               </div>
             ))}
           </div>
+        </section>
+
+        <section className="container py-12 md:py-16 border-t border-surface-border">
+          <BuildToRetainerBridge />
         </section>
 
         <section id="tiers" className="container py-12 md:py-16 border-t border-surface-border scroll-mt-24">
@@ -319,18 +324,18 @@ export default function PricingStrategyPage() {
               need the product to be in six months.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3">
-              <Link to={QUOTE_PAGE} className="btn-primary">
-                {PARTNERSHIP_CTA_LABEL}
-              </Link>
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-outline"
+                className="btn-primary"
               >
                 <MessageCircle className="w-5 h-5" aria-hidden />
-                Discuss on WhatsApp
+                {PARTNERSHIP_CTA_LABEL}
               </a>
+              <Link to={QUOTE_PAGE} className="btn-outline">
+                {QUOTE_TOOL_LABEL}
+              </Link>
             </div>
             <p className="mt-8 text-xs text-text-muted">
               Greenfield build? Use the optional{' '}

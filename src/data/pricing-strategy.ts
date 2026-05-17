@@ -18,7 +18,8 @@ export const RETAINER_TIERS: RetainerTier[] = [
     name: 'Essential',
     tagline: 'Lightweight systems with predictable upkeep',
     monthlyFromZar: 'R18 000',
-    bestFor: 'MVPs, internal tools, and marketing sites that need a steady technical owner',
+    bestFor:
+      'South African SMMEs, MVPs, internal tools, and marketing sites that need a steady technical owner after launch',
     systemExamples: [
       'Landing pages and brochure sites',
       'Internal admin panels',
@@ -156,5 +157,11 @@ export const PRICING_FAQ = [
     question: 'Is there a minimum commitment?',
     answer:
       'Most partnerships start with a three-month retainer so we can stabilise the system and establish a release rhythm. Shorter engagements are possible for rescues or audits.',
+  },
+  {
+    id: 'after-build',
+    question: 'How does launch spend relate to my monthly retainer?',
+    answer:
+      'A smaller, focused launch (often in the R120k – R350k band for a fundable MVP) usually pairs with Essential once the product is live. Heavier builds with payments, marketplaces, or constant releases move toward Growth or Ecosystem. The mapping table on this page uses the same ZAR bands as the 2026 app development cost guide.',
   },
 ] as const;
