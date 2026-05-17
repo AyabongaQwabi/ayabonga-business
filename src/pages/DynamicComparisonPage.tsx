@@ -17,12 +17,17 @@ import {
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
+  MVP_SCOPE_CHECKLIST_LABEL,
+  MVP_SCOPE_CHECKLIST_PAGE,
+  QUOTE_PAGE,
   SITE_NAME,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
 import comparisonData from '../data/comparisons.json';
 import NotFound from './NotFound';
+
+const JUNIOR_DEV_LOTTERY_SLUG = 'ayabonga-vs-junior-dev-lottery';
 
 const DynamicComparisonPage = () => {
   const { slug } = useParams();
@@ -35,6 +40,7 @@ const DynamicComparisonPage = () => {
   const canonicalPath = `/vs/${page.slug}`;
   const canonical = absoluteUrl(canonicalPath);
   const metaDescription = `Comparing ${page.target} with senior technical co-founder services. ${page.verdict}`;
+  const isJuniorDevLottery = page.slug === JUNIOR_DEV_LOTTERY_SLUG;
 
   return (
     <>
@@ -95,6 +101,15 @@ const DynamicComparisonPage = () => {
               <MessageCircle className="w-4 h-4" />
               Message Me on WhatsApp
             </a>
+            {isJuniorDevLottery ? (
+              <Link
+                to={MVP_SCOPE_CHECKLIST_PAGE}
+                className="inline-flex items-center gap-2 px-8 py-4 border border-primary/40 bg-background/80 text-foreground font-bold rounded-lg transition-all duration-300 hover:border-primary w-full sm:w-auto justify-center"
+              >
+                {MVP_SCOPE_CHECKLIST_LABEL}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            ) : null}
           </div>
         </div>
       </div>
@@ -192,8 +207,30 @@ const DynamicComparisonPage = () => {
               </Link>
             </div>
             <p className="text-sm text-muted-foreground">
-              Want a cost estimate first?{' '}
-              <Link to="/get-a-quote" className="text-primary hover:underline underline-offset-4">See how I scope and price work</Link>.
+              {isJuniorDevLottery ? (
+                <>
+                  Scope v1 before you hire?{' '}
+                  <Link
+                    to={MVP_SCOPE_CHECKLIST_PAGE}
+                    className="text-primary hover:underline underline-offset-4"
+                  >
+                    {MVP_SCOPE_CHECKLIST_LABEL}
+                  </Link>
+                  . Want a ballpark?{' '}
+                  <Link to={QUOTE_PAGE} className="text-primary hover:underline underline-offset-4">
+                    Project scope estimator
+                  </Link>
+                  .
+                </>
+              ) : (
+                <>
+                  Want a cost estimate first?{' '}
+                  <Link to={QUOTE_PAGE} className="text-primary hover:underline underline-offset-4">
+                    See how I scope and price work
+                  </Link>
+                  .
+                </>
+              )}
             </p>
           </div>
         </div>

@@ -10,14 +10,19 @@ import {
 } from '../components/ui/accordion';
 import {
   absoluteUrl,
+  APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
+  PRICING_STRATEGY_PAGE,
   SITE_NAME,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
+import { BuildToRetainerBridge } from '../components/BuildToRetainerBridge';
+import { PricingTable } from '../components/PricingTable';
 import { PageHero } from '../components/PageHero';
 import { LeadCaptureForm } from '../components/leads/LeadCaptureForm';
 import { HERO_IMAGES } from '../lib/hero-images';
+import { getTaasPhase1Table, TAAS_PHASE_1_NOTE } from '../data/build-retainer-bridge';
 
 const PAGE_TITLE = 'Technical Co-founder as a Service';
 const PAGE_DESCRIPTION =
@@ -43,7 +48,21 @@ const TAAS_FAQ = [
     answer:
       'Agencies bill for layers of overhead (account managers, sales, juniors) and often slow decisions. TaaS is one senior engineer who builds directly with you, with testable progress every few days and deep familiarity with local payments (Paystack, Stitch, Ozow) and POPIA-aware patterns. You talk to the person writing the code, not a relay team.',
   },
+  {
+    id: 'phase-1-cost',
+    question: 'What does Phase 1 cost?',
+    answer:
+      'Phase 1 is a fixed-scope build priced in the same ZAR bands as the 2026 app development cost guide. Most TaaS engagements land in the fundable MVP range (roughly R120k – R350k) depending on payments, admin, and platforms. We confirm price after a scoping call, not from a generic calculator.',
+  },
+  {
+    id: 'after-phase-1',
+    question: 'What happens after Phase 1 goes live?',
+    answer:
+      'Most South African SMME products move to a monthly Essential retainer for upkeep and small improvements. Products with payments, integrations, or heavy release pressure step up to Growth or Ecosystem. See the build-to-retainer mapping on the retainer pricing page.',
+  },
 ] as const;
+
+const phase1Table = getTaasPhase1Table();
 
 export default function TechnicalCofounderPage() {
   return (
@@ -186,6 +205,54 @@ export default function TechnicalCofounderPage() {
               <p className="text-sm text-muted-foreground">We go from zero to live in weeks. I handle the cloud, the payments, and the scaling so you can focus on winning customers.</p>
             </div>
           </div>
+        </section>
+
+        <section className="mb-24" aria-labelledby="phase-1-pricing-heading">
+          <div className="mb-10 max-w-2xl">
+            <h2 id="phase-1-pricing-heading" className="text-3xl font-bold mb-4">
+              Phase 1 build bands (fixed scope)
+            </h2>
+            <p className="text-muted-foreground leading-relaxed">
+              TaaS Phase 1 is a paid build to production, not equity. Ranges below match the{' '}
+              <Link
+                to={APP_DEVELOPMENT_COST_PAGE}
+                className="text-primary hover:underline underline-offset-4"
+              >
+                2026 app development cost guide
+              </Link>
+              . Your quote depends on integrations, compliance, and how many platforms you ship on
+              day one.
+            </p>
+          </div>
+          <PricingTable
+            table={{
+              ...phase1Table,
+              id: 'taas-phase-1',
+              title: 'Phase 1 · MVP builds for startups',
+              note: TAAS_PHASE_1_NOTE,
+            }}
+          />
+          <p className="mt-8 text-sm text-muted-foreground leading-relaxed max-w-2xl">
+            After launch, most SMME teams start on{' '}
+            <Link
+              to={`${PRICING_STRATEGY_PAGE}#tiers`}
+              className="text-primary font-medium hover:underline underline-offset-4"
+            >
+              Essential retainer
+            </Link>{' '}
+            unless payments, marketplaces, or release pressure push you higher.{' '}
+            <Link
+              to={`${PRICING_STRATEGY_PAGE}#build-to-retainer`}
+              className="text-primary font-medium hover:underline underline-offset-4"
+            >
+              See launch budget → retainer mapping
+            </Link>
+            .
+          </p>
+        </section>
+
+        <section className="mb-24 border-t border-border pt-16">
+          <BuildToRetainerBridge showCostGuideLink={false} />
         </section>
 
         {/* FAQ */}
