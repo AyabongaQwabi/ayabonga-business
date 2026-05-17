@@ -9,6 +9,7 @@ import { AdminLayout } from './components/admin/AdminLayout.tsx';
 const HomePage = lazy(() => import('./pages/HomePage.tsx'));
 const PricingStrategyPage = lazy(() => import('./pages/PricingStrategyPage.tsx'));
 const GetAQuotePage = lazy(() => import('./pages/GetAQuotePage.tsx'));
+const MvpScopeChecklistPage = lazy(() => import('./pages/MvpScopeChecklistPage.tsx'));
 const AboutPage = lazy(() => import('./pages/AboutPage.tsx'));
 const BlogIndexPage = lazy(() => import('./pages/BlogIndexPage.tsx'));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage.tsx'));
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/pricing-strategy" element={<PricingStrategyPage />} />
         <Route path="/get-a-quote" element={<GetAQuotePage />} />
+        <Route path="/mvp-scope-checklist" element={<MvpScopeChecklistPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/blog" element={<BlogIndexPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />

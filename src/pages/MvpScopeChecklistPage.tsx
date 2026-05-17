@@ -1,45 +1,48 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import GetAQuote from '../components/GetAQuote.jsx';
+import { MvpScopeChecklist } from '../components/MvpScopeChecklist';
 import { PageShell } from '../components/layout/PageShell';
+import {
+  MVP_SCOPE_CHECKLIST_META_DESCRIPTION,
+  MVP_SCOPE_CHECKLIST_META_TITLE,
+  MVP_SCOPE_CHECKLIST_PATH,
+} from '../data/mvp-scope-checklist';
 import {
   absoluteUrl,
   APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
-  MVP_SCOPE_CHECKLIST_LABEL,
-  MVP_SCOPE_CHECKLIST_PAGE,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
+  QUOTE_PAGE,
   SITE_NAME,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
-import {
-  CLIENT_QUOTE_BUFFER_PERCENT,
-  CLIENT_QUOTE_HOURLY_RATE_ZAR,
-  CLIENT_QUOTE_HOURS_PER_DAY,
-  CLIENT_QUOTE_YEARS_EXPERIENCE,
-} from '../config/quoteToolConfig';
 
-const PAGE_TITLE = 'Project scope estimator';
-const PAGE_DESCRIPTION = `Optional ballpark for greenfield builds: feature selection and timeline-adjusted pricing. Assumptions are fixed at R${CLIENT_QUOTE_HOURLY_RATE_ZAR}/hr, ${CLIENT_QUOTE_YEARS_EXPERIENCE} years experience, ${CLIENT_QUOTE_HOURS_PER_DAY} billable hours per day, ${CLIENT_QUOTE_BUFFER_PERCENT}% buffer, ZAR display. Ongoing partnerships use monthly retainers on the pricing page.`;
+export default function MvpScopeChecklistPage() {
+  const canonical = absoluteUrl(MVP_SCOPE_CHECKLIST_PATH);
 
-export default function GetAQuotePage() {
   return (
     <>
       <Helmet>
-        <title>{`${PAGE_TITLE} | ${SITE_NAME}`}</title>
-        <meta name="description" content={PAGE_DESCRIPTION} />
-        <link rel="canonical" href={absoluteUrl('/get-a-quote')} />
+        <title>{`${MVP_SCOPE_CHECKLIST_META_TITLE} | ${SITE_NAME}`}</title>
+        <meta name="description" content={MVP_SCOPE_CHECKLIST_META_DESCRIPTION} />
+        <link rel="canonical" href={canonical} />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content={absoluteUrl('/get-a-quote')} />
-        <meta property="og:title" content={`${PAGE_TITLE} | ${SITE_NAME}`} />
-        <meta property="og:description" content={PAGE_DESCRIPTION} />
+        <meta property="og:url" content={canonical} />
+        <meta
+          property="og:title"
+          content={`${MVP_SCOPE_CHECKLIST_META_TITLE} | ${SITE_NAME}`}
+        />
+        <meta property="og:description" content={MVP_SCOPE_CHECKLIST_META_DESCRIPTION} />
         <meta property="og:image" content={DEFAULT_OG_IMAGE} />
         <meta property="og:locale" content="en_ZA" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${PAGE_TITLE} | ${SITE_NAME}`} />
-        <meta name="twitter:description" content={PAGE_DESCRIPTION} />
+        <meta
+          name="twitter:title"
+          content={`${MVP_SCOPE_CHECKLIST_META_TITLE} | ${SITE_NAME}`}
+        />
+        <meta name="twitter:description" content={MVP_SCOPE_CHECKLIST_META_DESCRIPTION} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <meta name="twitter:site" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
@@ -48,10 +51,10 @@ export default function GetAQuotePage() {
       <PageShell
         className="bg-surface-base text-text-primary font-technical"
         mainClassName="container flex-1 pt-[4.5rem] pb-10 md:pb-14"
-        whatsappLabel="Questions? WhatsApp me"
+        whatsappLabel="Questions about scope?"
       >
         <header className="mb-10 max-w-3xl">
-          <p className="section-label mb-3">Optional · greenfield builds</p>
+          <p className="section-label mb-3">Free tool · MVP planning</p>
           <h1
             className="font-display font-bold text-text-primary mb-4"
             style={{
@@ -60,33 +63,33 @@ export default function GetAQuotePage() {
               letterSpacing: '-0.02em',
             }}
           >
-            {PAGE_TITLE}
+            {MVP_SCOPE_CHECKLIST_META_TITLE}
           </h1>
           <p
             className="text-text-secondary leading-relaxed"
             style={{ fontSize: 'var(--type-body-md)', lineHeight: 'var(--leading-body)' }}
           >
-            {PAGE_DESCRIPTION}
+            {MVP_SCOPE_CHECKLIST_META_DESCRIPTION}
           </p>
           <p
             className="text-text-secondary mt-4 leading-relaxed"
             style={{ fontSize: 'var(--type-body-sm)' }}
           >
-            Not sure which features matter yet? Start with the{' '}
+            When essentials are mostly checked, use the{' '}
             <Link
-              to={MVP_SCOPE_CHECKLIST_PAGE}
+              to={QUOTE_PAGE}
               className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
             >
-              {MVP_SCOPE_CHECKLIST_LABEL}
-            </Link>
-            , then the{' '}
+              project scope estimator
+            </Link>{' '}
+            for a ZAR ballpark, or read the{' '}
             <Link
               to={APP_DEVELOPMENT_COST_PAGE}
               className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
             >
               app development cost guide
             </Link>
-            , then return here for a ballpark. For live products and long-term ownership, see{' '}
+            . For live products, see{' '}
             <Link
               to={PRICING_STRATEGY_PAGE}
               className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
@@ -99,7 +102,6 @@ export default function GetAQuotePage() {
             className="text-text-secondary mt-3 leading-relaxed"
             style={{ fontSize: 'var(--type-body-sm)' }}
           >
-            Prefer a conversation?{' '}
             <a
               href={WHATSAPP_URL}
               target="_blank"
@@ -108,7 +110,7 @@ export default function GetAQuotePage() {
             >
               Message on WhatsApp
             </a>{' '}
-            with your idea in one paragraph. I reply with fit and next steps.
+            with your copied checklist summary.
           </p>
           <p className="mt-6">
             <Link to={PRICING_STRATEGY_PAGE} className="btn-outline">
@@ -117,7 +119,7 @@ export default function GetAQuotePage() {
           </p>
         </header>
 
-        <GetAQuote />
+        <MvpScopeChecklist />
       </PageShell>
     </>
   );

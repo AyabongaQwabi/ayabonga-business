@@ -24,6 +24,7 @@ const STATIC_PRERENDER_ROUTES = [
   '/technical-cofounder',
   '/pricing-strategy',
   '/get-a-quote',
+  '/mvp-scope-checklist',
   '/blog',
   '/projects/espazza',
   '/app-development-cost-south-africa',

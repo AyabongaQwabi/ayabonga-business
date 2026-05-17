@@ -32,6 +32,11 @@ export const APP_DEVELOPMENT_COST_PAGE = '/app-development-cost-south-africa';
 /** Optional project scope estimator (secondary to partnership conversation). */
 export const QUOTE_PAGE = '/get-a-quote';
 
+/** Interactive MVP scope checklist (free tool, pre-quote). */
+export const MVP_SCOPE_CHECKLIST_PAGE = '/mvp-scope-checklist';
+
+export const MVP_SCOPE_CHECKLIST_LABEL = 'MVP scope checklist';
+
 export const PARTNERSHIP_CTA_LABEL = 'Start a technical partnership';
 export const QUOTE_TOOL_LABEL = 'Project scope estimator';
 

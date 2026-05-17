@@ -1,6 +1,7 @@
 import { wrapBrandedEmail } from './emailLayout';
 
 const SITE_URL = process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
+const MVP_SCOPE_CHECKLIST_URL = `${SITE_URL}/mvp-scope-checklist`;
 
 export type NurtureEmail = {
   subject: string;
@@ -9,11 +10,17 @@ export type NurtureEmail = {
   delayDays: number;
 };
 
-function wrapHtml(body: string, firstName: string, primaryCta?: { label: string; href: string }): string {
+function wrapHtml(
+  body: string,
+  firstName: string,
+  primaryCta?: { label: string; href: string },
+  secondaryCta?: { label: string; href: string },
+): string {
   return wrapBrandedEmail({
     firstName,
     bodyHtml: body,
     primaryCta,
+    secondaryCta,
   });
 }
 
@@ -37,6 +44,8 @@ export function getFounderNurtureSequence(firstName: string): NurtureEmail[] {
         '',
         'If two of those are true, you are not failing. You just scoped for demo day, not launch day.',
         '',
+        `Scope v1 before you hire: ${MVP_SCOPE_CHECKLIST_URL}`,
+        '',
         `I wrote more on this: ${SITE_URL}/blog/hidden-cost-junior-mvp`,
         '',
         'Ayabonga',
@@ -49,9 +58,11 @@ export function getFounderNurtureSequence(firstName: string): NurtureEmail[] {
           <li>Auth and payments were bolted on late, not designed in.</li>
           <li>Nobody can explain your data model in one whiteboard sketch.</li>
         </ol>
-        <p style="font-size:15px;line-height:1.65;">If two of those are true, you scoped for demo day, not launch day.</p>`,
+        <p style="font-size:15px;line-height:1.65;">If two of those are true, you scoped for demo day, not launch day.</p>
+        <p style="font-size:15px;line-height:1.65;">Scope v1 before you hire? Use the <a href="${MVP_SCOPE_CHECKLIST_URL}" style="color:#0891b2;text-decoration:underline;">MVP scope checklist</a> to mark essentials vs phase two.</p>`,
         name,
         { label: 'Read: Junior-built MVPs and the rebuild tax', href: `${SITE_URL}/blog/hidden-cost-junior-mvp` },
+        { label: 'MVP scope checklist', href: MVP_SCOPE_CHECKLIST_URL },
       ),
     },
     {

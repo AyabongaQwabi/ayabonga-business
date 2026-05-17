@@ -151,6 +151,7 @@ async function main() {
     { url: '/editorial', changefreq: 'yearly', priority: 0.35 },
     { url: '/corrections', changefreq: 'yearly', priority: 0.3 },
     { url: '/get-a-quote', changefreq: 'monthly', priority: 0.7 },
+    { url: '/mvp-scope-checklist', changefreq: 'monthly', priority: 0.86 },
     ...buyerIntentPaths.map((url) => ({
       url,
       changefreq: 'monthly',
