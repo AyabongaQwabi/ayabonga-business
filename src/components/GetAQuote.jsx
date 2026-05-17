@@ -65,6 +65,8 @@ import { getTotals, getFeatureBreakdown } from '@/lib/quoteToolPricing';
 import { buildQuoteExportPayload } from '@/lib/buildQuoteExportPayload';
 import { parseApiJsonResponse } from '@/lib/parseApiJsonResponse';
 import { cn } from '@/lib/utils';
+import { OPEN_QUOTE_EMAIL_EVENT } from '@/context/ConversionPopupContext';
+import { trackConversion } from '@/lib/conversion-analytics';
 
 const formInputCls = (hasError) => cn('form-input min-h-[44px]', hasError && 'error');
 
@@ -357,6 +359,20 @@ export default function GetAQuote({ trustStats = null }) {
         if (w >= 1 && w <= 5) setWizardStep(w);
       }
     } catch (_) {}
+  }, []);
+
+  useEffect(() => {
+    const openEmailCapture = () => {
+      setShowEnquiryForm(true);
+      trackConversion('popup_view', { surface: 'quote_email_prompt' });
+      window.requestAnimationFrame(() => {
+        document
+          .getElementById('quote-email-section')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    };
+    window.addEventListener(OPEN_QUOTE_EMAIL_EVENT, openEmailCapture);
+    return () => window.removeEventListener(OPEN_QUOTE_EMAIL_EVENT, openEmailCapture);
   }, []);
 
   useEffect(() => {
@@ -972,7 +988,7 @@ export default function GetAQuote({ trustStats = null }) {
         </Card>
 
         {showEnquiryForm === null && (
-          <Card>
+          <Card id="quote-email-section">
             <CardHeader>
               <CardTitle className="text-lg text-cyan-800 flex items-center gap-2">
                 <CheckCircle className="h-5 w-5" aria-hidden />
@@ -986,7 +1002,15 @@ export default function GetAQuote({ trustStats = null }) {
             </CardHeader>
             <CardContent className="flex flex-wrap gap-3">
               <Button
-                onClick={() => setShowEnquiryForm(true)}
+                onClick={() => {
+                  setShowEnquiryForm(true);
+                  trackConversion('popup_cta', { surface: 'quote_email_prompt' });
+                  window.requestAnimationFrame(() => {
+                    document
+                      .getElementById('quote-email-section')
+                      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  });
+                }}
                 disabled={!totals.hasFeatures}
                 className="bg-emerald-600 hover:bg-emerald-700 min-h-[44px]"
               >

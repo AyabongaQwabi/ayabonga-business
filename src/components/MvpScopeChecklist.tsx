@@ -6,9 +6,12 @@ import {
   Check,
   ClipboardCopy,
   ListChecks,
+  Mail,
   MessageCircle,
   RotateCcw,
 } from 'lucide-react';
+import { useConversionPopup } from '../context/ConversionPopupContext';
+import { trackConversion } from '../lib/conversion-analytics';
 import {
   MVP_ESSENTIAL_ITEMS,
   MVP_PHASE2_ITEMS,
@@ -83,6 +86,7 @@ const BAND_COPY: Record<ReadinessBand, { title: string; body: string }> = {
 };
 
 export function MvpScopeChecklist() {
+  const { openChecklistEmailDialog } = useConversionPopup();
   const [checked, setChecked] = useState<Set<string>>(() => loadChecked());
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'error'>('idle');
 
@@ -148,6 +152,13 @@ export function MvpScopeChecklist() {
     );
     return `https://wa.me/27603116777?text=${intro}`;
   }, [mvpCheckedCount, mvpTotal, phase2CheckedCount]);
+
+  const emailSummary = useMemo(() => buildSummary(checked), [checked]);
+
+  const handleEmailSummary = () => {
+    trackConversion('popup_cta', { surface: 'checklist_email_prompt' });
+    openChecklistEmailDialog(emailSummary);
+  };
 
   return (
     <div className="max-w-3xl">
@@ -216,6 +227,14 @@ export function MvpScopeChecklist() {
               : copyStatus === 'error'
                 ? 'Copy failed'
                 : 'Copy scope summary'}
+          </button>
+          <button
+            type="button"
+            onClick={handleEmailSummary}
+            className="btn-outline min-h-[44px]"
+          >
+            <Mail className="w-4 h-4 shrink-0" aria-hidden />
+            Email my summary
           </button>
           <a
             href={whatsappShareUrl}
