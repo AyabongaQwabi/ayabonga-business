@@ -135,6 +135,20 @@ export default function PricingStrategyPage() {
             your business changes. Monthly retainers scale with technical complexity and operational
             load, not with how many pages a brochure has.
           </p>
+
+          <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="btn-primary min-h-[44px]">
+              <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
+              Message on WhatsApp
+            </a>
+            <Link to={QUOTE_PAGE} className="btn-outline min-h-[44px]">
+              {QUOTE_TOOL_LABEL}
+            </Link>
+          </div>
+          <p className="mt-4 text-sm text-text-muted max-w-2xl leading-relaxed">
+            Share what you run today, what breaks, and where the product needs to be in six months.
+            If we fit, I send a written proposal with retainer tier and first priorities.
+          </p>
         </header>
 
         <section className="container py-12 border-t border-surface-border">
