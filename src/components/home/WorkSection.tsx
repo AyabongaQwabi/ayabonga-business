@@ -41,7 +41,9 @@ export function WorkSection() {
                   description={project.description}
                   url={project.url}
                   tech={project.tech}
-                  showImage={false}
+                  imageUrl={project.imageUrl}
+                  imageAlt={project.imageAlt}
+                  showImage={Boolean(project.imageUrl)}
                   featured={project.featured}
                   wip={project.wip}
                 />

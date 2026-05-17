@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import {
   PARTNERSHIP_CTA_LABEL,
+  PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
   QUOTE_TOOL_LABEL,
   WHATSAPP_URL,
@@ -36,12 +37,13 @@ export function CtaSection() {
             color: 'rgba(10, 25, 47, 0.75)',
           }}
         >
-          Tell me what you run today, what is fragile, and where the product needs to go. I will
-          reply with fit, a retainer band or build range, and what I would tackle first.
+          Tell me what you run today, what is fragile, and where the product needs to go. After
+          WhatsApp we align on fit; if it works, I send a written proposal with retainer tier and
+          first priorities.
         </p>
         <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
           <Link
-            to={QUOTE_PAGE}
+            to={PRICING_STRATEGY_PAGE}
             className="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-3.5 rounded-md font-technical font-semibold text-sm transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3"
             style={{
               background: 'var(--color-text-inverse)',
@@ -66,7 +68,7 @@ export function CtaSection() {
           </a>
         </div>
         <p className="mt-8 text-sm" style={{ color: 'rgba(10, 25, 47, 0.7)' }}>
-          Planning a greenfield build?{' '}
+          Greenfield build only?{' '}
           <Link
             to={QUOTE_PAGE}
             className="font-semibold underline underline-offset-4 hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 rounded-sm"
@@ -74,7 +76,7 @@ export function CtaSection() {
           >
             {QUOTE_TOOL_LABEL}
           </Link>{' '}
-          gives a rough scope ballpark. Retainers are agreed after we review your stack.
+          gives a rough scope ballpark before we talk.
         </p>
       </div>
     </section>

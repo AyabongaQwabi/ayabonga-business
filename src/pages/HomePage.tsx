@@ -8,6 +8,7 @@ import { HeroSection } from '../components/home/HeroSection';
 import { PartnershipSection } from '../components/home/PartnershipSection';
 import { PricingSection } from '../components/home/PricingSection';
 import { ServicesSection } from '../components/home/ServicesSection';
+import { TestimonialsSection } from '../components/home/TestimonialsSection';
 import { WorkSection } from '../components/home/WorkSection';
 import { PageShell } from '../components/layout/PageShell';
 import {
@@ -90,8 +91,9 @@ export default function HomePage() {
         <ServicesSection />
         <PartnershipSection />
         <BuildCostsTeaser />
-        <PricingSection />
         <WorkSection />
+        <TestimonialsSection />
+        <PricingSection />
         <CtaSection />
       </PageShell>
 

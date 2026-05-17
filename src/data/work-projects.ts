@@ -14,7 +14,11 @@ export type WorkProject = {
   featured?: boolean;
   wip?: boolean;
   relatedLinks?: WorkProjectLink[];
+  imageUrl?: string;
+  imageAlt?: string;
 };
+
+/** CRO todo: add card thumbnails for Trip, My Grad Zaka, Future Start, Kingly, eSpazza. */
 
 export const WORK_PROJECTS: WorkProject[] = [
   {
@@ -26,6 +30,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     tech: ['React Native', 'Expo', 'Supabase'],
     featured: true,
     wip: true,
+    imageUrl: '/images/utap-screenshot.png',
+    imageAlt: 'uTap campus wallet app screenshot',
     relatedLinks: [{ label: 'Vendor portal', url: 'https://vendors.utaptech.co.za' }],
   },
   {
@@ -62,6 +68,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Occupational health bookings for mining and construction companies in Witbank and Mpumalanga. Customer web app and admin console on MERN with Google Cloud, plus realtime coordination between clinics and sites.',
     url: 'https://clinicplusbookings.co.za/',
     tech: ['React', 'Node.js', 'MongoDB', 'GCP'],
+    imageUrl: '/images/clinicplus.jpg',
+    imageAlt: 'ClinicPlus occupational health booking platform',
   },
   {
     title: 'Laundry Marketplace',
@@ -70,6 +78,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Turnkey laundry marketplace with admin, partner, driver, and customer apps. Full order lifecycle from booking through pickup, processing, delivery, and payouts.',
     url: 'https://laundry.qwabi.co.za',
     tech: ['Next.js', 'Marketplace', 'Payments'],
+    imageUrl: '/images/projects/laundry-marketplace.jpg',
+    imageAlt: 'Laundry marketplace customer and provider flow',
   },
   {
     title: 'Queens Connect',
@@ -78,6 +88,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Friendly AI companion for the Queenstown community with local information and assistance. Built as a web experience with patterns ready for WhatsApp-style outreach.',
     url: 'https://queensconnect.qwabi.co.za',
     tech: ['AI', 'Next.js', 'OpenAI'],
+    imageUrl: '/images/projects/queens-connect.jpg',
+    imageAlt: 'Queens Connect community AI assistant',
   },
   {
     title: 'Kingly',
