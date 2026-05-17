@@ -43,6 +43,8 @@ export function SupportingPageShell({
         <meta property="og:locale" content="en_ZA" />
         {ogImage ? <meta property="og:image" content={ogImage} /> : null}
         <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
         <meta name="twitter:site" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
         {jsonLd ? (

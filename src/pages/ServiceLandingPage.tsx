@@ -11,10 +11,12 @@ import { PageHero } from '../components/PageHero';
 import { SupportingPageShell } from '../components/SupportingPageShell';
 import { serviceLandingPagesByPath } from '../data/service-landing-pages';
 import { heroImageForServicePath } from '../lib/hero-images';
+import { BookDiscoveryCallButton } from '../components/shared/BookDiscoveryCallButton';
 import {
   absoluteUrl,
   APP_DEVELOPMENT_COST_PAGE,
   DEFAULT_OG_IMAGE,
+  GET_ESTIMATE_LABEL,
   QUOTE_PAGE,
   SITE_ORIGIN,
   TWITTER_HANDLE,
@@ -255,18 +257,19 @@ export default function ServiceLandingPage() {
           <h2 className="text-xl font-bold text-foreground mb-2">{page.ctaHeadline}</h2>
           <p className="text-muted-foreground mb-6 leading-relaxed">{page.ctaSubhead}</p>
           <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+            <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
+              {GET_ESTIMATE_LABEL}
+            </Link>
+            <BookDiscoveryCallButton variant="outline" />
             <a
               href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#25D366] text-white rounded-xl font-semibold hover:bg-[#128C7E] transition-colors"
+              className="btn-outline min-h-[44px]"
             >
               <MessageCircle className="w-5 h-5" aria-hidden />
               WhatsApp
             </a>
-            <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
-              Get a quote
-            </Link>
             <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-outline min-h-[44px] text-sm">
               Cost guide
             </Link>

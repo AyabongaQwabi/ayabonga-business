@@ -26,6 +26,7 @@ const STATIC_PRERENDER_ROUTES = [
   '/get-a-quote',
   '/mvp-scope-checklist',
   '/blog',
+  '/projects',
   '/projects/espazza',
   '/app-development-cost-south-africa',
   '/mobile-app-development-south-africa',

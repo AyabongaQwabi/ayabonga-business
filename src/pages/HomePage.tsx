@@ -23,9 +23,9 @@ import {
 } from '../lib/entity-schema';
 
 const HOME_TITLE =
-  'Software Development Company South Africa | App & Web Development';
+  'Software Development Company South Africa | Qwabi Engineering';
 const HOME_DESCRIPTION =
-  'South African app development company for mobile app development, web development, and custom software. Ecommerce, business systems, AI, and long-term technical ownership from one senior engineer.';
+  'Qwabi Engineering is a South African software development company for mobile apps, web platforms, custom business systems, and AI automation. National and remote delivery; Eastern Cape based.';
 
 export default function HomePage() {
   const scrollTo = useCallback((id: string) => {
@@ -69,7 +69,7 @@ export default function HomePage() {
               buildWebSiteSchema(),
               {
                 '@type': 'ProfessionalService',
-                name: 'Ayabonga Qwabi, Software Development South Africa',
+                name: 'Qwabi Engineering, Software Development South Africa',
                 url: absoluteUrl('/'),
                 areaServed: { '@type': 'Country', name: 'South Africa' },
                 description: HOME_DESCRIPTION,

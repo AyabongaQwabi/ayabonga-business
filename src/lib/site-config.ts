@@ -9,10 +9,18 @@ export const SITE_ORIGIN = envSite || 'https://business.qwabi.co.za';
 export const SITE_NAME = 'Ayabonga Qwabi';
 
 export const DEFAULT_PAGE_TITLE =
-  'Custom App Developer South Africa | Ayabonga Qwabi';
+  'Software Development Company South Africa | Qwabi Engineering';
 
 export const DEFAULT_PAGE_DESCRIPTION =
-  'Senior product engineer and long-term technical partner in South Africa. Monthly retainers for maintenance, feature delivery, integrations, and scalable product evolution.';
+  'Qwabi Engineering builds mobile apps, web platforms, and custom business software for South African teams. Based in the Eastern Cape, delivery nationwide and remote.';
+
+/** Founder / senior engineer story (not the company homepage angle). */
+export const ABOUT_PAGE = '/about';
+
+export const FOUNDER_PAGE_LABEL = 'Meet the engineer';
+
+/** Full project catalog and case studies. */
+export const PROJECTS_PAGE = '/projects';
 
 export const DEFAULT_OG_IMAGE =
   'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/634131924_4362348684012184_2809328754212142225_n%20%281%29-n9dEY5Noh5Y0nxfTCK3TwAMABTs8KG.jpg';
@@ -21,7 +29,13 @@ export const TWITTER_HANDLE = '@ayabongaqwabi';
 
 /** Primary contact: WhatsApp direct link with a pre-filled opening message. */
 export const WHATSAPP_NUMBER = '27603116777';
-export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi Ayabonga, I found your site and I'd like to chat.")}`;
+export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent("Hi, I found Qwabi Engineering and I'd like to chat.")}`;
+
+/** Discovery call scheduling (Cal.com / Calendly). Not live yet. */
+export const DISCOVERY_CALL_LABEL = 'Book a discovery call';
+export const DISCOVERY_CALL_ENABLED = false;
+/** Set when live, e.g. https://cal.com/ayabonga-qwabi */
+export const DISCOVERY_CALL_URL = '';
 
 /** Retainer pricing philosophy and tiers. */
 export const PRICING_STRATEGY_PAGE = '/pricing-strategy';
@@ -31,6 +45,8 @@ export const APP_DEVELOPMENT_COST_PAGE = '/app-development-cost-south-africa';
 
 /** Optional project scope estimator (secondary to partnership conversation). */
 export const QUOTE_PAGE = '/get-a-quote';
+
+export const GET_ESTIMATE_LABEL = 'Get an estimate';
 
 /** Interactive MVP scope checklist (free tool, pre-quote). */
 export const MVP_SCOPE_CHECKLIST_PAGE = '/mvp-scope-checklist';

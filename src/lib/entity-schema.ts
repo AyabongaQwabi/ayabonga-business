@@ -59,7 +59,7 @@ export function buildWebSiteSchema() {
     url: SITE_ORIGIN,
     name: SITE_NAME,
     description:
-      'Portfolio and writing by Ayabonga Qwabi: product engineering, AI, cloud architecture, and shipped work for South African founders.',
+      'Qwabi Engineering: software development company in South Africa for mobile apps, web platforms, and custom business systems.',
     publisher: { '@id': `${SITE_ORIGIN}/#organization` },
     inLanguage: 'en-ZA',
   };

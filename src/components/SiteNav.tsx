@@ -2,7 +2,9 @@ import { useEffect, useState, type MouseEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { NavHamburger } from './NavHamburger';
 import {
+  ABOUT_PAGE,
   APP_DEVELOPMENT_COST_PAGE,
+  FOUNDER_PAGE_LABEL,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
@@ -22,6 +24,7 @@ const navItems: NavItem[] = [
   { label: 'App costs', to: APP_DEVELOPMENT_COST_PAGE },
   { label: 'Retainers', to: PRICING_STRATEGY_PAGE },
   { label: 'Work', sectionId: 'work' },
+  { label: FOUNDER_PAGE_LABEL, to: ABOUT_PAGE },
 ];
 
 type SiteNavProps = {

@@ -25,6 +25,7 @@ const DynamicComparisonPage = lazy(() => import('./pages/DynamicComparisonPage.t
 const DevelopersRegionHub = lazy(() => import('./pages/DevelopersRegionHub.tsx'));
 const LocalDeveloperPage = lazy(() => import('./pages/LocalDeveloperPage.tsx'));
 const EspazzaProject = lazy(() => import('./pages/EspazzaProject.tsx'));
+const ProjectsPage = lazy(() => import('./pages/ProjectsPage.tsx'));
 const BuyerIntentPage = lazy(() => import('./pages/BuyerIntentPage.tsx'));
 const PartnershipLandingPage = lazy(() => import('./pages/PartnershipLandingPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
@@ -88,6 +89,7 @@ export default function App() {
           </Route>
         </Route>
 
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/espazza" element={<EspazzaProject />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

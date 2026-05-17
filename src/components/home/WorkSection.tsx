@@ -1,6 +1,9 @@
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import ProjectCard from '../shared/ProjectCard';
 import { ScrollReveal } from '../ScrollReveal';
 import { WORK_PROJECTS } from '../../data/work-projects';
+import { PROJECTS_PAGE } from '../../lib/site-config';
 
 export function WorkSection() {
   return (
@@ -22,9 +25,16 @@ export function WorkSection() {
             className="text-text-secondary max-w-2xl mb-10"
             style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
           >
-            Shipped mobile app development and web development projects in South Africa, not
-            mockups. Collaborations include Warner Music Africa and Western Cape Labs.
+            Shipped and in-flight systems across South Africa, not mockups. The full catalog
+            includes live products, white-label SaaS, and honestly paused client builds.
           </p>
+          <Link
+            to={PROJECTS_PAGE}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-accent-gold hover:underline underline-offset-4 mb-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold rounded-sm"
+          >
+            View full project catalog
+            <ArrowRight className="w-4 h-4" aria-hidden />
+          </Link>
           <div className="grid md:grid-cols-2 gap-4">
             {WORK_PROJECTS.map((project) => (
               <div
@@ -46,6 +56,7 @@ export function WorkSection() {
                   showImage={Boolean(project.imageUrl)}
                   featured={project.featured}
                   wip={project.wip}
+                  statusLabel={project.statusLabel}
                 />
                 {project.relatedLinks && project.relatedLinks.length > 0 ? (
                   <p className="flex flex-wrap gap-x-4 gap-y-1 pl-1 text-sm">

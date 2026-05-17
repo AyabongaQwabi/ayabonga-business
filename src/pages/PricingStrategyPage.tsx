@@ -16,9 +16,11 @@ import {
   PRICING_FAQ,
   RETAINER_TIERS,
 } from '../data/pricing-strategy';
+import { BookDiscoveryCallButton } from '../components/shared/BookDiscoveryCallButton';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
+  GET_ESTIMATE_LABEL,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
@@ -337,17 +339,21 @@ export default function PricingStrategyPage() {
               WhatsApp is the fastest path. Share what you run today, what breaks, and where you
               need the product to be in six months.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
+              <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
+                {GET_ESTIMATE_LABEL}
+              </Link>
+              <BookDiscoveryCallButton variant="outline" />
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary"
+                className="btn-outline min-h-[44px]"
               >
                 <MessageCircle className="w-5 h-5" aria-hidden />
-                {PARTNERSHIP_CTA_LABEL}
+                WhatsApp
               </a>
-              <Link to={QUOTE_PAGE} className="btn-outline">
+              <Link to={QUOTE_PAGE} className="btn-outline min-h-[44px] text-sm">
                 {QUOTE_TOOL_LABEL}
               </Link>
             </div>

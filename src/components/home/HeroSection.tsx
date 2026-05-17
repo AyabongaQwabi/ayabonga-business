@@ -1,51 +1,38 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
+import { ArrowRight, MessageCircle } from 'lucide-react';
 import { animateHeroHeadline, animateHeroSupport } from '../../lib/animations';
 import {
+  ABOUT_PAGE,
   APP_DEVELOPMENT_COST_PAGE,
+  FOUNDER_PAGE_LABEL,
+  GET_ESTIMATE_LABEL,
   MVP_SCOPE_CHECKLIST_PAGE,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
+  QUOTE_PAGE,
   WHATSAPP_URL,
 } from '../../lib/site-config';
+import { BookDiscoveryCallButton } from '../shared/BookDiscoveryCallButton';
 import { SectionLabel } from '../shared/SectionLabel';
 import { ClientLogoStrip } from './ClientLogoStrip';
 
 const HEADLINE_WORDS = [
-  'Senior',
-  'product',
-  'engineer',
+  'Custom',
+  'software',
+  'development',
   'for',
   'South',
   'African',
-  'founders',
-  'building',
-  'apps,',
-  'platforms,',
-  'and',
-  'ops',
-  'systems',
+  'businesses',
 ] as const;
 
 const GOLD_WORD_INDICES = new Set([4, 5]);
 
-const DEFAULT_PROOF_POINTS = [
-  'Software development company South Africa with 10+ years in production',
-  'Mobile app development, web development, and custom business systems',
-  'One senior engineer accountable for architecture and delivery',
-  'Local payments, POPIA-aware patterns, and monthly retainers after launch',
-];
-
-type HeroSectionProps = {
-  proofPoints?: string[];
-};
-
-export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionProps) {
+export function HeroSection() {
   const headlineRef = useRef<HTMLHeadingElement>(null);
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-  const proofRef = useRef<HTMLUListElement>(null);
   const trustRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
 
@@ -54,7 +41,6 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
     const support: HTMLElement[] = [];
     if (subRef.current) support.push(subRef.current);
     if (ctaRef.current) support.push(ctaRef.current);
-    if (proofRef.current) support.push(proofRef.current);
     if (trustRef.current) support.push(trustRef.current);
     if (visualRef.current) support.push(visualRef.current);
     if (support.length) animateHeroSupport(support);
@@ -82,7 +68,7 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
         <div className="mt-4 grid w-full max-w-none items-center gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] xl:max-w-6xl">
           <div className="min-w-0">
             <SectionLabel className="mb-2 sm:mb-3">
-              App development company · South Africa
+              Software development company · South Africa
             </SectionLabel>
 
             <h1
@@ -112,11 +98,20 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
               className="mt-3 sm:mt-4 text-text-secondary max-w-xl"
               style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
             >
-              One senior product engineer from architecture to launch. Web, mobile, and business
-              systems with local payments. Most clients move to a monthly retainer after go-live.
+              Qwabi Engineering ships web apps, mobile apps, and business systems for teams across
+              South Africa. One senior product engineer leads delivery from architecture to launch.
+              Based in the Eastern Cape; remote-friendly. Most clients move to a monthly retainer
+              after go-live.
             </p>
 
             <p className="mt-3 text-sm text-text-muted max-w-xl">
+              <Link
+                to={ABOUT_PAGE}
+                className="text-accent-gold font-medium hover:underline underline-offset-4"
+              >
+                {FOUNDER_PAGE_LABEL}
+              </Link>
+              {' · '}
               Researching first? See the{' '}
               <Link
                 to={APP_DEVELOPMENT_COST_PAGE}
@@ -138,19 +133,26 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
               ref={ctaRef}
               className="mt-4 sm:mt-5 flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3"
             >
+              <Link to={QUOTE_PAGE} className="btn-primary min-h-[44px]">
+                {GET_ESTIMATE_LABEL}
+              </Link>
+              <BookDiscoveryCallButton variant="outline" />
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary min-h-[44px]"
+                className="btn-outline min-h-[44px]"
               >
                 <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
-                Message on WhatsApp
+                WhatsApp
               </a>
               <Link to={PRICING_STRATEGY_PAGE} className="btn-outline min-h-[44px]">
                 {PARTNERSHIP_CTA_LABEL}
               </Link>
-              <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-outline min-h-[44px]">
+              <Link
+                to={APP_DEVELOPMENT_COST_PAGE}
+                className="btn-outline min-h-[44px] hidden sm:inline-flex"
+              >
                 View 2026 build cost ranges
                 <ArrowRight className="w-4 h-4 shrink-0" aria-hidden />
               </Link>
@@ -159,22 +161,6 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
             <p className="mt-3 text-sm text-text-secondary">
               Monthly retainers after go-live, not one-off handoffs.
             </p>
-
-            <ul
-              ref={proofRef}
-              className="mt-3 sm:mt-4 flex flex-wrap gap-1.5 sm:gap-2"
-              aria-label="Why teams work with Qwabi Engineering"
-            >
-              {proofPoints.map((point) => (
-                <li
-                  key={point}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-surface-border bg-surface-raised/80 px-3 py-1.5 text-xs md:text-sm text-text-secondary backdrop-blur-sm"
-                >
-                  <CheckCircle2 className="w-3.5 h-3.5 text-accent-gold shrink-0" aria-hidden />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
           </div>
 
           <div

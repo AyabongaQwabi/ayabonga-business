@@ -12,7 +12,7 @@ import {
   AUTHOR_SAME_AS,
 } from '../lib/author-profile';
 import { TechTag } from '../components/shared/TechTag';
-import { SITE_NAME, WHATSAPP_URL } from '../lib/site-config';
+import { FOUNDER_PAGE_LABEL, SITE_NAME, WHATSAPP_URL } from '../lib/site-config';
 
 const ABOUT_STACK = [
   'React',
@@ -50,19 +50,22 @@ const shippedWork = [
   },
 ];
 
+const ABOUT_META_TITLE = `Meet ${SITE_NAME} | Senior product engineer & technical founder`;
+const ABOUT_META_DESCRIPTION = `${AUTHOR_JOB_TITLE} behind Qwabi Engineering. About ${AUTHOR_EXPERIENCE_YEARS} years shipping production apps, platforms, and AI tools for South African founders. Queenstown, Eastern Cape; remote across SA.`;
+
 export default function AboutPage() {
   return (
     <SupportingPageShell
-      title={`About ${SITE_NAME} | Senior product engineer`}
-      description={`About ${SITE_NAME}: ${AUTHOR_JOB_TITLE} in ${AUTHOR_LOCATION}. Product engineering, AI, and cloud work for South African founders.`}
+      title={ABOUT_META_TITLE}
+      description={ABOUT_META_DESCRIPTION}
       canonicalPath="/about"
       jsonLd={buildProfilePageSchema()}
     >
       <PageHero
         className="mb-12"
-        eyebrow="South Africa"
+        eyebrow={FOUNDER_PAGE_LABEL}
         title={SITE_NAME}
-        subtitle={`${AUTHOR_JOB_TITLE} in ${AUTHOR_LOCATION}. I help founders ship production software without agency overhead.`}
+        subtitle={`${AUTHOR_JOB_TITLE} in ${AUTHOR_LOCATION}. I lead Qwabi Engineering: architecture, build, and launch without agency handoffs. Serving South Africa and remote clients.`}
       />
 
       <div className="trust-prose">
@@ -81,9 +84,16 @@ export default function AboutPage() {
         </div>
 
         <p>
-          I am a product engineer and cloud architect with about {AUTHOR_EXPERIENCE_YEARS} years in
-          software. I help founders turn ideas into working apps, platforms, and AI tools without
-          agency overhead or the junior-dev lottery.
+          I am the senior product engineer and technical founder behind{' '}
+          <strong>Qwabi Engineering</strong>. With about {AUTHOR_EXPERIENCE_YEARS} years in software,
+          I help founders turn ideas into working apps, platforms, and AI tools without agency
+          overhead or the junior-dev lottery.
+        </p>
+
+        <p>
+          If you landed here from our homepage, that page is the company view: services, pricing, and
+          how we work. This page is the person behind the delivery: how I think, what I ship, and
+          how to reach me directly.
         </p>
 
         <p>

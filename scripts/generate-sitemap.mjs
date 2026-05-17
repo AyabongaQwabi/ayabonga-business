@@ -167,6 +167,7 @@ async function main() {
       changefreq: 'monthly',
       priority: url.includes('technical-partnership') ? 0.95 : 0.9,
     })),
+    { url: '/projects', changefreq: 'monthly', priority: 0.88 },
     { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
     ...pseoEntries.map((p) => ({
       url: `/solutions/${p.slug}`,

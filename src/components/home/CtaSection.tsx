@@ -1,12 +1,14 @@
 import { Link } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import {
+  GET_ESTIMATE_LABEL,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
   QUOTE_TOOL_LABEL,
   WHATSAPP_URL,
 } from '../../lib/site-config';
+import { BookDiscoveryCallButton } from '../shared/BookDiscoveryCallButton';
 
 /**
  * Gold conversion block. Static render (no scroll-reveal).
@@ -43,10 +45,8 @@ export function CtaSection() {
           first priorities.
         </p>
         <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to={QUOTE_PAGE}
             className="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-3.5 rounded-md font-technical font-semibold text-sm transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3"
             style={{
               background: 'var(--color-text-inverse)',
@@ -54,8 +54,22 @@ export function CtaSection() {
               outlineColor: 'var(--color-text-inverse)',
             }}
           >
+            {GET_ESTIMATE_LABEL}
+          </Link>
+          <BookDiscoveryCallButton variant="inverse" />
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-3.5 rounded-md font-technical font-semibold text-sm transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3"
+            style={{
+              border: '1px solid rgba(10, 25, 47, 0.4)',
+              color: 'var(--color-text-inverse)',
+              outlineColor: 'var(--color-text-inverse)',
+            }}
+          >
             <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
-            Message on WhatsApp
+            WhatsApp
           </a>
           <Link
             to={PRICING_STRATEGY_PAGE}

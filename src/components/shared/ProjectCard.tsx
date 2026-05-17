@@ -16,6 +16,7 @@ export interface ProjectCardProps {
   showImage?: boolean;
   featured?: boolean;
   wip?: boolean;
+  statusLabel?: string;
 }
 
 const cardClassName =
@@ -83,6 +84,7 @@ function ProjectCardContent({
   showExternalIcon,
   featured,
   wip,
+  statusLabel,
 }: {
   title: string;
   description: string;
@@ -90,6 +92,7 @@ function ProjectCardContent({
   showExternalIcon: boolean;
   featured?: boolean;
   wip?: boolean;
+  statusLabel?: string;
 }) {
   return (
     <div className={featured ? 'p-7 md:p-8' : 'p-6'}>
@@ -102,9 +105,9 @@ function ProjectCardContent({
           >
             {title}
           </h3>
-          {wip ? (
+          {wip || statusLabel ? (
             <span className="shrink-0 rounded-full border border-primary/40 bg-primary/10 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-primary">
-              In progress
+              {statusLabel ?? 'In progress'}
             </span>
           ) : null}
         </div>
@@ -146,6 +149,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   showImage = true,
   featured,
   wip,
+  statusLabel,
 }) => {
   const isInternal = url.startsWith('/');
   const thumbnailAlt = imageAlt ?? `${title} project preview`;
@@ -174,6 +178,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         showExternalIcon={!isInternal}
         featured={featured}
         wip={wip}
+        statusLabel={statusLabel}
       />
     </>
   );

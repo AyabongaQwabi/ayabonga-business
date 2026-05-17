@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { RetainerPricingCards } from '../RetainerPricingCards';
 import { BUILD_TO_RETAINER_BRIDGE } from '../../data/build-retainer-bridge';
 import { PRICING_STRATEGY_PAGE } from '../../lib/site-config';
+import { BookDiscoveryCallButton } from '../shared/BookDiscoveryCallButton';
 
 const BRIDGE_SECTION_PATH = `${PRICING_STRATEGY_PAGE}#build-to-retainer`;
 
@@ -70,6 +71,10 @@ export function PricingSection() {
           featuredTierId="essential"
           featuredBadge="Common SMME path"
         />
+
+        <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3 justify-center">
+          <BookDiscoveryCallButton variant="primary" />
+        </div>
       </div>
     </section>
   );
