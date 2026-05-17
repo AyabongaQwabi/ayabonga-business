@@ -1,4 +1,6 @@
+import { MessageCircle } from 'lucide-react';
 import { CLIENT_TESTIMONIALS } from '../../data/client-testimonials';
+import { WHATSAPP_URL } from '../../lib/site-config';
 import { MarketingSection } from '../shared/MarketingSection';
 import { SectionLabel } from '../shared/SectionLabel';
 
@@ -53,6 +55,22 @@ export function TestimonialsSection() {
           </li>
         ))}
       </ul>
+
+      <div className="mt-10 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-primary min-h-[44px]"
+        >
+          <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
+          Discuss your stack on WhatsApp
+        </a>
+        <p className="text-sm text-text-secondary max-w-md">
+          Tell me what you run today and what keeps breaking. If we fit, I send a written proposal
+          with retainer tier and first priorities.
+        </p>
+      </div>
     </MarketingSection>
   );
 }

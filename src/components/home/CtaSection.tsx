@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { MessageCircle } from 'lucide-react';
 import {
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
@@ -27,7 +28,7 @@ export function CtaSection() {
             color: 'var(--color-text-inverse)',
           }}
         >
-          Ready to stop guessing on tech?
+          Get a senior engineer on your product, not another handoff
         </h2>
         <p
           className="mb-8 max-w-[520px] mx-auto text-pretty"
@@ -42,8 +43,10 @@ export function CtaSection() {
           first priorities.
         </p>
         <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
-          <Link
-            to={PRICING_STRATEGY_PAGE}
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-3.5 rounded-md font-technical font-semibold text-sm transition-transform hover:scale-[1.02] active:scale-[0.98] motion-reduce:transform-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3"
             style={{
               background: 'var(--color-text-inverse)',
@@ -51,12 +54,11 @@ export function CtaSection() {
               outlineColor: 'var(--color-text-inverse)',
             }}
           >
-            {PARTNERSHIP_CTA_LABEL}
-          </Link>
-          <a
-            href={WHATSAPP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
+            Message on WhatsApp
+          </a>
+          <Link
+            to={PRICING_STRATEGY_PAGE}
             className="inline-flex items-center justify-center gap-2 min-h-[44px] px-8 py-3.5 rounded-md font-technical font-semibold text-sm transition-colors hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-3"
             style={{
               border: '1px solid rgba(10, 25, 47, 0.4)',
@@ -64,8 +66,8 @@ export function CtaSection() {
               outlineColor: 'var(--color-text-inverse)',
             }}
           >
-            WhatsApp me directly
-          </a>
+            {PARTNERSHIP_CTA_LABEL}
+          </Link>
         </div>
         <p className="mt-8 text-sm" style={{ color: 'rgba(10, 25, 47, 0.7)' }}>
           Greenfield build only?{' '}

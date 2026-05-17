@@ -1,10 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, ClipboardList, MessageCircle } from 'lucide-react';
+import { ArrowRight, CheckCircle2, MessageCircle } from 'lucide-react';
 import { animateHeroHeadline, animateHeroSupport } from '../../lib/animations';
 import {
   APP_DEVELOPMENT_COST_PAGE,
-  MVP_SCOPE_CHECKLIST_LABEL,
   MVP_SCOPE_CHECKLIST_PAGE,
   PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
@@ -13,15 +12,22 @@ import {
 import { SectionLabel } from '../shared/SectionLabel';
 
 const HEADLINE_WORDS = [
-  'Custom',
-  'software',
+  'Senior',
+  'product',
+  'engineer',
   'for',
   'South',
   'African',
-  'teams',
-];
+  'founders',
+  'building',
+  'apps,',
+  'platforms,',
+  'and',
+  'ops',
+  'systems',
+] as const;
 
-const GOLD_WORD_INDEX = 1;
+const GOLD_WORD_INDICES = new Set([4, 5]);
 
 const DEFAULT_PROOF_POINTS = [
   'Software development company South Africa with 10+ years in production',
@@ -53,7 +59,7 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
 
   return (
     <section
-      className="relative isolate flex min-h-[calc(100svh-4.5rem)] min-h-[calc(100dvh-4.5rem)] flex-col justify-center py-6 sm:py-8 scroll-mt-0"
+      className="relative isolate flex min-h-0 flex-col justify-center py-8 sm:py-10 lg:min-h-[calc(100svh-4.5rem)] lg:min-h-[calc(100dvh-4.5rem)] lg:py-8 scroll-mt-0"
       style={{
         background:
           'radial-gradient(ellipse at 20% 50%, rgba(5, 150, 105, 0.06) 0%, transparent 60%)',
@@ -70,7 +76,7 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
       </div>
 
       <div className="container">
-        <div className="mt-8 grid w-full max-w-none items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] xl:max-w-6xl">
+        <div className="mt-4 grid w-full max-w-none items-center gap-8 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] xl:max-w-6xl">
           <div className="min-w-0">
             <SectionLabel className="mb-2 sm:mb-3">
               App development company · South Africa
@@ -79,18 +85,18 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
             <h1
               id="home-hero-heading"
               ref={headlineRef}
-              className="font-display font-black text-text-primary mb-3 sm:mb-4"
+              className="font-display font-black text-text-primary mb-3 sm:mb-4 text-balance max-w-3xl"
               style={{
-                fontSize: 'var(--type-display-hero)',
-                lineHeight: 'var(--leading-display)',
-                letterSpacing: '-0.03em',
+                fontSize: 'clamp(1.625rem, 3.6vw, 2.875rem)',
+                lineHeight: 1.2,
+                letterSpacing: '-0.025em',
               }}
             >
               {HEADLINE_WORDS.map((word, i) => (
                 <span
                   key={`${word}-${i}`}
                   className={`hero-word inline-block mr-[0.2em] ${
-                    i === GOLD_WORD_INDEX ? 'text-accent-gold' : ''
+                    GOLD_WORD_INDICES.has(i) ? 'text-accent-gold' : ''
                   }`}
                 >
                   {word}
@@ -108,54 +114,47 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
             </p>
 
             <p className="mt-3 text-sm text-text-muted max-w-xl">
-              New here? Skim the{' '}
+              Researching first? See the{' '}
               <Link
                 to={APP_DEVELOPMENT_COST_PAGE}
                 className="text-accent-gold font-medium hover:underline underline-offset-4"
               >
                 cost guide
-              </Link>
-              , run the{' '}
+              </Link>{' '}
+              or{' '}
               <Link
                 to={MVP_SCOPE_CHECKLIST_PAGE}
                 className="text-accent-gold font-medium hover:underline underline-offset-4"
               >
                 MVP checklist
               </Link>
-              , then WhatsApp. If we fit, I send a proposal.
+              . If we fit after WhatsApp, I send a written proposal.
             </p>
 
             <div
               ref={ctaRef}
               className="mt-4 sm:mt-5 flex flex-col sm:flex-row flex-wrap gap-2.5 sm:gap-3"
             >
-              <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-primary min-h-[44px]">
-                View 2026 build cost ranges
-                <ArrowRight className="w-4 h-4 shrink-0" aria-hidden />
-              </Link>
-              <Link to={MVP_SCOPE_CHECKLIST_PAGE} className="btn-outline min-h-[44px]">
-                <ClipboardList className="w-5 h-5 shrink-0" aria-hidden />
-                {MVP_SCOPE_CHECKLIST_LABEL}
-              </Link>
               <a
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-outline min-h-[44px] border-[#25D366]/40 text-[#25D366] hover:bg-[#25D366]/10 focus-visible:ring-[#25D366]"
+                className="btn-primary min-h-[44px]"
               >
                 <MessageCircle className="w-5 h-5 shrink-0" aria-hidden />
-                WhatsApp when you are ready
+                Message on WhatsApp
               </a>
+              <Link to={PRICING_STRATEGY_PAGE} className="btn-outline min-h-[44px]">
+                {PARTNERSHIP_CTA_LABEL}
+              </Link>
+              <Link to={APP_DEVELOPMENT_COST_PAGE} className="btn-outline min-h-[44px]">
+                View 2026 build cost ranges
+                <ArrowRight className="w-4 h-4 shrink-0" aria-hidden />
+              </Link>
             </div>
 
             <p className="mt-3 text-sm text-text-secondary">
-              <Link
-                to={PRICING_STRATEGY_PAGE}
-                className="text-accent-gold font-medium hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-gold rounded-sm"
-              >
-                {PARTNERSHIP_CTA_LABEL}
-              </Link>
-              <span className="opacity-80"> · monthly retainers, not one-off handoffs</span>
+              Monthly retainers after go-live, not one-off handoffs.
             </p>
 
             <ul
