@@ -18,7 +18,9 @@ export type WorkProject = {
   imageAlt?: string;
 };
 
-/** CRO todo: add card thumbnails for Trip, My Grad Zaka, Future Start, Kingly, eSpazza. */
+/** Card thumbnails live in public/images/screenshots (filename matches project slug). */
+
+const SCREENSHOTS = '/images/screenshots';
 
 export const WORK_PROJECTS: WorkProject[] = [
   {
@@ -30,8 +32,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     tech: ['React Native', 'Expo', 'Supabase'],
     featured: true,
     wip: true,
-    imageUrl: '/images/utap-screenshot.png',
-    imageAlt: 'uTap campus wallet app screenshot',
+    imageUrl: `${SCREENSHOTS}/utapadmin.png`,
+    imageAlt: 'uTap admin dashboard screenshot',
     relatedLinks: [{ label: 'Vendor portal', url: 'https://vendors.utaptech.co.za' }],
   },
   {
@@ -42,6 +44,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     url: 'https://trip.qwabi.co.za/',
     tech: ['Flutter', 'Supabase', 'React'],
     wip: true,
+    imageUrl: `${SCREENSHOTS}/trip-website.png`,
+    imageAlt: 'Trip ride-hailing marketing website screenshot',
     relatedLinks: [{ label: 'Trip Media', url: 'https://media.qwabi.co.za/' }],
   },
   {
@@ -52,6 +56,8 @@ export const WORK_PROJECTS: WorkProject[] = [
     url: 'https://mygradzaka-web.vercel.app/',
     tech: ['React Native', 'Supabase', 'TypeScript'],
     wip: true,
+    imageUrl: `${SCREENSHOTS}/mygradzaka.png`,
+    imageAlt: 'My Grad Zaka savings app screenshot',
   },
   {
     title: 'Future Start',
@@ -60,6 +66,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Student success services for South African tertiary learners: application support, mentoring, accommodation help, and national student excellence programs including SASEA.',
     url: 'https://www.futurestart.co.za/',
     tech: ['Web', 'Student services'],
+    imageUrl: `${SCREENSHOTS}/futurestart.png`,
+    imageAlt: 'Future Start student services website screenshot',
   },
   {
     title: 'ClinicPlus',
@@ -68,8 +76,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Occupational health bookings for mining and construction companies in Witbank and Mpumalanga. Customer web app and admin console on MERN with Google Cloud, plus realtime coordination between clinics and sites.',
     url: 'https://clinicplusbookings.co.za/',
     tech: ['React', 'Node.js', 'MongoDB', 'GCP'],
-    imageUrl: '/images/clinicplus.jpg',
-    imageAlt: 'ClinicPlus occupational health booking platform',
+    imageUrl: `${SCREENSHOTS}/clinicplus-clients.png`,
+    imageAlt: 'ClinicPlus client booking app screenshot',
   },
   {
     title: 'Laundry Marketplace',
@@ -78,8 +86,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Turnkey laundry marketplace with admin, partner, driver, and customer apps. Full order lifecycle from booking through pickup, processing, delivery, and payouts.',
     url: 'https://laundry.qwabi.co.za',
     tech: ['Next.js', 'Marketplace', 'Payments'],
-    imageUrl: '/images/projects/laundry-marketplace.jpg',
-    imageAlt: 'Laundry marketplace customer and provider flow',
+    imageUrl: `${SCREENSHOTS}/laundry-marketplace-admin.png`,
+    imageAlt: 'Laundry marketplace admin dashboard screenshot',
   },
   {
     title: 'Queens Connect',
@@ -88,8 +96,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Friendly AI companion for the Queenstown community with local information and assistance. Built as a web experience with patterns ready for WhatsApp-style outreach.',
     url: 'https://queensconnect.qwabi.co.za',
     tech: ['AI', 'Next.js', 'OpenAI'],
-    imageUrl: '/images/projects/queens-connect.jpg',
-    imageAlt: 'Queens Connect community AI assistant',
+    imageUrl: `${SCREENSHOTS}/queensconnect.png`,
+    imageAlt: 'Queens Connect community AI assistant screenshot',
   },
   {
     title: 'Kingly',
@@ -98,6 +106,8 @@ export const WORK_PROJECTS: WorkProject[] = [
       'AI tool for documentation-first vibe coding: structured prompts and project docs aimed at developer productivity in Cursor-style workflows.',
     url: 'https://kingly.qwabi.co.za',
     tech: ['AI', 'React', 'TypeScript'],
+    imageUrl: `${SCREENSHOTS}/kingly.png`,
+    imageAlt: 'Kingly documentation and vibe coding tool screenshot',
   },
   {
     title: 'eSpazza',
@@ -106,5 +116,7 @@ export const WORK_PROJECTS: WorkProject[] = [
       'Xhosa hip hop music streaming and blogging celebrating Eastern Cape hip hop culture. React and Express stack with MongoDB for content and playback.',
     url: 'https://xhosahiphop.co.za/',
     tech: ['React', 'Express', 'MongoDB'],
+    imageUrl: `${SCREENSHOTS}/espazza.png`,
+    imageAlt: 'eSpazza Xhosa hip hop streaming site screenshot',
   },
 ];
