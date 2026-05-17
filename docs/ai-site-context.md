@@ -1,6 +1,8 @@
 # Business website — AI context
 
-Reference for agents working on **ayabonga-business** (marketing and conversion site). Last aligned to repo routing in `src/main.tsx` and data under `src/data/`.
+Reference for agents working on **ayabonga-business** (marketing and conversion site). Align copy and UI with [`.agents/product-marketing-context.md`](../.agents/product-marketing-context.md), [`docs/brand-guidelines.md`](./brand-guidelines.md), and [`docs/redesign/Consolidated Design Guidelines.md`](./redesign/Consolidated%20Design%20Guidelines.md).
+
+*Last updated: 17 May 2026*
 
 ---
 
@@ -10,242 +12,237 @@ Reference for agents working on **ayabonga-business** (marketing and conversion 
 | --- | --- |
 | **Canonical URL** | https://business.qwabi.co.za |
 | **Brand in nav** | Qwabi Engineering |
-| **Legal / schema name** | Ayabonga Qwabi (`Qwabi Technologies` in structured data) |
+| **Legal / schema** | Qwabi Technologies (`Ayabonga Qwabi` as founder in Person schema) |
 | **Repo** | `ayabonga-business` |
-| **Role** | Commercial site: lead generation, SEO (Search Engine Optimization), pricing transparency, and partnership positioning for software work in South Africa |
+| **Role** | Commercial site: lead generation, SEO (Search Engine Optimization), ZAR pricing transparency, retainers, programmatic landing pages, local SEO hubs, lead capture, admin leads |
 
-This is **not** the personal portfolio site. The personal site lives at https://www.qwabi.co.za (`ayabonga` repo). The business site links to it from the footer as **Personal site**. Keep positioning distinct:
+**Not** the personal portfolio. Personal site: https://www.qwabi.co.za (`ayabonga` repo). Footer link: **Personal site**.
 
-- **Personal site:** craft, writing, broader identity, art-forward home experience.
-- **Business site:** buyer intent, ZAR pricing bands, retainers, programmatic landing pages, local SEO hubs, lead capture, admin leads tooling.
+| Site | Voice | Job |
+| --- | --- | --- |
+| business.qwabi.co.za | **We** (company) | Convert: estimate, discovery, retainers |
+| www.qwabi.co.za | **I** (founder) | Authority, writing, craft |
 
 ---
 
-## What it is about (positioning)
+## Positioning (Master Positioning v1.1)
 
-**One-line:** Senior product engineer and cloud architect in South Africa who builds mobile apps, web platforms, custom business systems, ecommerce, and AI automation, with long-term technical partnership (retainers) instead of agency overhead.
+**Company one-liner:** Qwabi Engineering builds AI-powered software systems that help businesses automate, scale, and modernise their operations.
 
-**Primary audience**
+**Primary shelves (ranked):**
 
-- Non-technical founders and SMME (small, medium, and micro enterprise) operators in South Africa
-- Teams comparing agencies, junior freelancers, no-code, or fractional CTO (Chief Technology Officer) options
-- Buyers searching for local developers (Eastern Cape and national)
+1. Custom software development company (South Africa)
+2. AI-powered software systems studio
+3. Technical partner for businesses and agencies
 
-**Core promise**
+**Geography:** South Africa first → Eastern Cape (proof, local SEO) → remote/global.
 
-- Direct access to the senior engineer who ships production code
-- Production-minded architecture (payments, POPIA-aware patterns, mobile-first)
-- Ongoing ownership via monthly retainers after launch
+**Homepage hero (company angle):** Software development company · South Africa. Custom software development for South African businesses. Senior engineer-led delivery; Eastern Cape based; remote-friendly.
 
-**Proof projects** (external live URLs, cited on home and landings)
+**Founder angle (not homepage H1):** `/about` via **Meet the engineer** (`FOUNDER_PAGE_LABEL` in `site-config.ts`). Personal site for full founder story.
 
-- Laundry Marketplace — https://laundry.qwabi.co.za/
-- ClinicPlus — https://clinicplusbookings.co.za/
-- UTap — https://utaptech.co.za/
-- Queens Connect — https://queensconnect.qwabi.co.za/
-- Kingly — https://kingly.qwabi.co.za/
-- eSpazza — https://xhosahiphop.co.za/ (also `/projects/espazza` case study on this site)
+**Core customer line:** “We need a system, not just a website. Something that actually runs the business.”
 
-**Primary CTAs**
+**Retired on company copy:** junior dev lottery · business-right · vague “technical partnership” as lead phrase.
 
-| CTA | Path / action |
+**Competitors:** Never name on public pages. Category contrast only (internal list in product-marketing-context).
+
+---
+
+## Design system (implementation)
+
+**Direction:** Accessible Dark Authority (dark navy, gold primary CTA, restrained motion).
+
+| Layer | Location |
 | --- | --- |
-| Start a technical partnership | `/pricing-strategy` |
-| Project scope estimator | `/get-a-quote` |
-| WhatsApp | `https://wa.me/27603116777` (pre-filled message in `site-config`) |
+| CSS tokens | `src/index.css` (`--color-surface-*`, `--type-*`, `--space-*`) |
+| Full spec | `docs/redesign/Consolidated Design Guidelines.md` |
+| Hero animation | `src/lib/animations.ts` + `.hero-word` spans in `HeroSection.tsx` |
+| Nav | `SiteNav.tsx` (fixed, blur on scroll, gold wordmark) |
+
+**Motion zones:**
+
+- **Impression:** hero kinetic typography only
+- **Evaluation:** `/get-a-quote`, `/pricing-strategy`, forms (no scroll animations)
+- **Transition:** services, work, testimonials (subtle reveal)
+
+**Accessibility:** WCAG AA contrast, `prefers-reduced-motion`, keyboard focus, 44px touch targets.
+
+**Gold rule:** One primary gold CTA per viewport. Final `#contact` section uses full gold background.
 
 ---
 
-## Tech stack (implementation)
+## Tech stack
 
 - **Framework:** Vite + React 18 + TypeScript
 - **Routing:** React Router 7 (`src/main.tsx`)
-- **Styling:** Tailwind CSS + design tokens in `src/index.css`
-- **SEO:** `react-helmet-async`, JSON-LD in key pages, `scripts/generate-sitemap.mjs` post-build
-- **Hosting:** Vercel (Analytics, Speed Insights, serverless `api/`)
-- **Lead storage:** Vercel Blob + Resend email (`api/send.ts`, `/admin` portal)
-- **Blog content:** Markdown in `src/content/blog/` (routes exist; see indexing note below)
-
-**Config sources agents should read first**
-
-| File | Purpose |
-| --- | --- |
-| `src/lib/site-config.ts` | Origin URL, CTAs, WhatsApp, key path constants |
-| `src/lib/author-profile.ts` | Job title, bio, schema person fields |
-| `docs/brand-guidelines.md` | Voice, colors, typography |
-| `CLAUDE.md` (repo root) | Anti-AI writing rules for all user-facing copy |
+- **Styling:** Tailwind CSS + design tokens in `src/index.css` (prefer CSS variables over arbitrary hex)
+- **Motion:** GSAP (hero only when motion allowed); CSS scroll-reveal in transition zones
+- **SEO:** `react-helmet-async` (one `meta description` per route; no duplicate tags in `index.html`)
+- **Prerender:** `scripts/prerender-developers.mjs` post-build (static HTML for key routes)
+- **Hosting:** Vercel (Analytics, Speed Insights, `api/`)
+- **Leads:** Vercel Blob + Resend (`api/send.ts`, `/admin`)
+- **Blog:** `src/content/blog/` (routes exist; `robots.txt` disallows `/blog` for crawlers)
 
 ---
 
-## Site hierarchy (information architecture)
+## Config and data sources
 
-High-level tree. Indentation = parent → child. Dynamic counts come from current data files.
+| File | Purpose |
+| --- | --- |
+| `src/lib/site-config.ts` | `SITE_ORIGIN`, CTAs, `ABOUT_PAGE`, `FOUNDER_PAGE_LABEL`, WhatsApp, page paths |
+| `src/lib/author-profile.ts` | Founder schema fields for `/about` |
+| `src/data/client-testimonials.ts` | Approved client feedback quotes |
+| `src/data/pricing-strategy.ts` | Retainer tiers (align names with product-marketing-context) |
+| `src/data/service-landing-pages.ts` | Service landings meta + content |
+| `src/data/buyer-intent-pages.ts` | Buyer-intent landings |
+| `src/data/partnership-landing-pages.ts` | Partnership landings |
+| `src/data/pseo-pages.json` | `/solutions/:slug` |
+| `src/data/comparisons.json` | `/vs/:slug` |
+| `src/data/local-developers.json` | `/developers/...` matrix |
+| `.agents/product-marketing-context.md` | Messaging, SEO, testimonials, WhatsApp templates |
+| `docs/brand-guidelines.md` | Voice + visual summary |
+| `CLAUDE.md` | Anti-AI writing rules (mandatory for user-facing strings) |
+
+---
+
+## CTAs and conversion
+
+| Priority | Label / path | Notes |
+| --- | --- | --- |
+| 1 | Get estimate → `/get-a-quote` | `QUOTE_TOOL_LABEL`: “Project scope estimator” in nav |
+| 2 | Book a discovery call | URL pending; prefer Cal.com when live |
+| 3 | WhatsApp → `WHATSAPP_URL` | Secondary, not primary hero |
+| Retainer path | `PARTNERSHIP_CTA_LABEL` → `/pricing-strategy` | “Start a technical partnership” |
+
+**Retainer public names:** Build & Support · Product Growth · AI Systems.
+
+**Discovery call:** Not live yet. Until then: disabled button, coming soon, or WhatsApp fallback copy per product-marketing-context.
+
+---
+
+## Site hierarchy
 
 ```
 business.qwabi.co.za
 ├── Home (/)
-│   ├── #services          (in-page)
+│   ├── #services
 │   ├── #partnership
 │   ├── #build-costs
-│   ├── #pricing
-│   ├── #build
 │   ├── #work
+│   ├── #testimonials
+│   ├── #pricing
 │   └── #contact
-│
 ├── Conversion & trust
-│   ├── /pricing-strategy          Retainer tiers and partnership philosophy
-│   ├── /get-a-quote               Interactive scope / ZAR ballpark estimator
-│   ├── /app-development-cost-south-africa   2026 cost guide (anchor hub)
-│   ├── /about
+│   ├── /projects          (full shipped-work catalog)
+│   ├── /pricing-strategy
+│   ├── /get-a-quote
+│   ├── /app-development-cost-south-africa
+│   ├── /mvp-scope-checklist
+│   ├── /about          (founder / Meet the engineer)
 │   └── /privacy
-│
-├── Core service hubs (hand-authored pages)
+├── Core hubs
 │   ├── /services
-│   └── /technical-cofounder       TaaS (Technical co-founder as a Service) positioning
-│
-├── Service landings (data: service-landing-pages.ts) — 2 pages
+│   └── /technical-cofounder
+├── Service landings (service-landing-pages.ts)
 │   ├── /mobile-app-development-south-africa
 │   └── /custom-software-development-south-africa
-│
-├── Buyer-intent landings (data: buyer-intent-pages.ts) — 2 pages
-│   ├── /mvp-developer-south-africa
-│   └── /best-app-developers-south-africa
-│
-├── Partnership / lead landings (data: partnership-landing-pages.ts) — 5 pages
-│   ├── /ai-agents-whatsapp-south-africa
-│   ├── /marketplace-development-south-africa
-│   ├── /logistics-platform-development-south-africa
-│   ├── /technical-partnership-phase-1
-│   └── /senior-product-engineer-south-africa
-│
-├── Industry solutions (data: pseo-pages.json) — /solutions/:slug — 12 pages
-│   ├── /solutions/fintech-founders-south-africa
-│   ├── /solutions/logistics-apps-cape-town
-│   ├── /solutions/healthcare-startups-johannesburg
-│   ├── /solutions/edutech-platforms-south-africa
-│   ├── /solutions/marketplace-founders-south-africa
-│   ├── /solutions/digital-transformation-experts-south-africa
-│   ├── /solutions/ai-integration-specialist-south-africa
-│   ├── /solutions/technical-cofounder-as-a-service-south-africa
-│   ├── /solutions/proptech-solutions-south-africa
-│   ├── /solutions/ecommerce-scale-south-africa
-│   ├── /solutions/saas-product-engineering-south-africa
-│   └── /solutions/solar-energy-platforms-south-africa
-│
-├── Comparisons (data: comparisons.json) — /vs/:slug — 5 pages
-│   ├── /vs/technical-cofounder-vs-agency
-│   ├── /vs/ayabonga-vs-junior-dev-lottery
-│   ├── /vs/senior-engineering-vs-no-code
-│   ├── /vs/taas-vs-fractional-cto
-│   └── /vs/ayabonga-vs-dev-shops
-│
-├── Local SEO (data: local-developers.json)
-│   ├── /developers/south-africa              Region hub
-│   ├── /developers/eastern-cape              Region hub
-│   └── /developers/eastern-cape/:city/:role  8 cities × 5 roles = 40 pages
-│         Cities: queenstown, east-london, gqeberha, mthatha, makhanda,
-│                   butterworth, qonce, port-alfred
-│         Roles: software-developer, software-engineer, web-developer,
-│                 web-designer, cloud-architect
-│
-├── Case study
-│   └── /projects/espazza
-│
-├── Blog (implemented, de-prioritized for crawlers)
-│   ├── /blog
-│   └── /blog/:slug
-│
-├── Trust pages (components exist; verify route wiring)
-│   ├── /editorial      Referenced from /about; in sitemap — confirm route in main.tsx
-│   └── /corrections    In sitemap — confirm route in main.tsx
-│
-└── Admin (noindex intent — password protected)
-    ├── /admin
-    ├── /admin/leads
-    ├── /admin/leads/:id
-    └── /admin/templates
+├── Buyer intent (buyer-intent-pages.ts)
+├── Partnership landings (partnership-landing-pages.ts)
+├── /solutions/:slug (pseo-pages.json)
+├── /vs/:slug (comparisons.json)
+├── /developers/... (local-developers.json)
+├── /projects/espazza
+├── /blog/:slug (de-prioritized in robots)
+└── /admin/* (noindex intent)
 ```
 
----
-
-## Navigation vs sitemap
-
-**Homepage primary nav** (`MarketingNav`): hash sections Services, Partnership, Work; routes App costs, Retainers; CTAs Quote tool and Partnership.
-
-**Footer** (`SiteFooter`): About, App development cost, Retainer pricing, Services, Mobile apps, Custom software, Technical co-founder, Quote tool, Privacy, GitHub, LinkedIn, link to personal site.
-
-**Sitemap / robots** (`scripts/generate-sitemap.mjs`):
-
-- Includes static routes, all programmatic URLs above, and local developer matrix.
-- **`Disallow: /blog`** and **`Disallow: /admin`** in `robots.txt`.
-- Blog routes remain in the app for direct links but are not the SEO focus of this property.
+When adding URLs: update data or `main.tsx`, then rebuild (sitemap + prerender).
 
 ---
 
-## Page types (how templates map)
+## Navigation (current)
 
-| Type | Route pattern | Source | Component |
+**`SiteNav`:** Services, Partnership, App costs, Retainers, Work, **Meet the engineer** (`/about`), Get a quote, Start a technical partnership.
+
+**`SiteFooter`:** Services group, Resources (cost guide, retainers, quote), Company (Meet the engineer, Privacy, Personal site, social).
+
+---
+
+## Homepage section map (implemented order)
+
+| Order | Section `id` | Component | Design notes |
 | --- | --- | --- | --- |
-| Home | `/` | `HomePage.tsx` | Marketing layout + sections |
-| Static marketing | fixed paths | `src/pages/*.tsx` | Per-page Helmet + layout |
-| Service landing | fixed paths | `service-landing-pages.ts` | `ServiceLandingPage.tsx` |
-| Buyer intent | fixed paths | `buyer-intent-pages.ts` | `BuyerIntentPage.tsx` |
-| Partnership landing | fixed paths | `partnership-landing-pages.ts` | `PartnershipLandingPage.tsx` |
-| Industry pSEO | `/solutions/:slug` | `pseo-pages.json` | `DynamicServicePage.tsx` |
-| Comparison pSEO | `/vs/:slug` | `comparisons.json` | `DynamicComparisonPage.tsx` |
-| Local pSEO | `/developers/...` | `local-developers.json` | `DevelopersRegionHub`, `LocalDeveloperPage` |
-| Blog | `/blog/:slug` | `src/content/blog/*.md` | `Blog.tsx`, `BlogPost.tsx` |
-| Admin | `/admin/*` | Vercel Blob API | `src/pages/admin/*` |
-
-When adding URLs, update **both** the data file (or `main.tsx` for static routes) and rely on build-time sitemap generation to pick up new paths.
+| 1 | (hero) | `HeroSection` | Kinetic words; company H1; link to `/about` |
+| 2 | `services` | `ServicesSection` | Bento-style grid target |
+| 3 | `partnership` | `PartnershipSection` | Retainer story |
+| 4 | `build-costs` | `BuildCostsTeaser` | Links to cost guide |
+| 5 | `work` | `WorkSection` | Alternating project layout |
+| 6 | `testimonials` | `TestimonialsSection` | `client-testimonials.ts` |
+| 7 | `pricing` | `PricingSection` | No motion (evaluation zone) |
+| 8 | `contact` | `CtaSection` | Gold full-width CTA |
 
 ---
 
-## Homepage section map
+## Client feedback (testimonials)
 
-For in-page nav and copy edits:
+Source: `src/data/client-testimonials.ts` (must match approved list in `.agents/product-marketing-context.md`).
 
-| Section `id` | Purpose |
-| --- | --- |
-| `services` | Six service pillars (mobile, web, business systems, ecommerce, AI, bespoke) |
-| `partnership` | Retainer / partnership pillars |
-| `build-costs` | Teaser to cost guide |
-| `pricing` | Retainer pricing cards |
-| `build` | Build types (marketplace, mobile, web, ops, health, fintech) |
-| `work` | Project cards |
-| `contact` | Final CTA block |
+Label on site: **Client feedback** or “What clients say”, not unverified “testimonials”.
+
+Priority clients for homepage rotation: Future Start, Warner Music Africa, Ilithiyana, eStudio Glam, Lungi The Strategist (see product-marketing-context for full nine).
+
+**Hero proof URLs** (also use in work/case studies where relevant): futurestart.co.za, warnermusicafrica.com, anconsulting.co.za, mpumelelo.vercel.app, estudioglam.co.za, ilithiyana.co.za, lungithestrategist.com, mlab.co.za, clinicpluswtb.co.za, plus portfolio (laundry.qwabi.co.za, utaptech.co.za, etc.).
+
+---
+
+## SEO
+
+**Primary cluster:** software development company south africa
+
+**Secondary:** app development south africa · custom software eastern cape · AI automation south africa · SaaS development south africa
+
+**Meta tags:** One description per route via Helmet only. Do not re-add global description in `index.html`.
+
+**Eastern Cape:** Regional hubs and city/role pages; natural city names; no thin duplicate spam.
+
+**Blog:** Disallow in robots; not primary SEO focus for this property.
+
+**Personal site:** Does not compete for company shelf keywords.
 
 ---
 
 ## Voice and content rules (summary)
 
-Full rules: repo `CLAUDE.md` and `docs/brand-guidelines.md`.
+From `CLAUDE.md` + product-marketing-context:
 
-- Direct, technical, personal, never corporate
-- No em dashes in user-facing copy
-- No colon-style blog titles (`Topic: Subtitle`)
-- Avoid AI clichés and performative sass
-- CTAs must be specific (partnership, scope call, WhatsApp), not vague “transform” language
-- ZAR pricing ranges use en dash for ranges (e.g. `R100k – R250k`)
+- **We** on business pages; **I** only on `/about`
+- Direct, calm, outcomes first; AI-powered sparingly
+- No em dashes, no colon blog titles, no unlock/empower/transform fluff
+- ZAR ranges use en dash: `R100k – R250k`
+- SA payments (Paystack, PayFast, Ozow) only when accurate to scope
+- POPIA (Protection of Personal Information Act) awareness where relevant, not legal advice
 
 ---
 
 ## Related repositories
 
-| Repo | URL | Use |
-| --- | --- | --- |
-| `ayabonga-business` | business.qwabi.co.za | This document |
-| `ayabonga` | www.qwabi.co.za | Personal brand, blog-forward, shared patterns may diverge |
+| Repo | URL |
+| --- | --- |
+| `ayabonga-business` | https://business.qwabi.co.za |
+| `ayabonga` | https://www.qwabi.co.za |
 
-Codebases share similar page names and data shapes; do not assume routes or copy are identical without checking each repo.
+Do not assume identical routes or copy between repos.
 
 ---
 
 ## Quick checklist for AI tasks
 
-1. Confirm you are editing **ayabonga-business**, not the personal site, unless the user says otherwise.
-2. Use `VITE_SITE_URL` / `SITE_ORIGIN` for canonical and OG URLs.
-3. New marketing URLs: add data + route + rebuild sitemap.
-4. Respect `CLAUDE.md` writing constraints on all visible strings.
-5. Do not expose admin credentials or commit `.env.local`.
-6. Payment and compliance copy should reference South African gateways (Paystack, PayFast, Ozow) only when accurate to scope.
+1. Editing **ayabonga-business** unless user says otherwise.
+2. Read product-marketing-context before marketing copy changes.
+3. UI changes: Consolidated Design Guidelines + `src/index.css` tokens.
+4. New URLs: data file + route + sitemap/prerender build.
+5. One `meta description` per page (Helmet only).
+6. Respect motion zones (no animation on quote/pricing).
+7. Do not commit secrets (`.env.local`, admin passwords).
+8. Bundle AI tool config changes (`.agents/`, `.cursor/`, etc.) when applicable per repo hygiene rules.
