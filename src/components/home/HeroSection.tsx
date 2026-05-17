@@ -10,6 +10,7 @@ import {
   WHATSAPP_URL,
 } from '../../lib/site-config';
 import { SectionLabel } from '../shared/SectionLabel';
+import { ClientLogoStrip } from './ClientLogoStrip';
 
 const HEADLINE_WORDS = [
   'Senior',
@@ -45,6 +46,7 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
   const subRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const proofRef = useRef<HTMLUListElement>(null);
+  const trustRef = useRef<HTMLDivElement>(null);
   const visualRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
     if (subRef.current) support.push(subRef.current);
     if (ctaRef.current) support.push(ctaRef.current);
     if (proofRef.current) support.push(proofRef.current);
+    if (trustRef.current) support.push(trustRef.current);
     if (visualRef.current) support.push(visualRef.current);
     if (support.length) animateHeroSupport(support);
   }, []);
@@ -188,6 +191,10 @@ export function HeroSection({ proofPoints = DEFAULT_PROOF_POINTS }: HeroSectionP
               className="w-full rounded-xl object-cover object-top max-h-[min(72vh,640px)]"
             />
           </div>
+        </div>
+
+        <div ref={trustRef} className="mt-8 lg:mt-10 max-w-3xl xl:max-w-none">
+          <ClientLogoStrip />
         </div>
       </div>
     </section>
