@@ -26,8 +26,25 @@ const DevelopersRegionHub = lazy(() => import('./pages/DevelopersRegionHub.tsx')
 const LocalDeveloperPage = lazy(() => import('./pages/LocalDeveloperPage.tsx'));
 const EspazzaProject = lazy(() => import('./pages/EspazzaProject.tsx'));
 const ProjectsPage = lazy(() => import('./pages/ProjectsPage.tsx'));
+const CaseStudyIndexPage = lazy(() => import('./pages/CaseStudyIndexPage.tsx'));
+const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage.tsx'));
 const BuyerIntentPage = lazy(() => import('./pages/BuyerIntentPage.tsx'));
+const InsightPage = lazy(() => import('./pages/InsightPage.tsx'));
 const PartnershipLandingPage = lazy(() => import('./pages/PartnershipLandingPage.tsx'));
+const IndustryIndexPage = lazy(() => import('./pages/IndustryIndexPage.tsx'));
+const IndustryPage = lazy(() => import('./pages/IndustryPage.tsx'));
+const InsightIndexPage = lazy(() => import('./pages/InsightIndexPage.tsx'));
+const SoftwareDevelopmentPricingPage = lazy(
+  () => import('./pages/SoftwareDevelopmentPricingPage.tsx'),
+);
+const SaasDevelopmentPricingPage = lazy(
+  () => import('./pages/SaasDevelopmentPricingPage.tsx'),
+);
+const AiAutomationPricingPage = lazy(() => import('./pages/AiAutomationPricingPage.tsx'));
+const WebsiteDevelopmentPricingPage = lazy(
+  () => import('./pages/WebsiteDevelopmentPricingPage.tsx'),
+);
+const SitemapPage = lazy(() => import('./pages/SitemapPage.tsx'));
 const NotFound = lazy(() => import('./pages/NotFound.tsx'));
 
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin.tsx'));
@@ -52,8 +69,12 @@ export default function App() {
         />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/editorial" element={<EditorialPage />} />
+        <Route path="/insights" element={<InsightIndexPage />} />
+        <Route path="/insights/:slug" element={<InsightPage />} />
 
         <Route path="/services" element={<ServicesPage />} />
+        <Route path="/industries" element={<IndustryIndexPage />} />
+        <Route path="/industries/:slug" element={<IndustryPage />} />
         <Route path="/technical-cofounder" element={<TechnicalCofounderPage />} />
         <Route path="/solutions/:slug" element={<DynamicServicePage />} />
         <Route path="/vs/:slug" element={<DynamicComparisonPage />} />
@@ -91,6 +112,20 @@ export default function App() {
 
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/espazza" element={<EspazzaProject />} />
+        <Route path="/case-studies" element={<CaseStudyIndexPage />} />
+        <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
+        <Route
+          path="/software-development-pricing"
+          element={<SoftwareDevelopmentPricingPage />}
+        />
+        <Route path="/saas-development-pricing" element={<SaasDevelopmentPricingPage />} />
+        <Route path="/ai-automation-pricing" element={<AiAutomationPricingPage />} />
+        <Route
+          path="/website-development-pricing"
+          element={<WebsiteDevelopmentPricingPage />}
+        />
+
+        <Route path="/sitemap" element={<SitemapPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
