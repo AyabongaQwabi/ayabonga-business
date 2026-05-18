@@ -43,8 +43,8 @@ function mapCatalogToWork(entry: ProjectCatalogEntry, index: number): WorkProjec
     wip,
     statusLabel,
     relatedLinks: entry.relatedLinks,
-    imageUrl: entry.imageUrl,
-    imageAlt: entry.imageAlt,
+    imageUrl: index === 0 ? entry.imageUrl : undefined,
+    imageAlt: index === 0 ? entry.imageAlt : undefined,
   };
 }
 

@@ -14,8 +14,9 @@ import {
   WHATSAPP_URL,
 } from '../lib/site-config';
 
-const PAGE_TITLE = 'Engineering Services';
-const PAGE_DESCRIPTION = 'Senior Product Engineering at 5x Speed. I provide Technical Co-founder as a Service for founders and agencies in South Africa.';
+const PAGE_TITLE = 'Software development services';
+const PAGE_DESCRIPTION =
+  'Custom software, mobile apps, web platforms, and business systems for South African teams. Senior-led delivery from Qwabi Engineering.';
 
 export default function ServicesPage() {
   return (
@@ -37,13 +38,14 @@ export default function ServicesPage() {
         <ScrollReveal>
         <PageHero
           className="mb-16"
-          eyebrow="Engineering services · South Africa"
+          eyebrow="Software development · South Africa"
           title={
             <>
-              Senior Product Engineering <span className="text-primary">at 5x Speed.</span>
+              Custom software, apps, and{' '}
+              <span className="text-primary">business systems</span>
             </>
           }
-          subtitle='I do not just build apps. I build businesses. With AI force multipliers and a "team of one" workflow, I deliver production-ready software without agency overhead.'
+          subtitle="We design and ship production software for founders, operators, and agency partners. Staged delivery, honest ZAR ranges, and monthly retainers after launch when you need ongoing ownership."
           imageSrc={HERO_IMAGES.servicesHub}
           imageAlt="Senior product engineer workspace for South African software delivery"
         />
@@ -52,34 +54,40 @@ export default function ServicesPage() {
         <section className="grid md:grid-cols-3 gap-8 mb-24">
           <div className="p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all">
             <Rocket className="w-10 h-10 text-primary mb-6" />
-            <h2 className="text-2xl font-bold mb-4">The Visionary Founder</h2>
+            <h2 className="text-2xl font-bold mb-4">Founders and product teams</h2>
             <p className="text-muted-foreground mb-6">
-              You have a business idea but no technical partner. You don't want to manage a team of junior devs; you want someone you can trust to own the build.
+              You need a real v1, not a demo that breaks under real users. We scope one critical
+              workflow, ship in visible milestones, and keep the same senior engineer on the build.
             </p>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
-                <span>MVP in 4-8 weeks</span>
+                <span>Scoped MVPs in weeks, not mystery sprints</span>
               </li>
               <li className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
-                <span>Strategic Technical Partner</span>
+                <span>Mobile apps and web platforms</span>
               </li>
               <li className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
-                <span>Zero Equity Required</span>
+                <span>Written scope before you commit</span>
               </li>
             </ul>
-            <Link to="/solutions/technical-cofounder-as-a-service-south-africa" className="inline-flex items-center gap-2 mt-8 text-sm font-bold text-primary hover:underline">
-              Learn about TaaS <ArrowRight className="w-4 h-4" />
+            <Link
+              to="/mobile-app-development-south-africa"
+              className="inline-flex items-center gap-2 mt-8 text-sm font-bold text-primary hover:underline"
+            >
+              Mobile app development <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all">
             <Users className="w-10 h-10 text-primary mb-6" />
-            <h2 className="text-2xl font-bold mb-4">The Orchestrator</h2>
+            <h2 className="text-2xl font-bold mb-4">Agencies and consultants</h2>
             <p className="text-muted-foreground mb-6">
-              You're an agency or consultant who wins big clients but needs a reliable builder behind the scenes to protect your reputation and deliver quality.
+              You sell strategy or design and need engineering that protects your reputation.
+              We deliver white-label builds with clear milestones and no surprise handoffs to
+              juniors.
             </p>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
@@ -99,9 +107,10 @@ export default function ServicesPage() {
 
           <div className="p-8 rounded-2xl bg-card border border-border hover:border-primary/50 transition-all">
             <BarChart className="w-10 h-10 text-primary mb-6" />
-            <h2 className="text-2xl font-bold mb-4">The Scaler</h2>
+            <h2 className="text-2xl font-bold mb-4">Operations and SMME teams</h2>
             <p className="text-muted-foreground mb-6">
-              You have an established business operating on manual chaos (WhatsApp/IG). You need to digitize to build credibility and unlock professional scale.
+              Spreadsheets and WhatsApp groups are failing. You need CRM, inventory, bookings, or
+              payroll workflows in software your staff will actually use.
             </p>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center gap-2">
@@ -114,11 +123,14 @@ export default function ServicesPage() {
               </li>
               <li className="flex items-center gap-2">
                 <Zap className="w-4 h-4 text-primary" />
-                <span>Data-Driven Growth</span>
+                <span>Reporting your team can trust</span>
               </li>
             </ul>
-            <Link to="/solutions/digital-transformation-experts-south-africa" className="inline-flex items-center gap-2 mt-8 text-sm font-bold text-primary hover:underline">
-              Digital Transformation <ArrowRight className="w-4 h-4" />
+            <Link
+              to="/custom-software-development-south-africa"
+              className="inline-flex items-center gap-2 mt-8 text-sm font-bold text-primary hover:underline"
+            >
+              Custom software development <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
@@ -126,15 +138,18 @@ export default function ServicesPage() {
         {/* Why One Person? */}
         <section className="mb-24 bg-primary/5 rounded-3xl p-8 md:p-12 border border-primary/10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6">Why the "Team of One" is Your Secret Advantage</h2>
+            <h2 className="text-3xl font-bold mb-6">Why one senior owner on the build</h2>
             <div className="grid sm:grid-cols-2 gap-8 text-left mt-12">
               <div className="flex gap-4">
                 <div className="shrink-0 w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
                   <Cpu className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold mb-2">Zero Communication Overhead</h3>
-                  <p className="text-sm text-muted-foreground">No meetings to discuss meetings. Decisions that take an agency two weeks happen in an afternoon.</p>
+                  <h3 className="font-bold mb-2">Fewer handoffs</h3>
+                  <p className="text-sm text-muted-foreground">
+                    The person who scoped the work writes the code. Decisions do not wait on a chain
+                    of account managers.
+                  </p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -142,10 +157,51 @@ export default function ServicesPage() {
                   <ShieldCheck className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold mb-2">Senior Accountability</h3>
-                  <p className="text-sm text-muted-foreground">You aren't paying for a senior to sell you and a junior to build for you. I own every line of code.</p>
+                  <h3 className="font-bold mb-2">Senior accountability</h3>
+                  <p className="text-sm text-muted-foreground">
+                    You are not paying for a senior pitch and a junior delivery. We own architecture,
+                    implementation, and launch quality.
+                  </p>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        {/* AI-Powered Rapid Build Promotion */}
+        <section className="mb-24 relative overflow-hidden rounded-3xl p-8 md:p-12 border border-accent-gold/20 bg-gradient-to-br from-accent-gold/5 via-transparent to-primary/5">
+          <div className="relative z-10 grid md:grid-cols-3 gap-8 items-center">
+            <div className="md:col-span-2">
+              <span className="inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider text-accent-gold bg-accent-gold/10 rounded-full mb-4">
+                Next-Gen Delivery Model
+              </span>
+              <h2 className="text-3xl font-bold mb-4">AI-powered rapid app development</h2>
+              <p className="text-muted-foreground mb-6 max-w-xl">
+                Need to ship a premium custom application or MVP under tight constraints? By combining senior-led software architecture with advanced, human-governed AI engineering workflows, we cut development timelines and cost by 50% without compromising on structural quality.
+              </p>
+              <div className="flex flex-wrap gap-4 text-sm font-semibold mb-6 md:mb-0">
+                <span className="flex items-center gap-1.5 text-text-primary">
+                  <Zap className="w-4 h-4 text-accent-gold" /> Shipped in 2 to 4 weeks
+                </span>
+                <span className="flex items-center gap-1.5 text-text-primary">
+                  <Zap className="w-4 h-4 text-accent-gold" /> 50% cost reduction
+                </span>
+                <span className="flex items-center gap-1.5 text-text-primary">
+                  <Zap className="w-4 h-4 text-accent-gold" /> Full codebase ownership
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col items-start md:items-end justify-center">
+              <Link
+                to="/services/ai-powered-rapid-app-development"
+                className="px-6 py-3 bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl font-bold transition-all shadow-lg shadow-primary/10 inline-flex items-center justify-center gap-2"
+              >
+                Learn about rapid builds
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <p className="text-xs text-muted-foreground mt-3 w-full md:text-right">
+                Qualify with a pre-approved spec
+              </p>
             </div>
           </div>
         </section>
@@ -167,6 +223,11 @@ export default function ServicesPage() {
                 title: 'Custom software development',
                 path: '/custom-software-development-south-africa',
                 desc: 'CRM, HR, inventory, property, and ops systems.',
+              },
+              {
+                title: 'AI rapid app development',
+                path: '/services/ai-powered-rapid-app-development',
+                desc: 'Accelerated MVPs and custom apps via AI-assisted engineering.',
               },
               {
                 title: 'App development cost (2026)',
@@ -213,7 +274,7 @@ export default function ServicesPage() {
               { name: "HealthTech", slug: "healthcare-startups-johannesburg", desc: "Secure records, bookings, and HIPAA-aligned platforms." },
               { name: "EduTech", slug: "edutech-platforms-south-africa", desc: "Student management and cashless campus ecosystems." },
               { name: "Marketplaces", slug: "marketplace-founders-south-africa", desc: "Multi-sided platforms for on-demand services." },
-              { name: "Established Brands", slug: "digital-transformation-experts-south-africa", desc: "Digitizing successful businesses for professional scale." },
+              { name: "Established brands", slug: "digital-transformation-experts-south-africa", desc: "Custom systems when spreadsheets and off-the-shelf tools no longer fit." },
               { name: "AI & Automation", slug: "ai-integration-specialist-south-africa", desc: "Strategic LLM integration and production-ready AI agents." }
             ].map((industry) => (
               <Link 
@@ -230,7 +291,7 @@ export default function ServicesPage() {
 
         {/* CTA */}
         <footer className="text-center">
-          <h2 className="text-3xl font-bold mb-8">Ready to ship something real?</h2>
+          <h2 className="text-3xl font-bold mb-8">Ready to scope a build?</h2>
           <div className="flex flex-wrap justify-center gap-4">
             <a
               href={WHATSAPP_URL}
@@ -239,18 +300,18 @@ export default function ServicesPage() {
               className="inline-flex items-center gap-2 px-8 py-4 bg-[#25D366] text-white rounded-xl font-bold hover:bg-[#128C7E] transition-all shadow-lg"
             >
               <MessageCircle className="w-5 h-5" />
-              Message Me on WhatsApp
+              Message us on WhatsApp
             </a>
             <Link
-              to="/technical-cofounder"
+              to="/get-a-quote"
               className="px-8 py-4 bg-card border border-border rounded-xl font-bold hover:border-primary transition-all"
             >
-              Learn about TaaS
+              Get an estimate
             </Link>
           </div>
           <p className="text-sm text-muted-foreground mt-6">
             Want a ballpark first?{' '}
-            <Link to="/get-a-quote" className="text-primary hover:underline underline-offset-4">See how I scope and price work</Link>.
+            <Link to="/app-development-cost-south-africa" className="text-primary hover:underline underline-offset-4">See 2026 build cost ranges</Link>.
           </p>
         </footer>
         </ScrollReveal>

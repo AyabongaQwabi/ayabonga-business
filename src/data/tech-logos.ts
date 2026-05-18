@@ -100,6 +100,8 @@ const LABEL_TO_SLUG: Record<string, string> = {
   gitlab: 'gitlab',
   'github actions': 'github-actions',
   ai: 'openai',
+  'vercel hosting': 'vercel',
+  'hosted web platform': 'vercel',
 };
 
 function normalizeLabel(value: string): string {

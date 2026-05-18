@@ -60,7 +60,7 @@ export const RETAINER_TIERS: RetainerTier[] = [
       'Integration work (payments, CRM, messaging)',
       'Performance and UX improvements',
       'Analytics and conversion support',
-      'Product iteration partnership',
+      'Product iteration with a dedicated engineering team',
     ],
     highlighted: true,
   },
@@ -121,15 +121,15 @@ export const PRICING_FACTORS = [
 export const PARTNERSHIP_PILLARS = [
   {
     title: 'Long-term ownership',
-    copy: 'I stay with the system after launch. Maintenance, debugging, and improvements are part of the relationship, not a surprise invoice.',
+    copy: 'We stay with the system after launch. Maintenance, debugging, and improvements are part of the relationship, not a surprise invoice.',
   },
   {
     title: 'Business-first engineering',
-    copy: 'Decisions favour revenue, operations, and risk. I will tell you when a feature should wait and when infrastructure matters more than polish.',
+    copy: 'Decisions favour revenue, operations, and risk. We will tell you when a feature should wait and when infrastructure matters more than polish.',
   },
   {
     title: 'Operational continuity',
-    copy: 'Monitoring, incident response, and predictable release rhythm so your team is not firefighting every week.',
+    copy: 'Monitoring, incident response, and a predictable release rhythm so your team is not firefighting every week.',
   },
 ] as const;
 
@@ -148,7 +148,7 @@ export const PRICING_FAQ = [
   },
   {
     id: 'quote-tool',
-    question: 'What is the project scope estimator for?',
+    question: 'What is the get-an-estimate tool for?',
     answer:
       'It is an optional ballpark for greenfield builds: platforms, payments, and timeline assumptions. Retainer pricing is agreed after a technical review, not generated automatically.',
   },
@@ -164,4 +164,27 @@ export const PRICING_FAQ = [
     answer:
       'A smaller, focused launch (often in the R120k – R350k band for a fundable MVP) usually pairs with Essential once the product is live. Heavier builds with payments, marketplaces, or constant releases move toward Growth or Ecosystem. The mapping table on this page uses the same ZAR bands as the 2026 app development cost guide.',
   },
+  {
+    id: 'rapid-build-faq',
+    question: 'What is the AI-Powered Rapid Build and the Paid Scoping Sprint?',
+    answer:
+      'The AI-Powered Rapid Build is a next-generation engineering workflow that cuts both development timelines and cost by 50% through AI-assisted software production under strict human-architected quality gates. To start, we offer a 1-week Paid Scoping Sprint (ZAR 15,000) where we collaboratively map your requirements, database schema, and clickable wireframe. This R15,000 fee is credited back to you in full if you build the project with us.',
+  },
 ] as const;
+
+export const RAPID_BUILD_STRATEGY = {
+  id: 'rapid-build',
+  name: 'AI-Powered Rapid Build',
+  description: 'Next-generation engineering workflow using AI-assisted software production and documentation-driven development, protected by strict human-architected quality gates.',
+  multiplier: 0.5,
+  savingPercent: 50,
+  scopingSprintZar: 15000,
+  scopingSprintRefundable: true,
+  scopingSprintDeliverables: [
+    'Comprehensive Product Requirements Document (PRD)',
+    'Core Database and Schema Architectures',
+    'Interactive Click-through Wireframe Blueprint',
+    'Guaranteed Fixed-Scope Implementation Quote'
+  ]
+} as const;
+

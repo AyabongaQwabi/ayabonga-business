@@ -21,18 +21,16 @@ import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
   GET_ESTIMATE_LABEL,
-  PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
-  QUOTE_TOOL_LABEL,
   SITE_NAME,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
 
-const PAGE_TITLE = 'Retainer pricing for long-term product partnership';
+const PAGE_TITLE = 'Monthly retainer pricing for software you rely on';
 const PAGE_DESCRIPTION =
-  'Monthly engineering retainers scaled to system complexity, maintenance load, integrations, and how fast your product must evolve. Essential, Growth, and Ecosystem tiers for South African founders.';
+  'Engineering retainers scaled to system complexity, maintenance load, integrations, and how fast your product must evolve. Essential, Growth, and Ecosystem tiers for South African founders.';
 
 const COMPARISON_ROWS: { label: string; key: 'monthlyFromZar' | 'bestFor' | 'includes' | 'characteristics' }[] = [
   { label: 'Monthly from', key: 'monthlyFromZar' },
@@ -117,7 +115,7 @@ export default function PricingStrategyPage() {
         mainClassName="flex-1 pt-[4.5rem]"
       >
         <header className="container w-full pt-14 pb-12 md:pt-20 md:pb-16">
-          <p className="section-label mb-4">Subscription-first partnership</p>
+          <p className="section-label mb-4">Monthly retainers</p>
           <h1
             className="font-display font-black text-text-primary text-balance max-w-4xl"
             style={{
@@ -126,16 +124,15 @@ export default function PricingStrategyPage() {
               letterSpacing: '-0.03em',
             }}
           >
-            Pricing that follows the responsibility you hand over
+            Retainer pricing that matches how much you rely on the software
           </h1>
           <p
             className="mt-6 max-w-3xl text-text-secondary leading-relaxed"
             style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
           >
-            I do not sell one-off gigs or quote factories. I take ongoing ownership of your
-            systems: maintain them, improve them, debug them, integrate them, and evolve them as
-            your business changes. Monthly retainers scale with technical complexity and operational
-            load, not with how many pages a brochure has.
+            We take ongoing ownership of your systems: maintain them, improve them, debug them,
+            integrate them, and evolve them as your business changes. Monthly retainers scale with
+            technical complexity and operational load, not with how many pages a brochure has.
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-3">
@@ -144,12 +141,12 @@ export default function PricingStrategyPage() {
               Message on WhatsApp
             </a>
             <Link to={QUOTE_PAGE} className="btn-outline min-h-[44px]">
-              {QUOTE_TOOL_LABEL}
+              {GET_ESTIMATE_LABEL}
             </Link>
           </div>
           <p className="mt-4 text-sm text-text-muted max-w-2xl leading-relaxed">
             Share what you run today, what breaks, and where the product needs to be in six months.
-            If we fit, I send a written proposal with retainer tier and first priorities.
+            If we fit, we send a written proposal with retainer tier and first priorities.
           </p>
         </header>
 
@@ -183,7 +180,7 @@ export default function PricingStrategyPage() {
               className="font-display font-bold text-text-primary mb-3"
               style={{ fontSize: 'var(--type-heading-lg)', lineHeight: 'var(--leading-heading)' }}
             >
-              Monthly partnership tiers
+              Monthly retainer tiers
             </h2>
             <p className="text-text-secondary leading-relaxed">
               Three starting points. We confirm tier and scope after a technical review of your
@@ -207,7 +204,7 @@ export default function PricingStrategyPage() {
           <div className="hidden lg:block overflow-x-auto rounded-xl border border-surface-border bg-surface-raised">
             <table className="w-full text-left font-technical border-collapse">
               <caption className="sr-only">
-                Retainer tier comparison for Essential, Growth, and Ecosystem partnerships
+                Retainer tier comparison for Essential, Growth, and Ecosystem
               </caption>
               <thead>
                 <tr className="border-b border-surface-border">
@@ -291,7 +288,7 @@ export default function PricingStrategyPage() {
             className="font-display font-bold text-text-primary mb-8"
             style={{ fontSize: 'var(--type-heading-lg)', lineHeight: 'var(--leading-heading)' }}
           >
-            What you get as a partner
+            What you get on a retainer
           </h2>
           <div className="grid md:grid-cols-3 gap-5">
             {PARTNERSHIP_PILLARS.map(({ title, copy }) => (
@@ -333,7 +330,7 @@ export default function PricingStrategyPage() {
               className="font-display font-bold text-text-primary mb-3"
               style={{ fontSize: 'var(--type-heading-lg)', lineHeight: 'var(--leading-heading)' }}
             >
-              Plan your product partnership
+              Plan your retainer
             </h2>
             <p className="text-text-secondary leading-relaxed mb-8">
               WhatsApp is the fastest path. Share what you run today, what breaks, and where you
@@ -353,17 +350,14 @@ export default function PricingStrategyPage() {
                 <MessageCircle className="w-5 h-5" aria-hidden />
                 WhatsApp
               </a>
-              <Link to={QUOTE_PAGE} className="btn-outline min-h-[44px] text-sm">
-                {QUOTE_TOOL_LABEL}
-              </Link>
             </div>
             <p className="mt-8 text-xs text-text-muted">
-              Greenfield build? Use the optional{' '}
+              Greenfield build? Use{' '}
               <Link
                 to={QUOTE_PAGE}
                 className="text-accent-gold hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-gold)] rounded-sm"
               >
-                {QUOTE_TOOL_LABEL}
+                {GET_ESTIMATE_LABEL}
               </Link>{' '}
               for a rough scope ballpark before we talk retainers.
             </p>

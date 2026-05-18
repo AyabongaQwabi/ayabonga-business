@@ -12,7 +12,7 @@ import {
   AUTHOR_SAME_AS,
 } from '../lib/author-profile';
 import { TechTag } from '../components/shared/TechTag';
-import { FOUNDER_PAGE_LABEL, SITE_NAME, WHATSAPP_URL } from '../lib/site-config';
+import { FOUNDER_PAGE_LABEL, PROJECTS_PAGE, SITE_NAME, WHATSAPP_URL } from '../lib/site-config';
 
 const ABOUT_STACK = [
   'React',
@@ -29,29 +29,34 @@ const ABOUT_STACK = [
 
 const shippedWork = [
   {
-    name: 'Laundry Marketplace',
-    url: 'https://laundry.qwabi.co.za/',
-    note: 'Marketplace for local laundry providers',
+    name: 'Future Start',
+    url: 'https://futurestart.co.za/',
+    note: 'Student accommodation and digital book sales',
   },
   {
     name: 'ClinicPlus',
     url: 'https://clinicplusbookings.co.za/',
-    note: 'Clinic appointment booking for occupational health',
+    note: 'Occupational health bookings for mining teams',
   },
   {
-    name: 'Queens Connect',
-    url: 'https://queensconnect.qwabi.co.za/',
-    note: 'Community AI assistant for Queenstown',
+    name: 'Warner Music Africa · Culture Shifters',
+    url: 'https://www.warnermusicafrica.com/',
+    note: 'Participant management for a regional competition',
   },
   {
-    name: 'Kingly',
-    url: 'https://kingly.qwabi.co.za/',
-    note: 'AI tooling for developer documentation and prompts',
+    name: 'Ilithiyana',
+    url: 'https://ilithiyana.co.za/',
+    note: 'Bookings and CRM for client operations',
+  },
+  {
+    name: 'eStudio Glam',
+    url: 'https://www.estudioglam.co.za/',
+    note: 'Edutech platform for hairstylist training',
   },
 ];
 
 const ABOUT_META_TITLE = `Meet ${SITE_NAME} | Senior product engineer & technical founder`;
-const ABOUT_META_DESCRIPTION = `${AUTHOR_JOB_TITLE} behind Qwabi Engineering. About ${AUTHOR_EXPERIENCE_YEARS} years shipping production apps, platforms, and AI tools for South African founders. Queenstown, Eastern Cape; remote across SA.`;
+const ABOUT_META_DESCRIPTION = `${AUTHOR_JOB_TITLE} behind Qwabi Engineering. About ${AUTHOR_EXPERIENCE_YEARS} years shipping custom software, mobile apps, and business systems for South African teams. Queenstown, Eastern Cape; remote across SA.`;
 
 export default function AboutPage() {
   return (
@@ -84,21 +89,20 @@ export default function AboutPage() {
         </div>
 
         <p>
-          I am the senior product engineer and technical founder behind{' '}
-          <strong>Qwabi Engineering</strong>. With about {AUTHOR_EXPERIENCE_YEARS} years in software,
-          I help founders turn ideas into working apps, platforms, and AI tools without agency
-          overhead or the junior-dev lottery.
+          I am the senior product engineer behind <strong>Qwabi Engineering</strong>. With about{' '}
+          {AUTHOR_EXPERIENCE_YEARS} years in software, I lead architecture and delivery for custom
+          software, mobile apps, web platforms, and business systems. The company site speaks as
+          'we'; this page is the person behind that delivery.
         </p>
 
         <p>
-          If you landed here from our homepage, that page is the company view: services, pricing, and
-          how we work. This page is the person behind the delivery: how I think, what I ship, and
-          how to reach me directly.
+          If you came from the homepage, that is the company view: services, selected work, pricing,
+          and how the team engages. Here you get background, stack, and direct contact.
         </p>
 
         <p>
-          My stack is mostly React, Next.js, Node.js, TypeScript, and Python, with cloud work on GCP,
-          AWS, and Azure. I use Supabase and Firebase when a project needs a fast, real-time backend.
+          Day to day I work in React, Next.js, Node.js, TypeScript, and Python, with cloud on GCP,
+          AWS, and Azure. Supabase and Firebase when a project needs a fast, real-time backend.
         </p>
         <ul className="not-prose flex flex-wrap gap-2 mb-8" aria-label="Technologies I work with">
           {ABOUT_STACK.map((tech) => (
@@ -109,6 +113,13 @@ export default function AboutPage() {
         </ul>
 
         <h2>Selected shipped work</h2>
+        <p className="text-text-secondary text-sm mb-4">
+          A short list. See the{' '}
+          <Link to={PROJECTS_PAGE} className="text-primary hover:underline underline-offset-4">
+            full project catalog
+          </Link>{' '}
+          for live, in-progress, and white-label builds.
+        </p>
         <ul className="space-y-3">
           {shippedWork.map((item) => (
             <li key={item.url}>

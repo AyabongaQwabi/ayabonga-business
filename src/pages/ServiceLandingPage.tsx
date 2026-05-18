@@ -150,11 +150,11 @@ export default function ServiceLandingPage() {
         <section className="mb-16" aria-labelledby="services-heading">
           <p className="section-label mb-3">Capabilities</p>
           <h2 id="services-heading" className="font-display text-2xl font-bold text-text-primary mb-3">
-            What I build
+            What we build
           </h2>
           <p className="text-muted-foreground text-sm leading-relaxed mb-8">
-            Senior-led delivery: architecture, implementation, and production ownership in one
-            relationship.
+            Senior-led delivery from Qwabi Engineering: architecture, implementation, and
+            production ownership in one accountable team.
           </p>
           <div className="grid sm:grid-cols-2 gap-4">
             {page.services.map((service) => {

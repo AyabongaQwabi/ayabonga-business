@@ -39,7 +39,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
   {
     slug: 'mvp-developer-south-africa',
     path: '/mvp-developer-south-africa',
-    metaTitle: 'MVP Developer South Africa | Build Without Junior Dev Chaos',
+    metaTitle: 'MVP Developer South Africa | Scoped Builds for Founders',
     metaDescription:
       'Senior MVP development for South African founders: scoped builds, production-minded architecture, and no agency overhead. Ship a real v1 in weeks, not months of rework.',
     keywords: [
@@ -51,7 +51,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     eyebrow: 'For founders · MVP · South Africa',
     h1: 'MVP Developer in South Africa',
     heroSubhead:
-      'Build your first real version without agency overhead or the junior dev lottery. One senior engineer owns architecture, delivery, and the tradeoffs that keep you out of a rebuild.',
+      'Build your first real version without agency overhead or rotating juniors. One senior engineer owns architecture, delivery, and the tradeoffs that keep you out of a rebuild.',
     heroImage: HERO_IMAGES.mvpDeveloper,
     heroImageAlt: 'Founders planning an MVP on laptops in a modern workspace',
     serviceType: 'MVP and startup product development',
@@ -66,9 +66,9 @@ export const buyerIntentPages: BuyerIntentPage[] = [
       },
       {
         id: 'how-i-work',
-        heading: 'How I work with founders',
+        heading: 'How we work with founders',
         paragraphs: [
-          'I operate as a senior product engineer and technical partner, not a ticket-taking dev shop. You get direct access, fast decisions, and code written by the person you hired.',
+          'Qwabi Engineering operates as a senior product engineering studio, not a ticket-taking dev shop. You get direct access, fast decisions, and code written by the people who scoped the work.',
         ],
         bullets: [
           'Scope workshop: what ships in v1 vs what waits',
@@ -96,9 +96,9 @@ export const buyerIntentPages: BuyerIntentPage[] = [
       },
       {
         id: 'proof',
-        heading: 'Shipped patterns I reuse',
+        heading: 'Shipped patterns we reuse',
         paragraphs: [
-          'Marketplace flows from Laundry Marketplace, booking systems from ClinicPlus, community AI from Queens Connect, and campus wallet patterns from UTap. You are not paying me to learn your domain from zero on your dime.',
+          'Booking systems from ClinicPlus, student services from Future Start, ecommerce from Lungi The Strategist, and ops platforms from AN Consulting. You are not paying us to learn your domain from zero on your dime.',
         ],
       },
     ],
@@ -126,12 +126,12 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     ],
     relatedLinks: [
       { label: 'App development cost guide', path: '/app-development-cost-south-africa' },
-      { label: 'Technical co-founder (TaaS)', path: '/technical-cofounder' },
+      { label: 'Mobile app development', path: '/mobile-app-development-south-africa' },
       { label: 'WhatsApp AI chatbot South Africa', path: '/whatsapp-ai-chatbot-south-africa' },
     ],
     ctaHeadline: 'Ready to scope your MVP?',
     ctaSubhead:
-      'Tell me the one workflow that must work in v1. I will respond with timeline, risks, and a realistic budget band.',
+      'Tell us the one workflow that must work in v1. We respond with timeline, risks, and a realistic budget band.',
   },
   {
     slug: 'whatsapp-ai-chatbot-south-africa',
@@ -204,7 +204,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
       {
         question: 'Do I need the WhatsApp Business API?',
         answer:
-          'For automated, scalable bots beyond the basic Business app, yes. Setup depends on your provider, verification, and message templates. I help you choose a path that matches your volume and compliance needs.',
+          'For automated, scalable bots beyond the basic Business app, yes. Setup depends on your provider, verification, and message templates. We help you choose a path that matches your volume and compliance needs.',
       },
       {
         question: 'Can the bot speak isiXhosa or mix languages?',
@@ -229,7 +229,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     ],
     ctaHeadline: 'Want a WhatsApp bot that survives real customers?',
     ctaSubhead:
-      'Describe your business, daily messages, and what should be automated vs human. I will suggest architecture and a realistic build band.',
+      'Describe your business, daily messages, and what should be automated vs human. We suggest architecture and a realistic build band.',
   },
   {
     slug: 'best-app-developers-south-africa',
@@ -258,7 +258,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
         bullets: [
           'Freelancer: best for bounded tasks with clear specs. Risky as sole owner of a complex product.',
           'Agency: adds PM and design bench. Watch for senior sales / junior delivery mismatch.',
-          'Senior partner (TaaS style): one accountable engineer across product, architecture, and launch. Fits founders who need speed without hiring a full team yet.',
+          'Senior studio: one accountable engineer across product, architecture, and launch. Fits founders who need speed without hiring a full team yet.',
         ],
       },
       {
@@ -326,7 +326,7 @@ export const buyerIntentPages: BuyerIntentPage[] = [
     ],
     ctaHeadline: 'Want a second opinion on a quote or codebase?',
     ctaSubhead:
-      'Send your scope or repo access. I will tell you what looks solid, what is missing, and what a realistic fix costs.',
+      'Send your scope or repo access. We tell you what looks solid, what is missing, and what a realistic fix costs.',
   },
 ];
 

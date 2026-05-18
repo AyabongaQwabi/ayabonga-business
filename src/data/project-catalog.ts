@@ -103,7 +103,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Occupational health bookings and practice management for mining and construction teams in Witbank and Mpumalanga.',
     tech: ['React', 'Node.js', 'MongoDB'],
     homepageFeatured: true,
-    homepageOrder: 4,
+    homepageOrder: 3,
     imageUrl: `${SCREENSHOTS}/clinicplus-clients.png`,
     imageAlt: 'ClinicPlus booking application',
   },
@@ -117,7 +117,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description: 'Participant management for the Warner Culture Shifters competition across regions.',
     tech: ['Web platform', 'Operations'],
     homepageFeatured: true,
-    homepageOrder: 5,
+    homepageOrder: 2,
   },
   {
     id: 'future-start',
@@ -130,7 +130,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Student accommodation requests and digital book sales for South African tertiary learners.',
     tech: ['Web', 'Commerce'],
     homepageFeatured: true,
-    homepageOrder: 6,
+    homepageOrder: 1,
     imageUrl: `${SCREENSHOTS}/futurestart.png`,
     imageAlt: 'Future Start website',
   },
@@ -143,6 +143,8 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     category: 'Ecommerce',
     description: 'Branded ecommerce platform for strategy and retail offerings.',
     tech: ['Ecommerce', 'Web'],
+    homepageFeatured: true,
+    homepageOrder: 6,
   },
   {
     id: 'an-consulting',
@@ -153,6 +155,8 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     category: 'Financial operations',
     description: 'Custom financial records management for internal consulting workflows.',
     tech: ['Web app', 'Records'],
+    homepageFeatured: true,
+    homepageOrder: 7,
   },
   {
     id: 'ilithiyana',
@@ -163,6 +167,8 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     category: 'Bookings · CRM',
     description: 'Bookings and CRM for client operations and visibility.',
     tech: ['CRM', 'Scheduling'],
+    homepageFeatured: true,
+    homepageOrder: 4,
   },
   {
     id: 'namoota-tech',
@@ -183,6 +189,21 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     category: 'Edutech',
     description: 'Educational platform for hairstylist training and online learning.',
     tech: ['Edutech', 'Web'],
+    homepageFeatured: true,
+    homepageOrder: 5,
+  },
+  {
+    id: 'western-cape-labs-case-pro',
+    title: 'Case Pro · Western Cape Labs',
+    url: 'https://mlab.co.za/',
+    status: 'live',
+    visibility: 'public',
+    category: 'Case management',
+    description:
+      'Case management system built in collaboration with Western Cape Labs for operational workflows.',
+    tech: ['Web', 'Operations'],
+    homepageFeatured: true,
+    homepageOrder: 9,
   },
   {
     id: 'mzeke',
@@ -214,8 +235,6 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description:
       'Turnkey laundry marketplace with admin, partner, driver, and customer surfaces.',
     tech: ['Next.js', 'Marketplace'],
-    homepageFeatured: true,
-    homepageOrder: 7,
     imageUrl: `${SCREENSHOTS}/laundry-marketplace-admin.png`,
     imageAlt: 'Laundry marketplace admin',
   },
@@ -255,8 +274,6 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description:
       'Milestone savings with vault discipline, sponsor links, and compliance-minded architecture on Supabase.',
     tech: ['React Native', 'Supabase'],
-    homepageFeatured: true,
-    homepageOrder: 3,
     imageUrl: `${SCREENSHOTS}/mygradzaka.png`,
     imageAlt: 'My Grad Zaka',
   },
@@ -272,8 +289,6 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description:
       'Campus NFC wallet, vendor ordering, and admin analytics. Student app, vendor portal, and admin console.',
     tech: ['React Native', 'Supabase'],
-    homepageFeatured: true,
-    homepageOrder: 1,
     imageUrl: `${SCREENSHOTS}/utapadmin.png`,
     imageAlt: 'uTap admin',
     relatedLinks: [
@@ -291,8 +306,6 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description:
       'Compliance-first ride-hailing with driver onboarding, wallets, and ops tooling for pilot corridors.',
     tech: ['Flutter', 'Supabase', 'React'],
-    homepageFeatured: true,
-    homepageOrder: 2,
     imageUrl: `${SCREENSHOTS}/trip-website.png`,
     imageAlt: 'Trip marketing site',
     relatedLinks: [
@@ -386,6 +399,8 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     category: 'Non-profit',
     description: 'Donation collection website for the foundation. Live path may move to custom domain.',
     tech: ['Web', 'Donations'],
+    homepageFeatured: true,
+    homepageOrder: 8,
   },
   {
     id: 'zach-repairs',

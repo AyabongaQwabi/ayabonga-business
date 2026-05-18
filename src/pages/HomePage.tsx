@@ -5,7 +5,6 @@ import { Analytics } from '@vercel/analytics/react';
 import { BuildCostsTeaser } from '../components/home/BuildCostsTeaser';
 import { CtaSection } from '../components/home/CtaSection';
 import { HeroSection } from '../components/home/HeroSection';
-import { PartnershipSection } from '../components/home/PartnershipSection';
 import { PricingSection } from '../components/home/PricingSection';
 import { ServicesSection } from '../components/home/ServicesSection';
 import { TestimonialsSection } from '../components/home/TestimonialsSection';
@@ -89,10 +88,9 @@ export default function HomePage() {
       <PageShell onNavigateSection={scrollTo} mainClassName="flex-1">
         <HeroSection />
         <ServicesSection />
-        <PartnershipSection />
-        <BuildCostsTeaser />
         <WorkSection />
         <TestimonialsSection />
+        <BuildCostsTeaser />
         <PricingSection />
         <CtaSection />
       </PageShell>

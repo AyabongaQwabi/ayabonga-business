@@ -284,7 +284,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
             Ready to compare your quote to real scope?
           </h2>
           <p className="text-muted-foreground mb-6 leading-relaxed">
-            Send your brief or an existing proposal on WhatsApp. I will tell you what is realistic
+            Send your brief or an existing proposal on WhatsApp. We will tell you what is realistic
             for MVP scope, payment integration, and post-launch maintenance before you sign.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -301,7 +301,7 @@ export default function AppDevelopmentCostSouthAfricaPage() {
               to={QUOTE_PAGE}
               className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-card border border-border rounded-xl font-semibold hover:border-primary/50 transition-colors"
             >
-              Get a quote
+              Get an estimate
             </Link>
           </div>
         </section>

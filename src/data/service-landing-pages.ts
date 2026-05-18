@@ -4,10 +4,12 @@ import {
   Calculator,
   Car,
   ClipboardList,
+  Cpu,
   Package,
   Smartphone,
   Users,
   Warehouse,
+  Zap,
 } from 'lucide-react';
 import type { PricingTableBlock } from '../components/PricingTable';
 import { HERO_IMAGES } from '../lib/hero-images';
@@ -236,7 +238,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     eyebrow: 'App development company · South Africa',
     h1: 'Mobile App Development South Africa',
     heroSubhead:
-      'I build Android and iOS products as a senior engineer, not a hand-off agency. You get store-ready apps, APIs, admin tooling, and honest ZAR ranges before you commit.',
+      'We build Android and iOS products with senior-led delivery, not a hand-off agency bench. You get store-ready apps, APIs, admin tooling, and honest ZAR ranges before you commit.',
     heroImage: HERO_IMAGES.mobileApp,
     heroImageAlt: 'Mobile app development workspace with smartphone and laptop',
     serviceType: 'Mobile application development',
@@ -266,7 +268,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       {
         step: '01',
         title: 'Scope call',
-        copy: 'You share the problem, users, and deadline. I ask about payments, admin, and what must work on day one.',
+        copy: 'You share the problem, users, and deadline. We ask about payments, admin, and what must work on day one.',
       },
       {
         step: '02',
@@ -290,26 +292,26 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       'Planning numbers for founders comparing quotes. Final price depends on screens, integrations, and who owns production quality.',
     projects: [
       {
-        title: 'UTap',
-        description: 'University NFC access wallet for campus access and payments.',
-        url: 'https://utaptech.co.za/',
-        tech: ['React Native', 'NFC', 'Firebase'],
+        title: 'Future Start',
+        description: 'Student accommodation requests and digital book sales.',
+        url: 'https://futurestart.co.za/',
+        tech: ['Web', 'Commerce'],
       },
       {
-        title: 'Laundry Marketplace',
-        description: 'Customer and provider apps with marketplace operations.',
-        url: 'https://laundry.qwabi.co.za/',
-        tech: ['Next.js', 'Mobile web', 'Payments'],
+        title: 'ClinicPlus',
+        description: 'Occupational health bookings for mining-sector employers.',
+        url: 'https://clinicplusbookings.co.za/',
+        tech: ['React', 'Node.js', 'Operations'],
       },
       {
-        title: 'Queens Connect',
-        description: 'Community AI companion with local context and assistance.',
-        url: 'https://queensconnect.qwabi.co.za/',
-        tech: ['Next.js', 'OpenAI', 'AI'],
+        title: 'Lungi The Strategist',
+        description: 'Branded ecommerce aligned to retail and strategy offerings.',
+        url: 'https://lungithestrategist.co.za/',
+        tech: ['Ecommerce', 'Web'],
       },
     ],
     projectsIntro:
-      'Shipped products across fintech, marketplaces, and community apps. Ask for architecture detail on a call.',
+      'Client apps and platforms across education, health, and retail. Ask for architecture detail on a scope call.',
     faqs: [
       {
         question: 'How do I find a reliable app developer in South Africa?',
@@ -329,7 +331,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       {
         question: 'Do you work with startups only?',
         answer:
-          'Most clients are founders and SME operators. I also rescue live products and partner on retainers when the app is already in market.',
+          'Most clients are founders and SME operators. We also rescue live products and support retainers when the app is already in market.',
       },
     ],
     relatedLinks: [
@@ -340,7 +342,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     ],
     ctaHeadline: 'Ready to scope your mobile app?',
     ctaSubhead:
-      'Send a short brief on WhatsApp or use the estimator. I reply with fit, risks, and a realistic ZAR range.',
+      'Send a short brief on WhatsApp or use the estimator. We reply with fit, risks, and a realistic ZAR range.',
   },
   {
     slug: 'custom-software-development-south-africa',
@@ -348,7 +350,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     metaTitle:
       'Custom Software Development South Africa | Bespoke Business Systems',
     metaDescription:
-      'Bespoke software for South African businesses: CRM, payroll, HR, inventory, property, fleet, and accounting operations. ZAR pricing ranges and long-term technical partnership.',
+      'Bespoke software for South African businesses: CRM, payroll, HR, inventory, property, fleet, and accounting operations. ZAR pricing ranges and senior-led delivery.',
     keywords: [
       'custom software development',
       'bespoke software development company',
@@ -365,7 +367,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     eyebrow: 'Bespoke systems · South Africa',
     h1: 'Custom Software Development South Africa',
     heroSubhead:
-      'Replace spreadsheets and broken off-the-shelf tools with software that matches how your team works. I design, build, and stay responsible for CRM, ops, HR, inventory, and industry-specific platforms.',
+      'Replace spreadsheets and broken off-the-shelf tools with software that matches how your team works. We design, build, and stay responsible for CRM, ops, HR, inventory, and industry-specific platforms.',
     heroImage: HERO_IMAGES.customSoftware,
     heroImageAlt: 'Business team using custom operations software on desktop',
     serviceType: 'Custom business software development',
@@ -405,7 +407,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       {
         step: '01',
         title: 'Process mapping',
-        copy: 'We walk your current spreadsheets, WhatsApp groups, and pain points. I document roles and must-not-break rules.',
+        copy: 'We walk your current spreadsheets, WhatsApp groups, and pain points. Then we document roles and must-not-break rules.',
       },
       {
         step: '02',
@@ -426,7 +428,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     pricingTables: customSoftwarePricingTables,
     pricingSectionTitle: 'Bespoke software pricing ranges (ZAR)',
     pricingSectionIntro:
-      'Module complexity, integrations, and compliance drive quotes. Use these bands for budgeting; I confirm after a technical review.',
+      'Module complexity, integrations, and compliance drive quotes. Use these bands for budgeting; we confirm after a technical review.',
     projects: [
       {
         title: 'ClinicPlus',
@@ -435,16 +437,16 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
         tech: ['React', 'Node.js', 'Operations'],
       },
       {
-        title: 'Laundry Marketplace',
-        description: 'Multi-sided operations: providers, customers, payouts, and admin.',
-        url: 'https://laundry.qwabi.co.za/',
-        tech: ['Marketplace', 'Admin', 'Payments'],
+        title: 'AN Consulting',
+        description: 'Financial records management for internal consulting workflows.',
+        url: 'https://www.anconsulting.co.za/',
+        tech: ['Web app', 'Records'],
       },
       {
-        title: 'Kingly',
-        description: 'Internal productivity platform for structured AI-assisted delivery.',
-        url: 'https://kingly.qwabi.co.za/',
-        tech: ['React', 'TypeScript', 'AI'],
+        title: 'Ilithiyana',
+        description: 'Bookings and CRM for day-to-day client operations.',
+        url: 'https://ilithiyana.co.za/',
+        tech: ['CRM', 'Scheduling'],
       },
     ],
     projectsIntro:
@@ -453,7 +455,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       {
         question: 'Custom software vs off-the-shelf CRM or ERP?',
         answer:
-          'Off-the-shelf wins when your process matches the product. Custom wins when you have already bent five tools and staff still run parallel spreadsheets. I will tell you honestly if SaaS is enough.',
+          'Off-the-shelf wins when your process matches the product. Custom wins when you have already bent five tools and staff still run parallel spreadsheets. We will tell you honestly if SaaS is enough.',
       },
       {
         question: 'Can you integrate with Sage, Xero, or Paystack?',
@@ -479,7 +481,149 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     ],
     ctaHeadline: 'Need bespoke software that fits your operations?',
     ctaSubhead:
-      'Describe the workflow on WhatsApp or book a scope conversation. I will map phases and ZAR ranges without a sales deck.',
+      'Describe the workflow on WhatsApp or use the estimator. We map phases and ZAR ranges without a sales deck.',
+  },
+  {
+    slug: 'ai-powered-rapid-app-development',
+    path: '/services/ai-powered-rapid-app-development',
+    metaTitle:
+      'AI-Powered Rapid App Development South Africa | Accelerated MVPs',
+    metaDescription:
+      'Accelerated custom application and MVP development using documentation-driven AI engineering workflows. Shipped in 2-4 weeks with senior-led quality gates.',
+    keywords: [
+      'ai app development',
+      'rapid app development south africa',
+      'ai software engineering',
+      'mvp development south africa',
+      'documentation driven development',
+      'fast mvp build',
+    ],
+    eyebrow: 'Accelerated Delivery · Qwabi Engineering',
+    h1: 'AI-Powered Rapid App Development',
+    heroSubhead:
+      'Build high-fidelity MVPs and bespoke business systems in weeks, not months. By combining senior-led software architecture with advanced AI-assisted engineering pipelines, we ship production-grade code at a fraction of standard timelines.',
+    heroImage: HERO_IMAGES.mvpDeveloper,
+    heroImageAlt: 'Senior software architect designing an AI-accelerated application architecture',
+    serviceType: 'AI-Powered Rapid App Development',
+    services: [
+      {
+        icon: Cpu,
+        title: 'AI-Assisted Boilerplate & Setup',
+        copy: 'We bypass weeks of manual plumbing by using customized LLM generators for robust schemas, API routers, and test coverage, focusing human creativity on your unique business rules.',
+      },
+      {
+        icon: Zap,
+        title: 'Documentation-Driven Engineering',
+        copy: 'Rigid specs and clear PRDs are parsed directly into high-fidelity code. If you lack complete specs, our scoping phase prepares them so implementation is continuous and error-free.',
+      },
+      {
+        icon: ClipboardList,
+        title: 'Senior-Led Architecture',
+        copy: 'AI writes code, but senior human engineers design the system, review security, govern the data schema, and handle deployment. Zero compromise on future-proof code quality.',
+      },
+      {
+        icon: Users,
+        title: 'Dual-Platform Native & Web',
+        copy: 'Rapid deployment across iOS, Android, and Web using state-of-the-art cross-platform systems (React Native/Expo and Next.js) tailored for speed and performance.',
+      },
+    ],
+    processSteps: [
+      {
+        step: '01',
+        title: 'Scoping / Alignment',
+        copy: 'We align on a rigid specification (PRD / wireframes). If missing, we kick off a 1-week Paid Scoping Sprint (ZAR 15,000) to design the exact blueprint.',
+      },
+      {
+        step: '02',
+        title: 'AI-Accelerated Sprints',
+        copy: 'Our proprietary agentic prompt workflows and code generators construct the foundation, backend schemas, and UI components in record time.',
+      },
+      {
+        step: '03',
+        title: 'Senior Quality Gates',
+        copy: 'A senior engineer audits every line, runs security sweeps, connects payment integrations, and sets up automated release pipelines.',
+      },
+      {
+        step: '04',
+        title: 'Store & Web Launch',
+        copy: 'We deploy to Vercel, Expo, App Store, and Google Play, handing over clean, documented, and fully owned repositories in 2–4 weeks.',
+      },
+    ],
+    pricingTables: [
+      {
+        id: 'rapid-app-pricing',
+        title: 'Rapid AI-Assisted Build Pricing (ZAR, 2026)',
+        intro: 'Rigid specifications (PRD / wireframes) are required to qualify for rapid builds. Otherwise, we start with a paid scoping sprint.',
+        tiers: [
+          {
+            name: 'Single-Platform MVP',
+            rangeZar: 'R40k – R80k',
+            summary: 'Focused core loop, single client (iOS, Android, or Web), database integration, and basic admin panel.',
+            timeline: '2–3 weeks (10–15 working days)',
+          },
+          {
+            name: 'Dual-Platform MVP',
+            rangeZar: 'R80k – R150k',
+            summary: 'Cross-platform mobile apps (iOS + Android) or dynamic web + mobile system with shared backend and full authentication.',
+            timeline: '3–4 weeks (15–20 working days)',
+          },
+          {
+            name: 'Paid Scoping Sprint',
+            rangeZar: 'R15,000 flat',
+            summary: '1-week interactive scoping phase. We produce a complete PRD, architecture blueprint, and wireframes. Fully credited back if you build with us.',
+            timeline: '1 week (5 working days)',
+          },
+        ],
+        note: 'Rapid pricing requires pre-approved rigid specifications and is subject to availability.',
+      },
+    ],
+    pricingSectionTitle: 'Clear, Accelerated Pricing Plans',
+    pricingSectionIntro: 'Fixed ZAR tiers backed by our AI-assisted engineering pipeline. We eliminate administrative overhead to deliver premium software under strict timelines.',
+    projects: [
+      {
+        title: 'Future Start',
+        description: 'Student accommodation requests and digital commerce platform.',
+        url: 'https://futurestart.co.za/',
+        tech: ['Web', 'Next.js', 'Commerce'],
+      },
+      {
+        title: 'ClinicPlus',
+        description: 'Occupational health booking system designed and shipped rapidly.',
+        url: 'https://clinicplusbookings.co.za/',
+        tech: ['SaaS Portal', 'Node.js', 'Operations'],
+      },
+    ],
+    projectsIntro: 'Production-ready MVPs built with speed, clarity, and structural integrity.',
+    faqs: [
+      {
+        question: 'What is AI-Powered Rapid App Development?',
+        answer: 'It is a next-generation software production model that utilizes advanced AI-assisted engineering pipelines (such as automated boilerplate generation, prompt-driven schema construction, and automated test writing) overseen by a senior software architect. This allows us to cut delivery times by 50% without compromising on the underlying codebase quality.',
+      },
+      {
+        question: 'Why do rapid builds require rigid specifications?',
+        answer: 'To build at maximum speed, there is no time for mid-sprint changes or open-ended design discussions. A rigid specification (PRD / wireframes) serves as a precise blueprint for our AI engines and senior developers. This enables continuous, uninterrupted code production.',
+      },
+      {
+        question: 'What if I do not have a PRD or wireframes?',
+        answer: 'We offer a dedicated 1-Week Paid Scoping Sprint for ZAR 15,000. We work with you interactively to translate your idea into a high-fidelity PRD, data schema design, and UI wireframes. If you proceed with the build with us, this scoping fee is fully credited back to your final invoice.',
+      },
+      {
+        question: 'Is this a low-code or no-code solution?',
+        answer: 'No. We write actual, clean TypeScript and JavaScript code (React Native, Expo, Next.js, and Node.js) that you fully own. There are no vendor lock-ins or closed platforms. It is premium, custom software engineered at high speed.',
+      },
+      {
+        question: 'Do we get support and updates after launch?',
+        answer: 'Yes. Once shipped, rapid builds can seamlessly transition to our standard operational retainers or be handed over to your internal team with full documentation and clean repositories.',
+      },
+    ],
+    relatedLinks: [
+      { label: 'Project scope estimator', path: '/get-a-quote' },
+      { label: 'Mobile app development', path: '/mobile-app-development-south-africa' },
+      { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+      { label: 'All engineering services', path: '/services' },
+    ],
+    ctaHeadline: 'Have a clear specification ready to build?',
+    ctaSubhead: 'Share your brief on WhatsApp or run it through our rapid quote wizard to see if your app qualifies for an accelerated build.',
   },
 ];
 

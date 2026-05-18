@@ -19,14 +19,15 @@ export function WorkSection() {
               letterSpacing: '-0.02em',
             }}
           >
-            Custom software in production
+            Client systems we shipped
           </h2>
           <p
             className="text-text-secondary max-w-2xl mb-10"
             style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
           >
-            Shipped and in-flight systems across South Africa, not mockups. The full catalog
-            includes live products, white-label SaaS, and honestly paused client builds.
+            A sample of live and handed-over builds across health, education, music, and
+            operations. Each card matches a client story in the feedback section below. The full
+            catalog includes white-label work and paused builds we still stand behind.
           </p>
           <Link
             to={PROJECTS_PAGE}

@@ -25,8 +25,8 @@ export function TestimonialsSection() {
         className="text-text-secondary max-w-2xl mb-10"
         style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
       >
-        Polished feedback from health, education, music, and consulting partners. Each entry
-        links to the system we shipped.
+        Approved quotes from founders and operators we built for. Each card links to the live
+        system in selected work above.
       </p>
 
       <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 md:gap-5 list-none p-0 m-0">

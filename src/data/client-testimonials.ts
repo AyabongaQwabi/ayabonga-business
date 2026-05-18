@@ -24,8 +24,8 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'future-start',
     homepageOrder: 1,
     quote:
-      'Qwabi Engineering helped us build a student accommodation request platform that also supported digital book sales. Communication was clear, timelines were respected, and the implementation process was smooth from start to finish.',
-    name: 'Ntokozo Mtheethwa',
+      "Honestly didn't know what to expect going in — we had a tight scope and a product that needed to work for students in a very specific way. They figured it out quickly and kept us in the loop the whole time. The accommodation system and the book store both launched without drama.",
+    name: 'Ntokozo Mthethwa',
     role: 'Director',
     organization: 'Future Start',
     location: 'Johannesburg',
@@ -37,7 +37,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'warner-music-africa',
     homepageOrder: 2,
     quote:
-      'Qwabi Engineering built a custom participant management system for the Warner Culture Shifters competition, helping streamline participant handling and operational coordination.',
+      'The Culture Shifters competition runs across multiple countries and we needed a system that could handle participant data at scale without things falling apart. It held up well and made the operational side of the competition far easier to manage than previous years.',
     name: 'Temi Adeniji',
     role: 'Managing Director',
     organization: 'Warner Music Africa',
@@ -49,7 +49,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'ilithiyana',
     homepageOrder: 3,
     quote:
-      'Qwabi Engineering developed a bookings and CRM system for our business operations. The solution made it easier to manage clients and improve operational visibility.',
+      "Before this we were managing bookings manually — WhatsApp messages, spreadsheets, the works. The CRM system changed that completely. Everything's in one place now and my team actually uses it, which is the real test.",
     name: 'Masande Dudula',
     role: 'Director',
     organization: 'Ilithiyana',
@@ -61,7 +61,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'estudio-glam',
     homepageOrder: 4,
     quote:
-      'We partnered with Qwabi Engineering to build an educational platform for hairstylists. The platform aligned well with our vision and helped us establish a stronger online learning experience.',
+      "I had a very clear vision for what the platform needed to be — an actual learning experience for hairstylists, not just a website with videos on it. They got that. The build matched the vision and our students have been able to engage with it in the way I hoped. Big one for us 🙌",
     name: 'Lwandy Ngebe',
     role: 'Founder',
     organization: 'eStudio Glam',
@@ -73,7 +73,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'lungi-the-strategist',
     homepageOrder: 5,
     quote:
-      'They built an ecommerce platform tailored to our business requirements and branding. The process was professional, collaborative and detail-oriented.',
+      "I needed an ecommerce setup that felt like me — not a generic template. The process was collaborative and they were thorough about the details. Clients have commented on how easy it is to navigate and buy, which tells me it worked.",
     name: 'Lungi Ntuli',
     role: 'Director',
     organization: 'Lungi The Strategist',
@@ -85,7 +85,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'an-consulting',
     homepageOrder: 6,
     quote:
-      'They developed a custom financial records management system tailored to our operational needs. The process was collaborative and the system significantly improved how we manage internal financial information.',
+      "We needed something custom — the off-the-shelf options just didn't fit how we manage financial records internally. What impressed me most was that they actually understood the operational side, not just the technical. The system works the way our team thinks.",
     name: 'Axolile Ntongana',
     role: 'CFO',
     organization: 'AN Consulting',
@@ -97,7 +97,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'mpumelelo-foundation',
     homepageOrder: 7,
     quote:
-      'Qwabi Engineering built a donation collection platform that helped us improve our digital presence and simplify online contribution management.',
+      "For a non-profit, every rand counts and every process matters. We needed a platform that made it easy for people to contribute online — something simple but credible. It came together well and it's been doing exactly what we needed it to do.",
     name: 'Nomsa Mbatha',
     role: 'Founder and Executive Director',
     organization: 'Mpumelelo Foundation',
@@ -109,7 +109,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'western-cape-labs',
     homepageOrder: 8,
     quote:
-      'We collaborated with Qwabi Engineering on the development of a case management system. Their technical contribution and product development support added strong value to the project.',
+      'We brought Ayabonga in on Case Pro at a point where we needed solid engineering support. He came up to speed fast, added real value to the product architecture, and worked well with the team. Would collaborate again without hesitation.',
     name: 'Mike Jones',
     role: 'Managing Director',
     organization: 'Western Cape Labs',
@@ -123,7 +123,7 @@ export const CLIENT_TESTIMONIALS: ClientTestimonial[] = [
     id: 'clinicplus',
     homepageOrder: 9,
     quote:
-      'Qwabi Engineering developed a custom occupational health management system aligned with the operational requirements of our practice.',
+      "Occupational health records have strict requirements — accuracy, structure, accessibility. The system they built handles all of that cleanly. Our admin load has dropped significantly and the compliance side is much easier to manage now.",
     name: 'Dr. Bertha van der Spuy-Lombaard',
     role: 'MD and Occupational Health Specialist',
     organization: 'ClinicPlus',

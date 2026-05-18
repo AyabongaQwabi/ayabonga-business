@@ -6,7 +6,7 @@ export const APP_DEVELOPMENT_COST_META_TITLE =
   'App Development Cost South Africa 2026 | ZAR Pricing Guide';
 
 export const APP_DEVELOPMENT_COST_META_DESCRIPTION =
-  'Realistic 2026 ZAR pricing for mobile apps (MVP vs full), web apps, marketplaces, payment gateway integration, WhatsApp AI, and maintenance retainers. Plan your budget before you hire.';
+  '2026 ZAR ranges for mobile apps (MVP vs full), web apps, marketplaces, payments, WhatsApp automation, and post-launch retainers. Plan your budget before you hire in South Africa.';
 
 export const APP_DEVELOPMENT_COST_KEYWORDS = [
   'app development cost south africa',
@@ -21,20 +21,20 @@ export const APP_DEVELOPMENT_COST_KEYWORDS = [
 export const APP_DEVELOPMENT_COST_H1 = 'App Development Cost South Africa 2026';
 
 export const APP_DEVELOPMENT_COST_HERO =
-  'Ballpark ZAR ranges for founders hiring in South Africa: mobile MVPs, full products, web apps, marketplaces, payments, and what happens after launch. Numbers are planning guides, not binding quotes.';
+  'Ballpark ZAR ranges for founders hiring in South Africa: mobile MVPs, full products, web apps, marketplaces, payments, and what happens after launch. These numbers are planning guides, not binding quotes.';
 
 export const APP_DEVELOPMENT_COST_TRUST_POINTS = [
   {
     title: 'Scoped for South African reality',
-    copy: 'Paystack, PayFast, Ozow, load-shedding connectivity, and POPIA-aware design are part of real quotes, not footnotes.',
+    copy: 'Paystack, PayFast, Ozow, patchy connectivity, and POPIA-aware design belong in real quotes, not footnotes.',
   },
   {
     title: 'Senior-led delivery',
-    copy: 'You work with the engineer who owns architecture and production code, not a sales layer handing work to juniors.',
+    copy: 'You work with the engineers who own architecture and production code, not a sales layer handing work to juniors.',
   },
   {
     title: 'Honest about the rewrite tax',
-    copy: 'The cheapest quote often skips admin, webhooks, and ops. Fixing that later costs more than building once with clear scope.',
+    copy: 'The cheapest quote often skips admin, webhooks, and ops. Fixing that later usually costs more than building once with clear scope.',
   },
 ] as const;
 
@@ -44,7 +44,7 @@ export const APP_DEVELOPMENT_COST_SECTIONS: BuyerIntentSection[] = [
     heading: 'How to use this guide',
     paragraphs: [
       'Use the tables below to sanity-check proposals. If a quote is far below these bands, ask what is excluded: payments, admin, notifications, monitoring, and who maintains the system after launch.',
-      'For a scoped ballpark on your idea, use the project estimator or message on WhatsApp with your must-have flows.',
+      'For a scoped ballpark on your idea, use the estimate tool or message us on WhatsApp with your must-have flows.',
     ],
   },
   {
@@ -56,8 +56,8 @@ export const APP_DEVELOPMENT_COST_SECTIONS: BuyerIntentSection[] = [
     ],
     bullets: [
       'Junior freelancer: cheaper upfront, higher risk on architecture and payments',
-      'Senior freelancer or solo product engineer: higher rate, fewer surprises in production',
-      'Agency: adds project management and margin; slower decisions, more handoffs',
+      'Senior freelancer or small product team: higher rate, fewer surprises in production',
+      'Agency: adds project management and margin; more handoffs, slower decisions',
     ],
   },
   {
@@ -65,7 +65,7 @@ export const APP_DEVELOPMENT_COST_SECTIONS: BuyerIntentSection[] = [
     heading: 'Affordable app developers without the lottery',
     paragraphs: [
       'Affordable should mean right-sized scope and maintainable code, not the lowest line item. A focused MVP with one payment path and basic admin is affordable. A full marketplace at MVP money is not.',
-      'I would rather scope an honest MVP and a retainer that matches operational load than promise a full platform on a shoestring.',
+      'We would rather scope an honest MVP and a retainer that matches operational load than promise a full platform on a shoestring.',
     ],
   },
   {
@@ -126,7 +126,7 @@ export const APP_DEVELOPMENT_COST_FAQS: BuyerIntentFaq[] = [
   {
     question: 'How do I find an MVP developer in South Africa?',
     answer:
-      'Look for shipped work in your domain (payments, bookings, marketplaces), ask who writes production code, and request a written v1 scope. See the MVP developer page linked below for how I work with founders.',
+      'Look for shipped work in your domain (payments, bookings, marketplaces), ask who writes production code, and request a written v1 scope. See the MVP developer page linked below for how we work with founders.',
   },
   {
     question: 'Do I need a monthly retainer after launch?',
@@ -139,6 +139,6 @@ export const APP_DEVELOPMENT_COST_RELATED = [
   { label: 'Home', path: '/' },
   { label: 'Engineering services', path: '/services' },
   { label: 'MVP developer South Africa', path: '/mvp-developer-south-africa' },
-  { label: 'Retainer pricing philosophy', path: '/pricing-strategy' },
-  { label: 'Project scope estimator', path: '/get-a-quote' },
+  { label: 'Retainer pricing', path: '/pricing-strategy' },
+  { label: 'Get an estimate', path: '/get-a-quote' },
 ] as const;
