@@ -18,7 +18,10 @@ const BUDGET_BANDS = new Set<BudgetBand>([
 
 function isDevLogEnv(): boolean {
   return (
-    process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview'
+    process.env.NODE_ENV === 'development' ||
+    process.env.VERCEL === '1' ||
+    process.env.VERCEL_ENV === 'preview' ||
+    process.env.VERCEL_ENV === 'production'
   );
 }
 

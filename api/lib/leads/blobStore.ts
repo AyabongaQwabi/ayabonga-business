@@ -1,4 +1,5 @@
 import { get, list, put } from '@vercel/blob';
+import { randomUUID } from 'node:crypto';
 import { getBlobAccess } from './blobAccess';
 import type {
   EmailTemplate,
@@ -122,7 +123,7 @@ export async function createLead(
 ): Promise<LeadRecord> {
   const now = new Date().toISOString();
   const lead: LeadRecord = {
-    id: partial.id ?? crypto.randomUUID(),
+    id: partial.id ?? randomUUID(),
     createdAt: now,
     updatedAt: now,
     status: partial.status ?? 'new',
