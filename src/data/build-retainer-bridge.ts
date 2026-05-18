@@ -61,6 +61,17 @@ export const BUILD_TO_RETAINER_BRIDGE_ROWS: BuildRetainerBridgeRow[] = [
     smmeFit: true,
   },
   {
+    id: 'rapid-build',
+    buildRangeLabel: 'R60k – R175k',
+    buildSourceNote: 'AI-Powered Rapid Build MVP',
+    productExamples: 'Accelerated SaaS MVP, fast internal workflow databases, client portals built in 2–4 weeks',
+    retainerTierId: 'essential',
+    retainerFromLabel: retainerFromLabel('essential'),
+    guidance:
+      'High-impact pathway for early stage ideas. A 50% discount on traditional MVP bands. Starts with a ZAR 15,000 scoping sprint which credits back in full if we build.',
+    smmeFit: true,
+  },
+  {
     id: 'fundable-mvp',
     buildRangeLabel: tierRange('mvp-startup', 'Fundable MVP'),
     buildSourceNote: 'Fundable MVP band',

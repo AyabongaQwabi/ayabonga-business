@@ -20,6 +20,11 @@ const localDevelopersPath = path.join(root, 'src/data/local-developers.json');
 const buyerIntentPath = path.join(root, 'src/data/buyer-intent-pages.ts');
 const partnershipPath = path.join(root, 'src/data/partnership-landing-pages.ts');
 const serviceLandingPath = path.join(root, 'src/data/service-landing-pages.ts');
+const insightsPath = path.join(root, 'src/data/insights-pages.ts');
+const pricingClusterPath = path.join(root, 'src/data/pricing-cluster-pages.ts');
+const caseStudiesPath = path.join(root, 'src/data/case-studies.ts');
+const industryPagesPath = path.join(root, 'src/data/industry-pages.ts');
+const insightsPagesPath = path.join(root, 'src/data/insights-pages.ts');
 
 
 const SITE_URL = (
@@ -69,6 +74,85 @@ function collectBlogEntries() {
     entries.push({ slug, lastmod });
   }
   return entries.sort((a, b) => a.slug.localeCompare(b.slug));
+}
+
+/** Slugs from `export const SOME_ARRAY = [` until the next export. */
+function collectSlugsBetweenExports(filePath, arrayExportName, nextExportName) {
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const start = raw.indexOf(`export const ${arrayExportName}`);
+  const end = raw.indexOf(`export const ${nextExportName}`);
+  if (start < 0 || end <= start) return [];
+  const section = raw.slice(start, end);
+  return [...section.matchAll(/slug: '([^']+)'/g)].map((m) => m[1]);
+}
+
+function collectCaseStudyLinks() {
+  try {
+    const raw = fs.readFileSync(caseStudiesPath, 'utf8');
+    const indexMatch = raw.match(/CASE_STUDIES_INDEX_PATH = '([^']+)'/);
+    const indexPath = indexMatch?.[1] ?? '/case-studies';
+    const slugs = collectSlugsBetweenExports(
+      caseStudiesPath,
+      'CASE_STUDIES',
+      'CASE_STUDIES_INDEX_PATH',
+    );
+    return [
+      { url: indexPath, changefreq: 'monthly', priority: 0.9 },
+      ...slugs.map((slug) => ({
+        url: `${indexPath}/${slug}`,
+        changefreq: 'monthly',
+        priority: 0.86,
+      })),
+    ];
+  } catch {
+    console.warn('generate-sitemap: could not read case-studies.ts');
+    return [];
+  }
+}
+
+function collectIndustryLinks() {
+  try {
+    const slugs = collectSlugsBetweenExports(
+      industryPagesPath,
+      'industryPages',
+      'industriesBySlug',
+    );
+    return [
+      { url: '/industries', changefreq: 'monthly', priority: 0.9 },
+      ...slugs.map((slug) => ({
+        url: `/industries/${slug}`,
+        changefreq: 'monthly',
+        priority: 0.84,
+      })),
+    ];
+  } catch {
+    console.warn('generate-sitemap: could not read industry-pages.ts');
+    return [];
+  }
+}
+
+function collectInsightLinks() {
+  try {
+    const raw = fs.readFileSync(insightsPagesPath, 'utf8');
+    const indexMatch = raw.match(/INSIGHTS_INDEX_PATH = '([^']+)'/);
+    const indexPath = indexMatch?.[1] ?? '/insights';
+    const slugs = collectSlugsBetweenExports(
+      insightsPagesPath,
+      'insightPages',
+      'insightSlugs',
+    );
+    return [
+      { url: indexPath, changefreq: 'weekly', priority: 0.88 },
+      ...slugs.map((slug) => ({
+        url: `${indexPath}/${slug}`,
+        changefreq: 'monthly',
+        priority: 0.82,
+      })),
+    ];
+  } catch {
+    console.warn('generate-sitemap: could not read insights-pages.ts');
+    return [];
+  }
 }
 
 async function main() {
@@ -137,12 +221,26 @@ async function main() {
     console.warn('generate-sitemap: could not read service-landing-pages.ts');
   }
 
+  let pricingClusterPaths = [];
+  try {
+    const raw = fs.readFileSync(pricingClusterPath, 'utf8');
+    const matches = [...raw.matchAll(/path:\s*'(\/[^']+-pricing)'/g)];
+    pricingClusterPaths = [...new Set(matches.map((m) => m[1]))];
+  } catch {
+    console.warn('generate-sitemap: could not read pricing-cluster-pages.ts');
+  }
+
   const links = [
     { url: '/', changefreq: 'weekly', priority: 1 },
     { url: '/services', changefreq: 'monthly', priority: 0.9 },
     { url: '/technical-cofounder', changefreq: 'monthly', priority: 0.95 },
     { url: '/pricing-strategy', changefreq: 'monthly', priority: 0.96 },
     { url: '/app-development-cost-south-africa', changefreq: 'monthly', priority: 0.97 },
+    ...pricingClusterPaths.map((url) => ({
+      url,
+      changefreq: 'monthly',
+      priority: 0.94,
+    })),
     { url: '/developers/eastern-cape', changefreq: 'weekly', priority: 0.92 },
     { url: '/developers/south-africa', changefreq: 'weekly', priority: 0.9 },
     ...localPageLinks,
@@ -150,6 +248,7 @@ async function main() {
     { url: '/privacy', changefreq: 'yearly', priority: 0.3 },
     { url: '/editorial', changefreq: 'yearly', priority: 0.35 },
     { url: '/corrections', changefreq: 'yearly', priority: 0.3 },
+    { url: '/sitemap', changefreq: 'monthly', priority: 0.5 },
     { url: '/get-a-quote', changefreq: 'monthly', priority: 0.7 },
     { url: '/mvp-scope-checklist', changefreq: 'monthly', priority: 0.86 },
     ...buyerIntentPaths.map((url) => ({
@@ -169,6 +268,9 @@ async function main() {
     })),
     { url: '/projects', changefreq: 'monthly', priority: 0.88 },
     { url: '/projects/espazza', changefreq: 'monthly', priority: 0.75 },
+    ...collectCaseStudyLinks(),
+    ...collectIndustryLinks(),
+    ...collectInsightLinks(),
     ...pseoEntries.map((p) => ({
       url: `/solutions/${p.slug}`,
       changefreq: 'monthly',

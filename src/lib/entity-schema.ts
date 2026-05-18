@@ -158,3 +158,48 @@ export function buildBlogPostingSchema(options: {
 
   return doc;
 }
+
+export function buildArticleSchema(options: {
+  headline: string;
+  description: string;
+  canonical: string;
+  shareImageUrl?: string;
+  datePublished: string;
+  dateModified?: string;
+  articleSection?: string;
+}) {
+  const {
+    headline,
+    description,
+    canonical,
+    shareImageUrl = DEFAULT_OG_IMAGE,
+    datePublished,
+    dateModified,
+    articleSection,
+  } = options;
+  const modified = dateModified ?? datePublished;
+
+  const doc: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline,
+    description,
+    url: canonical,
+    author: authorPersonSchema(),
+    publisher: buildPublisherSchema(),
+    image: shareImageUrl,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonical,
+    },
+    inLanguage: 'en-ZA',
+    datePublished: `${datePublished}T12:00:00+02:00`,
+    dateModified: `${modified}T12:00:00+02:00`,
+  };
+
+  if (articleSection) {
+    doc.articleSection = articleSection;
+  }
+
+  return doc;
+}

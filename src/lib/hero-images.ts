@@ -12,6 +12,7 @@ export const HERO_IMAGES = {
 const serviceHeroByPath: Record<string, string> = {
   '/mobile-app-development-south-africa': HERO_IMAGES.mobileApp,
   '/custom-software-development-south-africa': HERO_IMAGES.customSoftware,
+  '/services/ai-powered-rapid-app-development': HERO_IMAGES.mvpDeveloper,
 };
 
 export function heroImageForServicePath(path: string, override?: string): string {
