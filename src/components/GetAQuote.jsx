@@ -342,6 +342,9 @@ export default function GetAQuote({ trustStats = null }) {
     projectDetails: '',
   });
 
+  const [isRapidBuild, setIsRapidBuild] = useState(false);
+  const [addScopingSprint, setAddScopingSprint] = useState(false);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -352,6 +355,10 @@ export default function GetAQuote({ trustStats = null }) {
       if (Array.isArray(data.selectedFeatures))
         setSelectedFeatures(data.selectedFeatures);
       if (data.buildTime != null) setBuildTime(String(data.buildTime));
+      if (typeof data.isRapidBuild === 'boolean')
+        setIsRapidBuild(data.isRapidBuild);
+      if (typeof data.addScopingSprint === 'boolean')
+        setAddScopingSprint(data.addScopingSprint);
       // Legacy drafts used 6 steps (incl. "Your details"); map to 5-step flow.
       let w = data.wizardStep;
       if (typeof w === 'number' && Number.isFinite(w)) {
@@ -384,10 +391,12 @@ export default function GetAQuote({ trustStats = null }) {
           selectedFeatures,
           buildTime,
           wizardStep,
+          isRapidBuild,
+          addScopingSprint,
         })
       );
     } catch (_) {}
-  }, [selectedProjectTypes, selectedFeatures, buildTime, wizardStep]);
+  }, [selectedProjectTypes, selectedFeatures, buildTime, wizardStep, isRapidBuild, addScopingSprint]);
 
   // Dynamic pricing: getTotals uses hourly rate, experience, hours/day, desired days; no price_zar in math
   const totals = useMemo(() => {
@@ -395,7 +404,7 @@ export default function GetAQuote({ trustStats = null }) {
     const years = Math.max(0, parseInt(yearsExperience, 10) || 0);
     const hoursDay = Math.max(1, parseInt(hoursPerDay, 10) || HOURS_PER_DAY);
     const desiredDays = buildTime.trim() ? parseInt(buildTime, 10) : null;
-    return getTotals(
+    const baseTotals = getTotals(
       selectedFeatures,
       allFeatures,
       {
@@ -406,6 +415,42 @@ export default function GetAQuote({ trustStats = null }) {
       },
       bufferPercent
     );
+
+    let estimated_days = baseTotals.estimated_days;
+    let estimated_hours = baseTotals.estimated_hours;
+    let base_price = baseTotals.base_price;
+    let effective_desired_days = baseTotals.effective_desired_days;
+    let adjusted_price = baseTotals.adjusted_price;
+
+    if (isRapidBuild) {
+      const multiplier = 0.5;
+      estimated_days = Math.max(1, baseTotals.estimated_days * multiplier);
+      estimated_hours = baseTotals.estimated_hours * multiplier;
+      base_price = baseTotals.base_price * multiplier;
+
+      if (desiredDays !== null) {
+        effective_desired_days = Math.max(10, Math.min(20, desiredDays));
+      } else {
+        effective_desired_days = Math.max(10, Math.min(20, Math.round(estimated_days)));
+      }
+
+      adjusted_price = baseTotals.adjusted_price * multiplier;
+    }
+
+    // Add Paid Scoping Sprint (ZAR 15,000) if selected
+    if (isRapidBuild && addScopingSprint) {
+      adjusted_price += 15000;
+      base_price += 15000;
+    }
+
+    return {
+      ...baseTotals,
+      estimated_days,
+      estimated_hours,
+      base_price,
+      effective_desired_days,
+      adjusted_price,
+    };
   }, [
     selectedFeatures,
     hourlyRate,
@@ -413,6 +458,8 @@ export default function GetAQuote({ trustStats = null }) {
     hoursPerDay,
     buildTime,
     bufferPercent,
+    isRapidBuild,
+    addScopingSprint,
   ]);
 
   const handleBuildRequestSubmit = async (e) => {
@@ -457,7 +504,7 @@ export default function GetAQuote({ trustStats = null }) {
       const rate = Math.max(1, parseInt(hourlyRate, 10) || CLIENT_QUOTE_HOURLY_RATE_ZAR);
       const years = Math.max(0, parseInt(yearsExperience, 10) || 0);
       const hoursDay = Math.max(1, parseInt(hoursPerDay, 10) || HOURS_PER_DAY);
-      const breakdown = getFeatureBreakdown(
+      const baseBreakdown = getFeatureBreakdown(
         selectedFeatures,
         allFeatures,
         {
@@ -468,6 +515,14 @@ export default function GetAQuote({ trustStats = null }) {
         },
         bufferPercent,
       );
+      const breakdown = isRapidBuild
+        ? baseBreakdown.map((row) => ({
+            ...row,
+            adjusted_days: row.adjusted_days * 0.5,
+            feature_base_price: row.feature_base_price * 0.5,
+            feature_adjusted_price: (row.feature_adjusted_price ?? 0) * 0.5,
+          }))
+        : baseBreakdown;
       const quote = buildQuoteExportPayload({
         selectedProjectTypes,
         selectedFeatures,
@@ -857,6 +912,129 @@ export default function GetAQuote({ trustStats = null }) {
           </div>
         ) : null}
 
+        {/* Methodology Selection Card */}
+        {totals.hasFeatures && (
+          <Card className="border-surface-border bg-surface-raised overflow-hidden">
+            <CardHeader className="bg-gradient-to-r from-primary/5 via-accent-gold/5 to-transparent border-b border-surface-border">
+              <CardTitle className="text-xl text-text-primary flex items-center gap-2">
+                <Zap className="h-5 w-5 text-accent-gold animate-pulse" aria-hidden />
+                Select Build Methodology
+              </CardTitle>
+              <CardDescription>
+                Choose how we engineer your software. Qwabi Engineering offers both traditional manual-led engineering and next-generation, AI-accelerated delivery models.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="p-6 md:p-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                {/* Traditional Card */}
+                <div
+                  onClick={() => {
+                    setIsRapidBuild(false);
+                    setAddScopingSprint(false);
+                  }}
+                  className={cn(
+                    "cursor-pointer rounded-xl border p-5 transition-all flex flex-col justify-between h-full hover:border-surface-border/85",
+                    !isRapidBuild 
+                      ? "border-accent-gold bg-accent-gold/5 shadow-[0_0_15px_rgba(212,175,55,0.05)]" 
+                      : "border-surface-border bg-surface/40 opacity-70 hover:opacity-100"
+                  )}
+                >
+                  <div>
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-xs font-semibold tracking-wide uppercase text-text-secondary">Standard Build</span>
+                      <Badge variant={!isRapidBuild ? "default" : "outline"} className={!isRapidBuild ? "bg-accent-gold text-black hover:bg-accent-gold border-none" : "border-surface-border"}>
+                        Traditional
+                      </Badge>
+                    </div>
+                    <h4 className="text-base font-bold text-text-primary mb-2">Classic Engineering</h4>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Standard development cycle. Manual architecture planning, strict manual code reviews, and deep iterative cycles. Ideal for complex, hyper-custom systems or low-level performance tuning.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-surface-border/30 flex justify-between items-center text-xs">
+                    <span className="text-text-muted">Standard timeline</span>
+                    <span className="font-semibold text-text-primary">100% Rate</span>
+                  </div>
+                </div>
+
+                {/* AI-Powered Rapid Build Card */}
+                <div
+                  onClick={() => setIsRapidBuild(true)}
+                  className={cn(
+                    "cursor-pointer rounded-xl border p-5 transition-all flex flex-col justify-between h-full hover:border-surface-border/85",
+                    isRapidBuild 
+                      ? "border-emerald-500 bg-emerald-500/5 shadow-[0_0_15px_rgba(16,185,129,0.05)]" 
+                      : "border-surface-border bg-surface/40 opacity-70 hover:opacity-100"
+                  )}
+                >
+                  <div>
+                    <div className="flex justify-between items-start mb-3">
+                      <span className="text-xs font-semibold tracking-wide uppercase text-emerald-400">Accelerated Build</span>
+                      <Badge variant={isRapidBuild ? "default" : "outline"} className={isRapidBuild ? "bg-emerald-500 text-black hover:bg-emerald-500 border-none" : "border-surface-border"}>
+                        50% Cost Saving
+                      </Badge>
+                    </div>
+                    <h4 className="text-base font-bold text-text-primary mb-2 flex items-center gap-1.5">
+                      AI-Powered Rapid Build
+                      <Sparkles className="h-4 w-4 text-emerald-400 shrink-0" />
+                    </h4>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      Next-generation engineering workflow using AI-assisted software production and documentation-driven development, protected by strict human-architected quality gates.
+                    </p>
+                  </div>
+                  <div className="mt-6 pt-4 border-t border-surface-border/30 flex justify-between items-center text-xs">
+                    <span className="text-emerald-400 font-medium">Cut timeline in half</span>
+                    <span className="font-bold text-emerald-400">50% Discount Applied</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Paid Scoping Sprint Sub-Option (Only visible when AI-Powered Rapid Build is selected) */}
+              {isRapidBuild && (
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 transition-all duration-300 animate-fadeIn space-y-4">
+                  <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                    <div className="space-y-1">
+                      <h4 className="text-sm font-bold text-text-primary flex flex-wrap items-center gap-1.5">
+                        Add Paid Scoping Sprint Option
+                        <Badge className="bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 text-[10px]">1-Week Scoping</Badge>
+                      </h4>
+                      <p className="text-xs text-text-secondary leading-relaxed max-w-2xl">
+                        Accelerate alignment. A high-intensity 1-week collaborative session producing a comprehensive Product Requirements Document (PRD), core data schemas, and a click-through wireframe blueprint.
+                      </p>
+                      <p className="text-[11px] text-emerald-400 font-semibold mt-1">
+                        ★ Credited back in full (100% discount) if you build the project with us.
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end gap-1 shrink-0 self-end sm:self-start">
+                      <span className="text-[10px] text-text-muted">Sprint Fee</span>
+                      <span className="text-base font-extrabold text-emerald-400">{formatMoney(15000, currency)}</span>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-emerald-500/10 flex items-center justify-between">
+                    <label htmlFor="scoping-checkbox" className="text-xs text-text-primary font-medium cursor-pointer select-none flex items-center gap-2">
+                      <input
+                        id="scoping-checkbox"
+                        type="checkbox"
+                        checked={addScopingSprint}
+                        onChange={(e) => setAddScopingSprint(e.target.checked)}
+                        className="rounded border-emerald-500/30 text-emerald-500 focus:ring-emerald-500 bg-surface h-4 w-4"
+                      />
+                      Add Paid Scoping Sprint to my project
+                    </label>
+                    {addScopingSprint && (
+                      <span className="text-xs text-emerald-400 font-medium">Added to estimate</span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+
         <Card className="border-surface-border bg-surface-raised">
           <CardHeader>
             <CardTitle className="text-xl text-text-primary flex items-center gap-2">
@@ -913,6 +1091,19 @@ export default function GetAQuote({ trustStats = null }) {
               {Math.round(totalComplexity)} = {complexityPerc}%
             </p>
             <p className="text-emerald-600 text-sm italic">{complexityCopy}</p>
+
+            {isRapidBuild && (
+              <div
+                className="rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-sm text-emerald-400 font-medium"
+                role="status"
+              >
+                ⚡ AI-Powered Rapid Build active (50% faster timeline and 50% cost savings applied).
+                {addScopingSprint && (
+                  <span> Includes 1-Week Paid Scoping Sprint (credited back if you build).</span>
+                )}
+              </div>
+            )}
+
             <p>
               <strong>Our time:</strong> {Math.round(totals.estimated_days)} days ·{' '}
               {formatMoney(totals.base_price, currency)}

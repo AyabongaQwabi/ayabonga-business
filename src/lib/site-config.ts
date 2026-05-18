@@ -53,7 +53,11 @@ export const MVP_SCOPE_CHECKLIST_PAGE = '/mvp-scope-checklist';
 
 export const MVP_SCOPE_CHECKLIST_LABEL = 'MVP scope checklist';
 
-export const PARTNERSHIP_CTA_LABEL = 'Start a technical partnership';
+/** Primary CTA for retainer pricing (post-launch). */
+export const RETAINER_CTA_LABEL = 'View retainer plans';
+
+/** @deprecated Use RETAINER_CTA_LABEL — kept for legacy imports. */
+export const PARTNERSHIP_CTA_LABEL = RETAINER_CTA_LABEL;
 export const QUOTE_TOOL_LABEL = 'Project scope estimator';
 
 /** Disqus site shortname (https://disqus.com/admin/settings/general/) */

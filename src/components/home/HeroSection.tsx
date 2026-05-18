@@ -8,8 +8,8 @@ import {
   FOUNDER_PAGE_LABEL,
   GET_ESTIMATE_LABEL,
   MVP_SCOPE_CHECKLIST_PAGE,
-  PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
+  RETAINER_CTA_LABEL,
   QUOTE_PAGE,
   WHATSAPP_URL,
 } from '../../lib/site-config';
@@ -98,10 +98,10 @@ export function HeroSection() {
               className="mt-3 sm:mt-4 text-text-secondary max-w-xl"
               style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
             >
-              Qwabi Engineering ships web apps, mobile apps, and business systems for teams across
-              South Africa. One senior product engineer leads delivery from architecture to launch.
-              Based in the Eastern Cape; remote-friendly. Most clients move to a monthly retainer
-              after go-live.
+              We build custom software, mobile apps, business systems, and web platforms for teams
+              across South Africa. A senior engineer leads delivery from architecture to launch.
+              Based in the Eastern Cape; remote-friendly nationwide. Many clients move to a
+              monthly retainer after go-live.
             </p>
 
             <p className="mt-3 text-sm text-text-muted max-w-xl">
@@ -118,15 +118,22 @@ export function HeroSection() {
                 className="text-accent-gold font-medium hover:underline underline-offset-4"
               >
                 cost guide
-              </Link>{' '}
-              or{' '}
+              </Link>
+              {', '}
               <Link
                 to={MVP_SCOPE_CHECKLIST_PAGE}
                 className="text-accent-gold font-medium hover:underline underline-offset-4"
               >
                 MVP checklist
               </Link>
-              . If we fit after WhatsApp, I send a written proposal.
+              {', or '}
+              <Link
+                to="/services/ai-powered-rapid-app-development"
+                className="text-accent-gold font-medium hover:underline underline-offset-4"
+              >
+                rapid build system
+              </Link>
+              . If we fit after WhatsApp, we send a written proposal with scope and next steps.
             </p>
 
             <div
@@ -147,7 +154,7 @@ export function HeroSection() {
                 WhatsApp
               </a>
               <Link to={PRICING_STRATEGY_PAGE} className="btn-outline min-h-[44px]">
-                {PARTNERSHIP_CTA_LABEL}
+                {RETAINER_CTA_LABEL}
               </Link>
               <Link
                 to={APP_DEVELOPMENT_COST_PAGE}

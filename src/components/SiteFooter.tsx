@@ -4,6 +4,7 @@ import {
   APP_DEVELOPMENT_COST_PAGE,
   FOUNDER_PAGE_LABEL,
   PRICING_STRATEGY_PAGE,
+  PROJECTS_PAGE,
   QUOTE_PAGE,
   QUOTE_TOOL_LABEL,
   SITE_NAME,
@@ -29,8 +30,10 @@ const FOOTER_GROUPS: Record<string, FooterLink[]> = {
     { label: QUOTE_TOOL_LABEL, href: QUOTE_PAGE },
   ],
   Company: [
+    { label: 'All projects', href: PROJECTS_PAGE },
     { label: FOUNDER_PAGE_LABEL, href: ABOUT_PAGE },
     { label: 'Privacy', href: '/privacy' },
+    { label: 'Sitemap', href: '/sitemap' },
     {
       label: 'Personal site',
       href: 'https://www.qwabi.co.za',

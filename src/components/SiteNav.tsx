@@ -5,10 +5,10 @@ import {
   ABOUT_PAGE,
   APP_DEVELOPMENT_COST_PAGE,
   FOUNDER_PAGE_LABEL,
-  PARTNERSHIP_CTA_LABEL,
+  GET_ESTIMATE_LABEL,
   PRICING_STRATEGY_PAGE,
+  PROJECTS_PAGE,
   QUOTE_PAGE,
-  QUOTE_TOOL_LABEL,
 } from '../lib/site-config';
 
 const SCROLL_BLUR_THRESHOLD = 60;
@@ -20,10 +20,11 @@ type NavItem =
 
 const navItems: NavItem[] = [
   { label: 'Services', sectionId: 'services' },
-  { label: 'Partnership', sectionId: 'partnership' },
+  { label: 'Work', sectionId: 'work' },
+  { label: 'Feedback', sectionId: 'testimonials' },
   { label: 'App costs', to: APP_DEVELOPMENT_COST_PAGE },
   { label: 'Retainers', to: PRICING_STRATEGY_PAGE },
-  { label: 'Work', sectionId: 'work' },
+  { label: 'All projects', to: PROJECTS_PAGE },
   { label: FOUNDER_PAGE_LABEL, to: ABOUT_PAGE },
 ];
 
@@ -143,11 +144,8 @@ export function SiteNav({ onNavigateSection }: SiteNavProps) {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <Link to={QUOTE_PAGE} className="btn-outline px-4 py-2 text-xs">
-            {QUOTE_TOOL_LABEL}
-          </Link>
-          <Link to={PRICING_STRATEGY_PAGE} className="btn-primary px-4 py-2 text-xs">
-            {PARTNERSHIP_CTA_LABEL}
+          <Link to={QUOTE_PAGE} className="btn-primary px-4 py-2 text-xs">
+            {GET_ESTIMATE_LABEL}
           </Link>
         </div>
 
@@ -189,17 +187,10 @@ export function SiteNav({ onNavigateSection }: SiteNavProps) {
               <div className="mt-4 flex flex-col gap-3 border-t border-surface-border pt-6">
                 <Link
                   to={QUOTE_PAGE}
-                  className="btn-outline text-center"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {QUOTE_TOOL_LABEL}
-                </Link>
-                <Link
-                  to={PRICING_STRATEGY_PAGE}
                   className="btn-primary text-center"
                   onClick={() => setMobileOpen(false)}
                 >
-                  {PARTNERSHIP_CTA_LABEL}
+                  {GET_ESTIMATE_LABEL}
                 </Link>
               </div>
             </nav>

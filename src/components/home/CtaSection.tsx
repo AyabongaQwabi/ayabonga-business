@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import {
   GET_ESTIMATE_LABEL,
-  PARTNERSHIP_CTA_LABEL,
   PRICING_STRATEGY_PAGE,
+  RETAINER_CTA_LABEL,
   QUOTE_PAGE,
   QUOTE_TOOL_LABEL,
   WHATSAPP_URL,
@@ -30,7 +30,7 @@ export function CtaSection() {
             color: 'var(--color-text-inverse)',
           }}
         >
-          Get a senior engineer on your product, not another handoff
+          Need custom software built properly?
         </h2>
         <p
           className="mb-8 max-w-[520px] mx-auto text-pretty"
@@ -40,9 +40,9 @@ export function CtaSection() {
             color: 'rgba(10, 25, 47, 0.75)',
           }}
         >
-          Tell me what you run today, what is fragile, and where the product needs to go. After
-          WhatsApp we align on fit; if it works, I send a written proposal with retainer tier and
-          first priorities.
+          Tell us what you run today, what breaks under load, and what you need next. After
+          WhatsApp we align on fit. If it works, we send a written proposal with build scope,
+          timeline, and retainer options after launch.
         </p>
         <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
           <Link
@@ -80,7 +80,7 @@ export function CtaSection() {
               outlineColor: 'var(--color-text-inverse)',
             }}
           >
-            {PARTNERSHIP_CTA_LABEL}
+            {RETAINER_CTA_LABEL}
           </Link>
         </div>
         <p className="mt-8 text-sm" style={{ color: 'rgba(10, 25, 47, 0.7)' }}>
