@@ -1,0 +1,136 @@
+{
+  "updated": "2026-05-26",
+  "site": "https://business.qwabi.co.za",
+  "clusters": [
+    {
+      "id": "software-development-company-sa",
+      "primaryKeywords": [
+        "software development company south africa",
+        "software development companies south africa",
+        "software development companies in south africa",
+        "custom software development company"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Find a vendor to build custom software; compare agencies vs boutique vs senior partner.",
+      "primaryUrl": "/custom-software-development-south-africa",
+      "secondaryUrls": [
+        "/services",
+        "/developers/south-africa",
+        "/software-development-pricing",
+        "/get-a-quote"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "web-development-company-sa",
+      "primaryKeywords": [
+        "web development company in south africa",
+        "web development companies in south africa",
+        "web developers south africa",
+        "web development south africa"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Hire a team to build a web app, customer portal, or marketing site with real backend logic.",
+      "primaryUrl": "/web-development-company-south-africa",
+      "secondaryUrls": [
+        "/website-development-pricing",
+        "/developers/south-africa",
+        "/services"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "mobile-app-development-sa",
+      "primaryKeywords": [
+        "mobile app development south africa",
+        "mobile app developers in south africa",
+        "app developers in south africa",
+        "app development south africa"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Build a mobile app (often MVP); compare cost and timeline.",
+      "primaryUrl": "/mobile-app-development-south-africa",
+      "secondaryUrls": [
+        "/app-development-cost-south-africa",
+        "/mvp-developer-south-africa",
+        "/technical-cofounder"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "technical-cofounder-taas",
+      "primaryKeywords": [
+        "technical co-founder south africa",
+        "technical cofounder",
+        "technical co founder as a service",
+        "hire technical partner"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Non-technical founder needs a senior technical partner without giving equity.",
+      "primaryUrl": "/technical-cofounder",
+      "secondaryUrls": [
+        "/vs/technical-cofounder-vs-agency",
+        "/vs/taas-vs-fractional-cto",
+        "/pricing-strategy"
+      ],
+      "priority": 1
+    },
+    {
+      "id": "hire-developer-sa",
+      "primaryKeywords": [
+        "software developers south africa",
+        "software developer south africa",
+        "software engineers south africa"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Hire an individual senior developer or small team.",
+      "primaryUrl": "/developers/south-africa",
+      "secondaryUrls": ["/developers/eastern-cape", "/best-app-developers-south-africa"],
+      "priority": 2
+    },
+    {
+      "id": "ai-cloud-sa",
+      "primaryKeywords": [
+        "AI developer south africa",
+        "cloud architect south africa",
+        "whatsapp ai chatbot south africa"
+      ],
+      "intent": "commercial",
+      "searcherGoal": "Add AI, automation, or cloud capability to an existing product.",
+      "primaryUrl": "/solutions/ai-integration-specialist-south-africa",
+      "secondaryUrls": [
+        "/whatsapp-ai-chatbot-south-africa",
+        "/services/ai-powered-rapid-app-development",
+        "/ai-automation-pricing"
+      ],
+      "priority": 2
+    },
+    {
+      "id": "seo-backlinks-education",
+      "primaryKeywords": [
+        "types of seo backlinks",
+        "good backlinks vs bad backlinks",
+        "contextual backlinks"
+      ],
+      "intent": "informational",
+      "searcherGoal": "Learn which link types help rankings vs hurt.",
+      "primaryUrl": "/blog/types-of-seo-backlinks",
+      "secondaryUrls": ["/insights"],
+      "priority": 3
+    },
+    {
+      "id": "deprioritized",
+      "primaryKeywords": [
+        "software developer salary south africa",
+        "software engineering courses south africa",
+        "accounting software south africa",
+        "payroll software south africa"
+      ],
+      "intent": "informational-non-fit",
+      "searcherGoal": "Jobs, salaries, courses, or vertical SaaS we do not sell.",
+      "primaryUrl": null,
+      "secondaryUrls": [],
+      "priority": 0
+    }
+  ]
+}

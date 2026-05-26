@@ -37,8 +37,8 @@ function writeRobotsTxt() {
   const lines = [
     'User-agent: *',
     'Allow: /',
-    'Disallow: /blog',
     'Disallow: /admin',
+    'Disallow: /blog?',
     '',
     `Sitemap: ${SITE_URL}/sitemap.xml`,
     '',
@@ -141,12 +141,21 @@ function collectInsightLinks() {
       'insightPages',
       'insightSlugs',
     );
+    const dateBySlug = {};
+    for (const m of raw.matchAll(
+      /slug: '([^']+)'[\s\S]*?datePublished: '([^']+)'/g,
+    )) {
+      dateBySlug[m[1]] = m[2];
+    }
     return [
       { url: indexPath, changefreq: 'weekly', priority: 0.88 },
       ...slugs.map((slug) => ({
         url: `${indexPath}/${slug}`,
         changefreq: 'monthly',
         priority: 0.82,
+        ...(dateBySlug[slug]
+          ? { lastmod: dateBySlug[slug] }
+          : {}),
       })),
     ];
   } catch {
@@ -161,7 +170,7 @@ async function main() {
     process.exit(1);
   }
 
-  const blogEntries = [];
+  const blogEntries = collectBlogEntries();
   
   let pseoEntries = [];
   try {
@@ -280,6 +289,13 @@ async function main() {
       url: `/vs/${c.slug}`,
       changefreq: 'monthly',
       priority: 0.7,
+    })),
+    { url: '/blog', changefreq: 'weekly', priority: 0.85 },
+    ...blogEntries.map(({ slug, lastmod }) => ({
+      url: `/blog/${slug}`,
+      changefreq: 'weekly',
+      priority: 0.84,
+      ...(lastmod ? { lastmod } : {}),
     })),
   ];
 

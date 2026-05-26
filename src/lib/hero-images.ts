@@ -12,6 +12,7 @@ export const HERO_IMAGES = {
 const serviceHeroByPath: Record<string, string> = {
   '/mobile-app-development-south-africa': HERO_IMAGES.mobileApp,
   '/custom-software-development-south-africa': HERO_IMAGES.customSoftware,
+  '/web-development-company-south-africa': HERO_IMAGES.servicesHub,
   '/services/ai-powered-rapid-app-development': HERO_IMAGES.mvpDeveloper,
 };
 

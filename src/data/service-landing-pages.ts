@@ -5,7 +5,10 @@ import {
   Car,
   ClipboardList,
   Cpu,
+  Globe,
+  Layout,
   Package,
+  ShoppingCart,
   Smartphone,
   Users,
   Warehouse,
@@ -218,6 +221,62 @@ const customSoftwarePricingTables: PricingTableBlock[] = [
   },
 ];
 
+const webDevelopmentPricingTables: PricingTableBlock[] = [
+  {
+    id: 'marketing-site',
+    title: 'Marketing & brochure sites',
+    intro:
+      'Fast, accessible sites when the goal is credibility and lead capture, not a full product backend.',
+    tiers: [
+      {
+        name: 'Single-page or small site',
+        rangeZar: 'R25k – R70k',
+        summary: 'Landing page, contact form, analytics, basic CMS or static content.',
+        timeline: '2–4 weeks',
+      },
+      {
+        name: 'Multi-page company site',
+        rangeZar: 'R70k – R150k',
+        summary: 'Services, case studies, blog or insights feed, SEO foundations.',
+        timeline: '4–8 weeks',
+      },
+      {
+        name: 'Content-heavy site',
+        rangeZar: 'R150k – R280k',
+        summary: 'Many templates, localization, performance budget, editorial workflow.',
+        timeline: '6–12 weeks',
+      },
+    ],
+  },
+  {
+    id: 'web-app',
+    title: 'Web applications & customer portals',
+    intro:
+      'Logged-in experiences, dashboards, and APIs. This is where most founders need a software partner, not a theme install.',
+    tiers: [
+      {
+        name: 'Customer portal MVP',
+        rangeZar: 'R120k – R280k',
+        summary: 'Auth, core workflows, admin, one integration (payments or CRM).',
+        timeline: '6–10 weeks',
+      },
+      {
+        name: 'Production web platform',
+        rangeZar: 'R280k – R650k',
+        summary: 'Roles, reporting, webhooks, monitoring, staged releases.',
+        timeline: '3–6 months',
+      },
+      {
+        name: 'Multi-tenant or marketplace web',
+        rangeZar: 'R650k – R1.2m+',
+        summary: 'Vendor onboarding, payouts, dispute flows, scale planning.',
+        timeline: '6–12 months',
+      },
+    ],
+    note: 'See website development pricing for retainer bands after launch.',
+  },
+];
+
 export const serviceLandingPages: ServiceLandingPageConfig[] = [
   {
     slug: 'mobile-app-development-south-africa',
@@ -338,6 +397,7 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       { label: 'App development cost guide (2026)', path: '/app-development-cost-south-africa' },
       { label: 'Project scope estimator', path: '/get-a-quote' },
       { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+      { label: 'Web development company', path: '/web-development-company-south-africa' },
       { label: 'All engineering services', path: '/services' },
     ],
     ctaHeadline: 'Ready to scope your mobile app?',
@@ -482,6 +542,138 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     ctaHeadline: 'Need bespoke software that fits your operations?',
     ctaSubhead:
       'Describe the workflow on WhatsApp or use the estimator. We map phases and ZAR ranges without a sales deck.',
+  },
+  {
+    slug: 'web-development-company-south-africa',
+    path: '/web-development-company-south-africa',
+    metaTitle: 'Web Development Company South Africa | Apps & Platforms',
+    metaDescription:
+      'South African web development company for customer portals, SaaS dashboards, ecommerce, and marketing sites. Senior-led React/Next.js delivery with ZAR pricing bands.',
+    keywords: [
+      'web development company south africa',
+      'web development companies in south africa',
+      'web developers south africa',
+      'web development south africa',
+      'web application development',
+      'react development south africa',
+    ],
+    eyebrow: 'Web apps · South Africa',
+    h1: 'Web Development Company South Africa',
+    heroSubhead:
+      'We build web applications and platforms founders can run in production: auth, payments, admin, and integrations. Not brochure-only sites unless that is what you actually need.',
+    heroImage: HERO_IMAGES.servicesHub,
+    heroImageAlt: 'Web development team building a production platform for a South African business',
+    serviceType: 'Web application and platform development',
+    services: [
+      {
+        icon: Layout,
+        title: 'Customer portals & dashboards',
+        copy: 'Logged-in experiences for clients, tenants, or members with role-based access.',
+      },
+      {
+        icon: ShoppingCart,
+        title: 'Ecommerce & marketplaces',
+        copy: 'Catalogues, checkout, vendor onboarding, and ops tools behind the storefront.',
+      },
+      {
+        icon: Globe,
+        title: 'Marketing & content sites',
+        copy: 'Fast landing pages and company sites when SEO and conversion matter.',
+      },
+      {
+        icon: Cpu,
+        title: 'APIs & integrations',
+        copy: 'Paystack, CRM, webhooks, and legacy system bridges your web UI depends on.',
+      },
+      {
+        icon: Zap,
+        title: 'AI-assisted workflows',
+        copy: 'Support bots, document tools, and internal copilots wired into your product.',
+      },
+      {
+        icon: Users,
+        title: 'Admin & internal tools',
+        copy: 'Back-office panels support teams use daily, not afterthought spreadsheets.',
+      },
+    ],
+    processSteps: [
+      {
+        step: '01',
+        title: 'Scope the product surface',
+        copy: 'We separate marketing pages from authenticated app flows so quotes match what users actually do.',
+      },
+      {
+        step: '02',
+        title: 'Architecture & stack',
+        copy: 'React or Next.js on modern hosting, with auth, database, and observability chosen for your scale.',
+      },
+      {
+        step: '03',
+        title: 'Ship in phases',
+        copy: 'Staging, QA, and launch checklists. You see working software before polish layers pile up.',
+      },
+      {
+        step: '04',
+        title: 'Operate after launch',
+        copy: 'Retainers for fixes, releases, and performance as traffic and features grow.',
+      },
+    ],
+    pricingTables: webDevelopmentPricingTables,
+    pricingSectionTitle: 'Web development pricing ranges (ZAR)',
+    pricingSectionIntro:
+      'Marketing sites and full web apps sit in different budget bands. Use these for planning; we confirm after reviewing your spec.',
+    projects: [
+      {
+        title: 'Laundry Marketplace',
+        description: 'Multi-sided laundry marketplace with customer booking and provider dashboards.',
+        url: 'https://laundry.qwabi.co.za/',
+        tech: ['Next.js', 'React', 'Marketplace'],
+      },
+      {
+        title: 'ClinicPlus',
+        description: 'Web booking and clinic operations for occupational health programmes.',
+        url: 'https://clinicplusbookings.co.za/',
+        tech: ['React', 'Node.js', 'Bookings'],
+      },
+      {
+        title: 'AN Consulting',
+        description: 'Secure records and workflow tooling for consulting operations.',
+        url: 'https://www.anconsulting.co.za/',
+        tech: ['Web app', 'Operations'],
+      },
+    ],
+    projectsIntro: 'Production web platforms, not demo landing pages.',
+    faqs: [
+      {
+        question: 'Web development company vs freelancer?',
+        answer:
+          'Freelancers fit small marketing sites with clear specs. Product web apps with auth, payments, and admin usually need a senior partner who owns architecture and launch risk.',
+      },
+      {
+        question: 'Do you only build marketing websites?',
+        answer:
+          'No. We prefer web apps and portals when the business runs on software. We still ship marketing sites when that is the right scope.',
+      },
+      {
+        question: 'Which stack do you use?',
+        answer:
+          'Most builds use React or Next.js with TypeScript, Postgres or Firebase/Supabase depending on needs, and hosting on Vercel or GCP. Stack follows maintainability, not trends.',
+      },
+      {
+        question: 'How is web pricing different from mobile?',
+        answer:
+          'Single responsive web apps can be cheaper than dual native stores. Complex marketplaces or compliance-heavy portals can exceed mobile MVPs. Compare bands on our cost and pricing pages.',
+      },
+    ],
+    relatedLinks: [
+      { label: 'Website development pricing', path: '/website-development-pricing' },
+      { label: 'Mobile app development', path: '/mobile-app-development-south-africa' },
+      { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+      { label: 'Project scope estimator', path: '/get-a-quote' },
+    ],
+    ctaHeadline: 'Need a web platform, not just pages?',
+    ctaSubhead:
+      'Share your users, integrations, and launch date on WhatsApp or use the estimator. We reply with fit and a realistic ZAR range.',
   },
   {
     slug: 'ai-powered-rapid-app-development',

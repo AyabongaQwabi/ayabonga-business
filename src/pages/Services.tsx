@@ -225,6 +225,11 @@ export default function ServicesPage() {
                 desc: 'CRM, HR, inventory, property, and ops systems.',
               },
               {
+                title: 'Web development company',
+                path: '/web-development-company-south-africa',
+                desc: 'Portals, SaaS dashboards, ecommerce, and production web apps.',
+              },
+              {
                 title: 'AI rapid app development',
                 path: '/services/ai-powered-rapid-app-development',
                 desc: 'Accelerated MVPs and custom apps via AI-assisted engineering.',

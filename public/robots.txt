@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /blog
+Disallow: /admin
+Disallow: /blog?
 
 Sitemap: https://business.qwabi.co.za/sitemap.xml
