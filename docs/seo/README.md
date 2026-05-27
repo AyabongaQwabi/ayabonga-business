@@ -41,7 +41,8 @@ Last updated: 2026-05-26
 | Industry | fintech / logistics / healthtech | `/solutions/{slug}` |
 | Comparison | agency vs cofounder | `/vs/{slug}` |
 | Insights | how to automate whatsapp bookings | `/insights/{slug}` |
-| SEO education | types of seo backlinks | `/blog/types-of-seo-backlinks` |
+| SEO education (personal blog) | types of seo backlinks | `https://www.qwabi.co.za/blog/types-of-seo-backlinks` |
+| SEO education (personal blog) | seo for new website | `https://www.qwabi.co.za/blog/seo-brand-new-website-playbook` |
 
 Full cluster list: `keyword-intent-map.json`.
 
@@ -53,7 +54,7 @@ Full cluster list: `keyword-intent-map.json`.
 - [x] Developer hubs (SA + Eastern Cape + city × role)
 - [x] Industries, case studies, insights, comparisons, pSEO `/solutions/*`
 - [x] Editorial + About + quote tool
-- [x] Blog enabled in robots + sitemap (engineering/SEO pillars)
+- [x] Blog on business site (engineering/product); Grumpy SEO Guy SEO series lives on [qwabi.co.za/blog](https://www.qwabi.co.za/blog)
 
 ## Freshness
 

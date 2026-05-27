@@ -33,7 +33,6 @@ const STATIC_PRERENDER_ROUTES = [
   '/custom-software-development-south-africa',
   '/web-development-company-south-africa',
   '/mvp-developer-south-africa',
-  '/blog/types-of-seo-backlinks',
   '/whatsapp-ai-chatbot-south-africa',
   '/best-app-developers-south-africa',
 ];

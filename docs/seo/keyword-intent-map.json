@@ -114,8 +114,25 @@
       ],
       "intent": "informational",
       "searcherGoal": "Learn which link types help rankings vs hurt.",
-      "primaryUrl": "/blog/types-of-seo-backlinks",
+      "primaryUrl": "https://www.qwabi.co.za/blog/types-of-seo-backlinks",
       "secondaryUrls": ["/insights"],
+      "priority": 3
+    },
+    {
+      "id": "seo-new-website-education",
+      "primaryKeywords": [
+        "seo for new website",
+        "how to do seo on a new website",
+        "new website seo",
+        "seo brand new website"
+      ],
+      "intent": "informational",
+      "searcherGoal": "Learn launch order for keywords, content, and links on a greenfield domain.",
+      "primaryUrl": "https://www.qwabi.co.za/blog/seo-brand-new-website-playbook",
+      "secondaryUrls": [
+        "https://www.qwabi.co.za/blog/types-of-seo-backlinks",
+        "/insights"
+      ],
       "priority": 3
     },
     {
