@@ -15,16 +15,27 @@ import {
   cityDisplayName,
   easternCapeHubPath,
   getAllRoles,
-  getEasternCapeCities,
+  getCitiesByRegion,
   getRegion,
   localPagePath,
+  regionHubPath,
   southAfricaHubPath,
+  type CityHubRegionSlug,
   type LocalCity,
   type LocalRole,
   type RegionSlug,
+  type RoleSlug,
 } from '../lib/local-developers';
 
-function CityRoleLinks({ city, roles }: { city: LocalCity; roles: LocalRole[] }) {
+function CityRoleLinks({
+  city,
+  roles,
+  regionSlug,
+}: {
+  city: LocalCity;
+  roles: LocalRole[];
+  regionSlug: CityHubRegionSlug;
+}) {
   return (
     <article className="rounded-xl border border-border bg-card/40 p-5 hover:border-primary/40 transition-colors">
       <h3 className="text-lg font-semibold text-foreground mb-1">{cityDisplayName(city)}</h3>
@@ -33,7 +44,7 @@ function CityRoleLinks({ city, roles }: { city: LocalCity; roles: LocalRole[] })
         {roles.map((role) => (
           <li key={role.slug}>
             <Link
-              to={localPagePath(city.slug, role.slug)}
+              to={localPagePath(city.slug, role.slug, regionSlug)}
               className="text-xs px-2.5 py-1 rounded-md bg-secondary text-secondary-foreground hover:bg-primary hover:text-primary-foreground transition-colors"
             >
               {role.label}
@@ -49,6 +60,33 @@ type DevelopersRegionHubProps = {
   regionSlug: RegionSlug;
 };
 
+const POPULAR_SEARCHES: Record<
+  CityHubRegionSlug,
+  { city: string; role: RoleSlug; label: string }[]
+> = {
+  'eastern-cape': [
+    { city: 'port-alfred', role: 'web-designer', label: 'Web designer Port Alfred' },
+    { city: 'gqeberha', role: 'web-developer', label: 'Web developer Gqeberha' },
+    { city: 'qonce', role: 'web-developer', label: 'Web developer Qonce' },
+    { city: 'east-london', role: 'web-developer', label: 'Web developer East London' },
+    { city: 'gqeberha', role: 'web-designer', label: 'Web designer Gqeberha' },
+    { city: 'queenstown', role: 'software-engineer', label: 'Software engineer Queenstown' },
+    { city: 'mthatha', role: 'software-developer', label: 'Software developer Mthatha' },
+  ],
+  gauteng: [
+    { city: 'johannesburg', role: 'software-developer', label: 'Software developer Johannesburg' },
+    { city: 'sandton', role: 'cloud-architect', label: 'Cloud architect Sandton' },
+    { city: 'pretoria', role: 'web-developer', label: 'Web developer Pretoria' },
+    { city: 'johannesburg', role: 'software-engineer', label: 'Software engineer Joburg' },
+  ],
+  'kwazulu-natal': [
+    { city: 'durban', role: 'software-developer', label: 'Software developer Durban' },
+    { city: 'durban', role: 'web-developer', label: 'Web developer eThekwini' },
+    { city: 'durban', role: 'web-designer', label: 'Web designer Durban' },
+    { city: 'durban', role: 'cloud-architect', label: 'Cloud architect KZN' },
+  ],
+};
+
 export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubProps) {
   const region = getRegion(regionSlug);
 
@@ -56,11 +94,11 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
     return <Navigate to={easternCapeHubPath()} replace />;
   }
 
-  const isEC = regionSlug === 'eastern-cape';
-  const canonicalPath = isEC ? easternCapeHubPath() : southAfricaHubPath();
+  const isCityHub = regionSlug === 'eastern-cape' || regionSlug === 'gauteng' || regionSlug === 'kwazulu-natal';
+  const canonicalPath = regionHubPath(regionSlug);
   const canonical = absoluteUrl(canonicalPath);
   const ogTitle = `${region.title} | ${SITE_NAME}`;
-  const cities = getEasternCapeCities();
+  const cities = isCityHub ? getCitiesByRegion(regionSlug) : [];
   const roles = getAllRoles();
 
   return (
@@ -95,20 +133,36 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
           <p className="text-lg text-muted-foreground leading-relaxed">{region.description}</p>
         </header>
 
-        {!isEC && (
+        {!isCityHub && (
           <>
             <section className="mb-12 p-6 rounded-xl border border-primary/20 bg-primary/5">
               <p className="text-foreground mb-4">
                 Based in Queenstown, Eastern Cape. I work with founders and SMMEs across South Africa
                 remotely on MVPs, web apps, cloud architecture, and AI integrations.
               </p>
-              <Link
-                to={easternCapeHubPath()}
-                className="inline-flex items-center gap-1 text-primary font-medium hover:underline underline-offset-4"
-              >
-                City pages: software developers in the Eastern Cape
-                <ChevronRight className="w-4 h-4" />
-              </Link>
+              <div className="flex flex-col gap-2">
+                <Link
+                  to={easternCapeHubPath()}
+                  className="inline-flex items-center gap-1 text-primary font-medium hover:underline underline-offset-4"
+                >
+                  Eastern Cape city pages
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  to={regionHubPath('gauteng')}
+                  className="inline-flex items-center gap-1 text-primary font-medium hover:underline underline-offset-4"
+                >
+                  Gauteng city pages
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  to={regionHubPath('kwazulu-natal')}
+                  className="inline-flex items-center gap-1 text-primary font-medium hover:underline underline-offset-4"
+                >
+                  KwaZulu-Natal city pages
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
             </section>
             <section className="mb-14">
               <h2 className="text-2xl font-bold mb-4">What I build nationally</h2>
@@ -128,24 +182,29 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
           </>
         )}
 
-        {isEC && (
+        {isCityHub && (
           <>
             <section className="mb-10">
               <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-                Hire by role (all Eastern Cape towns)
+                Hire by role (all {region.name} cities)
               </h2>
               <p className="text-sm text-muted-foreground mb-4">
-                Roles available in every town:{' '}
-                {roles.map((r) => r.label).join(', ')}. Pick your town below for local context, FAQs,
+                Roles available in every city:{' '}
+                {roles.map((r) => r.label).join(', ')}. Pick your city below for local context, FAQs,
                 and contact.
               </p>
             </section>
 
             <section className="mb-14">
-              <h2 className="text-2xl font-bold mb-6">Towns and cities</h2>
+              <h2 className="text-2xl font-bold mb-6">Cities and towns</h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 {cities.map((city) => (
-                  <CityRoleLinks key={city.slug} city={city} roles={roles} />
+                  <CityRoleLinks
+                    key={city.slug}
+                    city={city}
+                    roles={roles}
+                    regionSlug={regionSlug as CityHubRegionSlug}
+                  />
                 ))}
               </div>
             </section>
@@ -153,18 +212,13 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
             <section className="mb-14 border-t border-border pt-10">
               <h2 className="text-2xl font-bold mb-4">Popular searches</h2>
               <ul className="grid sm:grid-cols-2 gap-2 text-sm">
-                {[
-                  { city: 'east-london', role: 'web-developer' as const, label: 'Web developer East London' },
-                  { city: 'gqeberha', role: 'web-designer' as const, label: 'Web designer Gqeberha' },
-                  { city: 'queenstown', role: 'software-engineer' as const, label: 'Software engineer Queenstown' },
-                  { city: 'mthatha', role: 'software-developer' as const, label: 'Software developer Mthatha' },
-                ].map((item) => {
+                {POPULAR_SEARCHES[regionSlug as CityHubRegionSlug].map((item) => {
                   const city = cities.find((c) => c.slug === item.city)!;
                   const role = roles.find((r) => r.slug === item.role)!;
                   return (
-                    <li key={item.label}>
+                    <li key={`${regionSlug}-${item.label}`}>
                       <Link
-                        to={localPagePath(item.city, item.role)}
+                        to={localPagePath(item.city, item.role, regionSlug)}
                         className="text-primary hover:underline underline-offset-4"
                       >
                         {item.label}
@@ -180,18 +234,55 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
           </>
         )}
 
-        {isEC && (
+        {isCityHub && (
           <section className="mb-14">
             <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
-              National coverage
+              Other regions
             </h2>
-            <Link
-              to={southAfricaHubPath()}
-              className="inline-flex items-center gap-1 text-sm text-primary hover:underline underline-offset-4"
-            >
-              Software developers South Africa
-              <ChevronRight className="w-4 h-4" />
-            </Link>
+            <ul className="flex flex-col gap-2 text-sm">
+              {regionSlug !== 'eastern-cape' && (
+                <li>
+                  <Link
+                    to={easternCapeHubPath()}
+                    className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                  >
+                    Software developers in the Eastern Cape
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </li>
+              )}
+              {regionSlug !== 'gauteng' && (
+                <li>
+                  <Link
+                    to={regionHubPath('gauteng')}
+                    className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                  >
+                    Software developers in Gauteng
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </li>
+              )}
+              {regionSlug !== 'kwazulu-natal' && (
+                <li>
+                  <Link
+                    to={regionHubPath('kwazulu-natal')}
+                    className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                  >
+                    Software developers in KwaZulu-Natal
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link
+                  to={southAfricaHubPath()}
+                  className="inline-flex items-center gap-1 text-primary hover:underline underline-offset-4"
+                >
+                  Software developers South Africa
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              </li>
+            </ul>
           </section>
         )}
 

@@ -136,13 +136,16 @@ export const buyerIntentPages: BuyerIntentPage[] = [
   {
     slug: 'whatsapp-ai-chatbot-south-africa',
     path: '/whatsapp-ai-chatbot-south-africa',
-    metaTitle: 'WhatsApp AI Chatbot South Africa | Business Automation',
+    metaTitle: 'WhatsApp AI Chatbot South Africa 2026 | Leads and Bookings',
     metaDescription:
-      'WhatsApp AI chatbots for South African businesses: lead capture, support, bookings, and local language-aware assistants. Built on real shipped community AI experience.',
+      'WhatsApp AI chatbots for SA businesses in 2026: lead capture, appointment bookings, FAQ support, and handoff to humans. Built on shipped community AI, not template spam.',
     keywords: [
       'whatsapp chatbot south africa',
       'whatsapp ai chatbot',
+      'whatsapp automation south africa',
       'whatsapp business automation',
+      'whatsapp lead capture south africa',
+      'whatsapp booking bot',
       'ai customer support south africa',
     ],
     eyebrow: 'WhatsApp · AI · South Africa',

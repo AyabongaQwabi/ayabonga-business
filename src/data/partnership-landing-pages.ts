@@ -179,9 +179,9 @@ export const partnershipLandingPages: PartnershipLandingPage[] = [
   {
     slug: 'senior-product-engineer-south-africa',
     path: '/senior-product-engineer-south-africa',
-    metaTitle: 'Senior Product Engineer South Africa | No Junior Lottery',
+    metaTitle: 'Senior Product Engineer South Africa | Hire Without the Junior Lottery',
     metaDescription:
-      'Hire a senior product engineer in South Africa for web, mobile, cloud, and AI products. Full-stack delivery, production discipline.',
+      'Hire a senior product engineer in South Africa for web, mobile, cloud, and AI. One accountable engineer, ZAR-scoped builds, and shipped references like ClinicPlus and Laundry Marketplace.',
     keywords: ['senior product engineer south africa', 'hire senior developer cape town'],
     eyebrow: 'Senior hire · SA',
     h1: 'Senior product engineering without the junior lottery',

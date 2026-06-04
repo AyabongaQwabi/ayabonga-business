@@ -52,7 +52,10 @@ const DynamicServicePage = () => {
   const Icon = iconMap[page.icon as keyof typeof iconMap] || Zap;
   const canonicalPath = `/solutions/${page.slug}`;
   const canonical = absoluteUrl(canonicalPath);
-  const metaDescription = `Are you an ${page.audience} in ${page.location}? ${page.solution}. Senior technical leadership for your ${page.industry} startup.`;
+  const metaDescription =
+    'metaDescription' in page && typeof page.metaDescription === 'string'
+      ? page.metaDescription
+      : `${page.benefit} ${page.solution}`.replace(/\s+/g, ' ').trim().slice(0, 160);
 
   return (
     <>
@@ -234,6 +237,32 @@ const DynamicServicePage = () => {
             <p className="text-sm text-slate-500">
               Want a cost estimate first?{' '}
               <Link to="/get-a-quote" className="text-slate-400 hover:text-white underline underline-offset-4">See how I scope and price work</Link>.
+              {page.slug === 'ai-integration-specialist-south-africa' ? (
+                <>
+                  {' '}
+                  Or read the{' '}
+                  <Link
+                    to="/ai-system-integration-south-africa"
+                    className="text-slate-400 hover:text-white underline underline-offset-4"
+                  >
+                    AI system integration guide
+                  </Link>
+                  .
+                </>
+              ) : null}
+              {page.slug === 'proptech-solutions-south-africa' ? (
+                <>
+                  {' '}
+                  See also{' '}
+                  <Link
+                    to="/industries/property-management"
+                    className="text-slate-400 hover:text-white underline underline-offset-4"
+                  >
+                    property management software
+                  </Link>
+                  .
+                </>
+              ) : null}
             </p>
           </div>
         </div>

@@ -107,14 +107,25 @@ async function waitForPrerenderContent(page) {
   await page.waitForFunction(
     (selector) => {
       const main = document.querySelector('#main-content');
-      if (!main || main.getAttribute('aria-busy') === 'true') return false;
+      if (main?.getAttribute('aria-busy') === 'true') return false;
 
       document.querySelectorAll('.reveal, .reveal-stagger').forEach((el) => {
         el.classList.add('is-visible');
       });
+      document.querySelectorAll('.hero-word').forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
 
       const heading = document.querySelector(selector);
-      return Boolean(heading?.textContent?.trim());
+      if (heading?.textContent?.trim()) return true;
+
+      const title = document.querySelector('title')?.textContent?.trim();
+      const description = document
+        .querySelector('meta[name="description"]')
+        ?.getAttribute('content')
+        ?.trim();
+      return Boolean(title && description);
     },
     { timeout: CONTENT_TIMEOUT_MS },
     PRERENDER_SELECTOR,
@@ -123,7 +134,7 @@ async function waitForPrerenderContent(page) {
 
 async function prerenderRoute(page, baseUrl, route) {
   const url = `${baseUrl}${route}`;
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: GOTO_TIMEOUT_MS });
+  await page.goto(url, { waitUntil: 'load', timeout: GOTO_TIMEOUT_MS });
   await waitForPrerenderContent(page);
   const html = await page.content();
   const outFile = routeToHtmlPath(route);
@@ -143,7 +154,11 @@ async function main() {
     process.exit(1);
   }
 
-  const routes = collectPrerenderRoutes();
+  const routes = collectPrerenderRoutes().sort((a, b) => {
+    if (a === '/') return 1;
+    if (b === '/') return -1;
+    return a.localeCompare(b);
+  });
   let preview;
 
   try {
@@ -163,13 +178,28 @@ async function main() {
       window.addEventListener('load', revealAll);
     });
 
+    let wrote = 0;
+    const failed = [];
+
     for (const route of routes) {
-      const outFile = await prerenderRoute(page, preview.baseUrl, route);
-      console.log(`prerender-developers: ${route} → ${path.relative(root, outFile)}`);
+      try {
+        const outFile = await prerenderRoute(page, preview.baseUrl, route);
+        wrote += 1;
+        console.log(`prerender-developers: ${route} → ${path.relative(root, outFile)}`);
+      } catch (err) {
+        failed.push(route);
+        console.warn(
+          `prerender-developers: skipped ${route} (${err instanceof Error ? err.message : err})`,
+        );
+      }
     }
 
     await browser.close();
-    console.log(`prerender-developers: wrote ${routes.length} HTML files`);
+    console.log(`prerender-developers: wrote ${wrote} HTML files`);
+    if (failed.length) {
+      console.warn(`prerender-developers: ${failed.length} routes failed: ${failed.join(', ')}`);
+      process.exit(1);
+    }
   } finally {
     if (preview?.child) {
       preview.child.kill('SIGTERM');

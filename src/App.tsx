@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { RouteFallback } from './components/layout/RouteFallback';
 import { buyerIntentPaths } from './data/buyer-intent-pages.ts';
 import { partnershipPaths } from './data/partnership-landing-pages.ts';
@@ -17,6 +17,7 @@ const AppDevelopmentCostPage = lazy(() => import('./pages/AppDevelopmentCostPage
 const ServiceLandingPage = lazy(() => import('./pages/ServiceLandingPage.tsx'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage.tsx'));
 const EditorialPage = lazy(() => import('./pages/Editorial.tsx'));
+const CorrectionsPage = lazy(() => import('./pages/Corrections.tsx'));
 
 const ServicesPage = lazy(() => import('./pages/Services.tsx'));
 const TechnicalCofounderPage = lazy(() => import('./pages/TechnicalCofounder.tsx'));
@@ -70,6 +71,7 @@ export default function App() {
         />
         <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/editorial" element={<EditorialPage />} />
+        <Route path="/corrections" element={<CorrectionsPage />} />
         <Route path="/insights" element={<InsightIndexPage />} />
         <Route path="/insights/:slug" element={<InsightPage />} />
 
@@ -78,6 +80,14 @@ export default function App() {
         <Route path="/industries/:slug" element={<IndustryPage />} />
         <Route path="/technical-cofounder" element={<TechnicalCofounderPage />} />
         <Route path="/solutions/:slug" element={<DynamicServicePage />} />
+        <Route
+          path="/proptech-solutions"
+          element={<Navigate to="/solutions/proptech-solutions-south-africa" replace />}
+        />
+        <Route
+          path="/ai-system-integration"
+          element={<Navigate to="/ai-system-integration-south-africa" replace />}
+        />
         <Route path="/vs/:slug" element={<DynamicComparisonPage />} />
         <Route
           path="/developers/south-africa"
@@ -88,7 +98,23 @@ export default function App() {
           element={<DevelopersRegionHub regionSlug="eastern-cape" />}
         />
         <Route
+          path="/developers/gauteng"
+          element={<DevelopersRegionHub regionSlug="gauteng" />}
+        />
+        <Route
+          path="/developers/kwazulu-natal"
+          element={<DevelopersRegionHub regionSlug="kwazulu-natal" />}
+        />
+        <Route
           path="/developers/eastern-cape/:city/:role"
+          element={<LocalDeveloperPage />}
+        />
+        <Route
+          path="/developers/gauteng/:city/:role"
+          element={<LocalDeveloperPage />}
+        />
+        <Route
+          path="/developers/kwazulu-natal/:city/:role"
           element={<LocalDeveloperPage />}
         />
 

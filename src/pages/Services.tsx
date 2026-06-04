@@ -1,16 +1,15 @@
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { ArrowRight, MapPin, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
+import { ArrowRight, Rocket, Users, BarChart, Zap, ShieldCheck, Cpu, MessageCircle } from 'lucide-react';
 import { PageShell } from '../components/layout/PageShell';
 import { ScrollReveal } from '../components/ScrollReveal';
 import { PageHero } from '../components/PageHero';
-import { easternCapeHubPath } from '../lib/local-developers';
+import { easternCapeHubPath, gautengHubPath, kznHubPath } from '../lib/local-developers';
 import { HERO_IMAGES } from '../lib/hero-images';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
   SITE_NAME,
-  TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
 
@@ -225,9 +224,24 @@ export default function ServicesPage() {
                 desc: 'CRM, HR, inventory, property, and ops systems.',
               },
               {
+                title: 'Web development South Africa',
+                path: '/web-development-south-africa',
+                desc: 'Custom web apps and marketing sites for SA founders.',
+              },
+              {
                 title: 'Web development company',
                 path: '/web-development-company-south-africa',
                 desc: 'Portals, SaaS dashboards, ecommerce, and production web apps.',
+              },
+              {
+                title: 'AI software development company',
+                path: '/ai-software-development-company',
+                desc: 'LLM features, agents, and production AI integration.',
+              },
+              {
+                title: 'Software developers South Africa',
+                path: '/software-developers-south-africa',
+                desc: 'Senior-led builds without agency overhead.',
               },
               {
                 title: 'AI rapid app development',
@@ -250,6 +264,46 @@ export default function ServicesPage() {
                 desc: 'Automation where your customers already message.',
               },
               {
+                title: 'Digital transformation',
+                path: '/digital-transformation-south-africa',
+                desc: 'When spreadsheets and off-the-shelf tools stop scaling.',
+              },
+              {
+                title: 'AI agent development',
+                path: '/ai-agent-development-south-africa',
+                desc: 'Task agents with tools, guardrails, and human approval.',
+              },
+              {
+                title: 'AI system integration',
+                path: '/ai-system-integration-south-africa',
+                desc: 'LLM features wired into CRM, ERP, and ops workflows.',
+              },
+              {
+                title: 'Bespoke AI solutions',
+                path: '/bespoke-ai-solutions',
+                desc: 'Custom AI layers on software you already run.',
+              },
+              {
+                title: 'Software development companies',
+                path: '/software-development-companies-south-africa',
+                desc: 'How to compare agencies, freelancers, and senior partners.',
+              },
+              {
+                title: 'AI-ready bespoke software',
+                path: '/ai-ready-bespoke-software',
+                desc: 'Custom ops platforms built to host copilots and agents later.',
+              },
+              {
+                title: 'Bespoke CRM systems',
+                path: '/bespoke-crm-systems-south-africa',
+                desc: 'Pipelines and WhatsApp hooks when off-the-shelf CRM fights your process.',
+              },
+              {
+                title: 'Senior product engineer',
+                path: '/senior-product-engineer-south-africa',
+                desc: 'Hire one senior owner without the junior delivery lottery.',
+              },
+              {
                 title: 'How to choose an app developer',
                 path: '/best-app-developers-south-africa',
                 desc: 'Compare freelancers, agencies, and senior partners.',
@@ -269,6 +323,24 @@ export default function ServicesPage() {
           </div>
         </section>
 
+        <section className="mb-12 text-center">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Browse{' '}
+            <Link to="/industries" className="text-primary hover:underline underline-offset-4">
+              industry-specific software guides
+            </Link>
+            ,{' '}
+            <Link to="/case-studies" className="text-primary hover:underline underline-offset-4">
+              case studies
+            </Link>
+            , and{' '}
+            <Link to="/insights" className="text-primary hover:underline underline-offset-4">
+              founder insights
+            </Link>{' '}
+            for deeper context on builds and costs.
+          </p>
+        </section>
+
         {/* Industry Focus - pSEO Links */}
         <section className="mb-24">
           <h2 className="text-3xl font-bold mb-12 text-center">Strategic Industry Focus</h2>
@@ -280,7 +352,12 @@ export default function ServicesPage() {
               { name: "EduTech", slug: "edutech-platforms-south-africa", desc: "Student management and cashless campus ecosystems." },
               { name: "Marketplaces", slug: "marketplace-founders-south-africa", desc: "Multi-sided platforms for on-demand services." },
               { name: "Established brands", slug: "digital-transformation-experts-south-africa", desc: "Custom systems when spreadsheets and off-the-shelf tools no longer fit." },
-              { name: "AI & Automation", slug: "ai-integration-specialist-south-africa", desc: "Strategic LLM integration and production-ready AI agents." }
+              { name: "AI & Automation", slug: "ai-integration-specialist-south-africa", desc: "Strategic LLM integration and production-ready AI agents." },
+              { name: "PropTech", slug: "proptech-solutions-south-africa", desc: "Property portals, tenant workflows, and rental operations software." },
+              { name: "E-commerce", slug: "ecommerce-scale-south-africa", desc: "Headless commerce, courier rules, and inventory sync for SA brands." },
+              { name: "SaaS", slug: "saas-product-engineering-south-africa", desc: "Multi-tenant B2B platforms with auth, billing, and API-first design." },
+              { name: "Solar & energy", slug: "solar-energy-platforms-south-africa", desc: "Lead CRM, install scheduling, and customer reporting for installers." },
+              { name: "Technical co-founder", slug: "technical-cofounder-as-a-service-south-africa", desc: "Senior product ownership without agency overhead or equity giveaways." }
             ].map((industry) => (
               <Link 
                 key={industry.slug}
@@ -289,6 +366,30 @@ export default function ServicesPage() {
               >
                 <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors">{industry.name} →</h3>
                 <p className="text-sm text-muted-foreground">{industry.desc}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-24">
+          <h2 className="text-3xl font-bold mb-4 text-center">Developers by region</h2>
+          <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-10">
+            Hire a senior software developer, web developer, or cloud architect. Based in Queenstown,
+            delivery nationwide.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            {[
+              { title: 'Eastern Cape', path: easternCapeHubPath(), desc: 'Queenstown, Gqeberha, Port Alfred, and more.' },
+              { title: 'Gauteng', path: gautengHubPath(), desc: 'Johannesburg, Sandton, and Pretoria.' },
+              { title: 'KwaZulu-Natal', path: kznHubPath(), desc: 'Durban and coastal KZN businesses.' },
+            ].map((hub) => (
+              <Link
+                key={hub.path}
+                to={hub.path}
+                className="group p-5 rounded-xl bg-card border border-border hover:border-primary/50 transition-all text-center"
+              >
+                <h3 className="font-bold mb-1 group-hover:text-primary transition-colors">{hub.title}</h3>
+                <p className="text-sm text-muted-foreground">{hub.desc}</p>
               </Link>
             ))}
           </div>

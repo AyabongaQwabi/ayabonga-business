@@ -57,7 +57,7 @@ const SERVICES: HomeService[] = [
     title: 'Web development',
     description:
       'Marketing sites, customer portals, and admin dashboards on modern stacks. Built for South African connectivity and mobile-first users.',
-    href: `${APP_DEVELOPMENT_COST_PAGE}#websites`,
+    href: '/web-development-south-africa',
     icon: Globe,
     illustration: 'web',
   },

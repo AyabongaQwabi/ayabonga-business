@@ -1,7 +1,15 @@
 import data from '../data/local-developers.json';
 import { SITE_NAME } from './site-config';
 
-export type RegionSlug = 'eastern-cape' | 'south-africa';
+export type RegionSlug =
+  | 'eastern-cape'
+  | 'south-africa'
+  | 'gauteng'
+  | 'kwazulu-natal';
+
+/** Regions with per-city landing pages in local-developers.json */
+export type CityHubRegionSlug = 'eastern-cape' | 'gauteng' | 'kwazulu-natal';
+
 export type RoleSlug =
   | 'software-developer'
   | 'software-engineer'
@@ -38,6 +46,12 @@ const regions = data.regions as Record<RegionSlug, LocalRegion>;
 const roles = data.roles as Record<RoleSlug, LocalRole>;
 const cities = data.cities as LocalCity[];
 
+const CITY_HUB_REGIONS: CityHubRegionSlug[] = [
+  'eastern-cape',
+  'gauteng',
+  'kwazulu-natal',
+];
+
 export function getRegion(slug: string): LocalRegion | undefined {
   return regions[slug as RegionSlug];
 }
@@ -50,23 +64,36 @@ export function getCity(slug: string): LocalCity | undefined {
   return cities.find((c) => c.slug === slug);
 }
 
+export function getCitiesByRegion(region: string): LocalCity[] {
+  return cities.filter((c) => c.region === region);
+}
+
 export function getEasternCapeCities(): LocalCity[] {
-  return cities.filter((c) => c.region === 'eastern-cape');
+  return getCitiesByRegion('eastern-cape');
 }
 
 export function getAllRoles(): LocalRole[] {
   return Object.values(roles);
 }
 
-export function getAllLocalPages(): { region: RegionSlug; city: string; role: RoleSlug }[] {
-  const ecCities = getEasternCapeCities();
+export function getCityHubRegions(): CityHubRegionSlug[] {
+  return [...CITY_HUB_REGIONS];
+}
+
+export function regionHubPath(regionSlug: CityHubRegionSlug | RegionSlug): string {
+  return `/developers/${regionSlug}`;
+}
+
+export function getAllLocalPages(): { region: CityHubRegionSlug; city: string; role: RoleSlug }[] {
   const roleSlugs = Object.keys(roles) as RoleSlug[];
-  return ecCities.flatMap((city) =>
-    roleSlugs.map((role) => ({
-      region: 'eastern-cape' as const,
-      city: city.slug,
-      role,
-    })),
+  return CITY_HUB_REGIONS.flatMap((region) =>
+    getCitiesByRegion(region).flatMap((city) =>
+      roleSlugs.map((role) => ({
+        region,
+        city: city.slug,
+        role,
+      })),
+    ),
   );
 }
 
@@ -77,22 +104,29 @@ export function cityDisplayName(city: LocalCity): string {
   return city.name;
 }
 
+function regionNameForCity(city: LocalCity): string {
+  return getRegion(city.region)?.name ?? city.region;
+}
+
 export function buildLocalPageTitle(role: LocalRole, city: LocalCity): string {
-  return `${role.label} in ${city.name}, Eastern Cape`;
+  const regionName = regionNameForCity(city);
+  return `${role.label} in ${city.name}, ${regionName}`;
 }
 
 export function buildLocalPageDescription(role: LocalRole, city: LocalCity): string {
   const alt = city.alternateName ? ` (${city.alternateName})` : '';
-  return `Hire a senior ${role.label.toLowerCase()} in ${city.name}${alt}, Eastern Cape. ${role.shortFocus}. Based in Queenstown, serving ${city.name} and all of SA remotely.`;
+  const regionName = regionNameForCity(city);
+  return `Hire a senior ${role.label.toLowerCase()} in ${city.name}${alt}, ${regionName}. ${role.shortFocus}. Based in Queenstown, serving ${city.name} and all of SA remotely.`;
 }
 
 export function buildLocalPageKeywords(role: LocalRole, city: LocalCity): string[] {
   const alt = city.alternateName?.toLowerCase();
+  const regionName = regionNameForCity(city).toLowerCase();
   const base = [
     `${role.label.toLowerCase()} ${city.name}`,
-    `${role.label.toLowerCase()} ${city.name} eastern cape`,
+    `${role.label.toLowerCase()} ${city.name} ${regionName}`,
     `${role.keywords[0]} ${city.name}`,
-    `${role.label.toLowerCase()} eastern cape`,
+    `${role.label.toLowerCase()} ${regionName}`,
     'software developer south africa',
   ];
   if (alt) {
@@ -109,12 +143,22 @@ export function buildLocalPageKeywords(role: LocalRole, city: LocalCity): string
     if (city.slug === 'queenstown') {
       base.push(`${role.label.toLowerCase()} komani`);
     }
+    if (city.slug === 'johannesburg') {
+      base.push(`${role.label.toLowerCase()} joburg`);
+    }
+    if (city.slug === 'pretoria') {
+      base.push(`${role.label.toLowerCase()} tshwane`);
+    }
+    if (city.slug === 'durban') {
+      base.push(`${role.label.toLowerCase()} ethekwini`);
+    }
   }
   return [...new Set([...base, ...role.keywords.map((k) => `${k} ${city.name}`)])];
 }
 
 export function buildLocalFaqs(role: LocalRole, city: LocalCity) {
   const place = cityDisplayName(city);
+  const regionName = regionNameForCity(city);
   return [
     {
       id: 'on-site',
@@ -123,7 +167,7 @@ export function buildLocalFaqs(role: LocalRole, city: LocalCity) {
     },
     {
       id: 'cost',
-      question: `How much does a ${role.label.toLowerCase()} cost in the Eastern Cape?`,
+      question: `How much does a ${role.label.toLowerCase()} cost in ${regionName}?`,
       answer: `Rates depend on scope: MVP, rebuild, or retainer. I scope Phase 1 as a fixed build so you are not stuck in hourly drift. Use the quote tool on this site for a ballpark, or message on WhatsApp with your timeline and budget.`,
     },
     {
@@ -134,28 +178,41 @@ export function buildLocalFaqs(role: LocalRole, city: LocalCity) {
     {
       id: 'remote',
       question: `Can you build for ${city.name} while based elsewhere?`,
-      answer: `Yes. Most Eastern Cape clients work with me remotely. Products are built mobile-first for SA networks, with staging links you can test from ${city.name} on real devices before launch.`,
+      answer: `Yes. Most ${regionName} clients work with me remotely. Products are built mobile-first for SA networks, with staging links you can test from ${city.name} on real devices before launch.`,
     },
   ];
 }
 
-export function localPagePath(citySlug: string, roleSlug: string): string {
-  return `/developers/eastern-cape/${citySlug}/${roleSlug}`;
+export function localPagePath(
+  citySlug: string,
+  roleSlug: string,
+  regionSlug: string = 'eastern-cape',
+): string {
+  return `/developers/${regionSlug}/${citySlug}/${roleSlug}`;
 }
 
 export function easternCapeHubPath(): string {
-  return '/developers/eastern-cape';
+  return regionHubPath('eastern-cape');
+}
+
+export function gautengHubPath(): string {
+  return regionHubPath('gauteng');
+}
+
+export function kznHubPath(): string {
+  return regionHubPath('kwazulu-natal');
 }
 
 export function southAfricaHubPath(): string {
-  return '/developers/south-africa';
+  return regionHubPath('south-africa');
 }
 
 export function buildLocalSchema(role: LocalRole, city: LocalCity, pageUrl: string) {
+  const regionName = regionNameForCity(city);
   return {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
-    name: `${role.label}, ${city.name}, Eastern Cape`,
+    name: `${role.label}, ${city.name}, ${regionName}`,
     description: buildLocalPageDescription(role, city),
     url: pageUrl,
     provider: {
@@ -174,7 +231,7 @@ export function buildLocalSchema(role: LocalRole, city: LocalCity, pageUrl: stri
       name: city.name,
       containedInPlace: {
         '@type': 'State',
-        name: 'Eastern Cape',
+        name: regionName,
       },
     },
     serviceType: role.label,
@@ -182,6 +239,10 @@ export function buildLocalSchema(role: LocalRole, city: LocalCity, pageUrl: stri
 }
 
 export function buildHubSchema(region: LocalRegion, pageUrl: string) {
+  const areaServed =
+    region.slug === 'south-africa'
+      ? 'South Africa'
+      : `${region.name}, South Africa`;
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -191,7 +252,7 @@ export function buildHubSchema(region: LocalRegion, pageUrl: string) {
     about: {
       '@type': 'ProfessionalService',
       name: `${SITE_NAME}, ${region.name}`,
-      areaServed: region.slug === 'eastern-cape' ? 'Eastern Cape, South Africa' : 'South Africa',
+      areaServed,
     },
   };
 }

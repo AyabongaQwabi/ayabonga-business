@@ -9,6 +9,7 @@ import { insightPages, INSIGHTS_INDEX_PATH } from '../data/insights-pages';
 import { buyerIntentPages } from '../data/buyer-intent-pages';
 import { partnershipLandingPages } from '../data/partnership-landing-pages';
 import { serviceLandingPages } from '../data/service-landing-pages';
+import pseoPages from '../data/pseo-pages.json';
 import { absoluteUrl, SITE_NAME } from '../lib/site-config';
 import { buildBreadcrumbSchema } from '../lib/entity-schema';
 
@@ -52,6 +53,7 @@ const CORE_LINKS: SitemapLink[] = [
   { label: 'Technical co-founder', path: '/technical-cofounder' },
   { label: 'Privacy policy', path: '/privacy' },
   { label: 'Editorial standards', path: '/editorial' },
+  { label: 'Corrections', path: '/corrections' },
 ];
 
 const SERVICE_LANDING_LINKS: SitemapLink[] = serviceLandingPages.map((p) => ({
@@ -96,6 +98,8 @@ const INSIGHT_LINKS: SitemapLink[] = insightPages.map((p) => ({
 const DEVELOPERS_LINKS: SitemapLink[] = [
   { label: 'Developers in South Africa', path: '/developers/south-africa' },
   { label: 'Developers in the Eastern Cape', path: '/developers/eastern-cape' },
+  { label: 'Developers in Gauteng', path: '/developers/gauteng' },
+  { label: 'Developers in KwaZulu-Natal', path: '/developers/kwazulu-natal' },
   { label: 'Queenstown', path: '/developers/eastern-cape/queenstown/software-developer' },
   { label: 'East London', path: '/developers/eastern-cape/east-london/software-developer' },
   { label: 'Gqeberha (Port Elizabeth)', path: '/developers/eastern-cape/gqeberha/software-developer' },
@@ -103,13 +107,26 @@ const DEVELOPERS_LINKS: SitemapLink[] = [
   { label: 'Makhanda (Grahamstown)', path: '/developers/eastern-cape/makhanda/software-developer' },
   { label: 'Butterworth', path: '/developers/eastern-cape/butterworth/software-developer' },
   { label: 'Qonce (King William\'s Town)', path: '/developers/eastern-cape/qonce/software-developer' },
-  { label: 'Port Alfred', path: '/developers/eastern-cape/port-alfred/software-developer' },
+  { label: 'Qonce (web developer)', path: '/developers/eastern-cape/qonce/web-developer' },
+  { label: 'Port Alfred (software developer)', path: '/developers/eastern-cape/port-alfred/software-developer' },
+  { label: 'Port Alfred (web designer)', path: '/developers/eastern-cape/port-alfred/web-designer' },
+  { label: 'Gqeberha (web developer)', path: '/developers/eastern-cape/gqeberha/web-developer' },
+  { label: 'Gqeberha (web designer)', path: '/developers/eastern-cape/gqeberha/web-designer' },
+  { label: 'Johannesburg', path: '/developers/gauteng/johannesburg/software-developer' },
+  { label: 'Sandton', path: '/developers/gauteng/sandton/software-developer' },
+  { label: 'Pretoria (Tshwane)', path: '/developers/gauteng/pretoria/software-developer' },
+  { label: 'Durban (eThekwini)', path: '/developers/kwazulu-natal/durban/software-developer' },
 ];
 
 const PROJECTS_LINKS: SitemapLink[] = [
   { label: 'All projects', path: '/projects' },
   { label: 'eSpazza project', path: '/projects/espazza' },
 ];
+
+const PSEO_SOLUTION_LINKS: SitemapLink[] = pseoPages.map((p) => ({
+  label: p.title,
+  path: `/solutions/${p.slug}`,
+}));
 
 // ─── Grouped structure ───────────────────────────────────────────────────────
 
@@ -162,6 +179,14 @@ const SITEMAP_GROUPS: SitemapGroup[] = [
     links: [
       { label: 'All industries', path: INDUSTRIES_INDEX_PATH },
       ...INDUSTRY_LINKS,
+    ],
+    children: [
+      {
+        id: 'industries-pseo',
+        label: 'Industry solutions',
+        heading: 'Industry solution landing pages',
+        links: PSEO_SOLUTION_LINKS,
+      },
     ],
   },
   {

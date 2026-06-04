@@ -73,14 +73,20 @@
   },
   {
     "slug": "ai-integration-specialist-south-africa",
-    "title": "Strategic AI Integration & Automation for High-Growth Startups",
+    "title": "AI Integration Specialist South Africa",
+    "metaDescription": "AI system integration for South African startups and SMMEs. Production LLM features, agents, and workflow automation wired to your CRM or ops stack, with senior-led delivery.",
     "industry": "Artificial Intelligence",
     "location": "South Africa",
     "audience": "Tech-Forward Founders & SaaS Teams",
     "pain_point": "Knowing that AI could multiply your team's output but not knowing how to integrate it securely without breaking existing workflows.",
     "solution": "Custom AI agent development, LLM integration (OpenAI/Claude/Grok), and automated prompt engineering systems like 'Kingly'.",
     "benefit": "Deploy production-ready AI features that actually improve your product, not just hype-driven wrappers.",
-    "keywords": ["AI developer South Africa", "LLM integration specialist", "Business AI automation"],
+    "keywords": [
+      "ai system integration services south africa",
+      "AI integration specialist South Africa",
+      "LLM integration specialist",
+      "Business AI automation"
+    ],
     "icon": "Brain"
   },
   {

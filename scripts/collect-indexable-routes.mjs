@@ -46,13 +46,29 @@ function parseFrontmatterDate(raw) {
   return new Date(t).toISOString().split('T')[0];
 }
 
+function parseFrontmatterSlug(raw) {
+  const m = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (!m) return undefined;
+  const line = m[1].split(/\r?\n/).find((l) => /^slug:\s*/i.test(l));
+  if (!line) return undefined;
+  let v = line.replace(/^slug:\s*/i, '').trim();
+  if (
+    (v.startsWith('"') && v.endsWith('"')) ||
+    (v.startsWith("'") && v.endsWith("'"))
+  ) {
+    v = v.slice(1, -1);
+  }
+  return v.trim() || undefined;
+}
+
 function collectBlogEntries() {
   if (!fs.existsSync(blogDir)) return [];
   const entries = [];
   for (const name of fs.readdirSync(blogDir)) {
     if (!name.endsWith('.md')) continue;
-    const slug = name.replace(/\.md$/i, '');
+    const fileSlug = name.replace(/\.md$/i, '');
     const raw = fs.readFileSync(path.join(blogDir, name), 'utf8');
+    const slug = parseFrontmatterSlug(raw) ?? fileSlug;
     const lastmod = parseFrontmatterDate(raw);
     entries.push({ slug, lastmod });
   }
@@ -179,15 +195,21 @@ export function collectSitemapLinks() {
     console.warn('collect-indexable-routes: could not read local-developers.json');
   }
 
-  const ecCities = (localDev.cities || []).filter((c) => c.region === 'eastern-cape');
+  const hubRegions = ['eastern-cape', 'gauteng', 'kwazulu-natal'];
   const roleSlugs = Object.keys(localDev.roles || {});
-  const localPageLinks = ecCities.flatMap((city) =>
+  const cities = localDev.cities || [];
+  const localPageLinks = cities.flatMap((city) =>
     roleSlugs.map((role) => ({
-      url: `/developers/eastern-cape/${city.slug}/${role}`,
+      url: `/developers/${city.region}/${city.slug}/${role}`,
       changefreq: 'monthly',
       priority: 0.8,
     })),
   );
+  const developerHubLinks = hubRegions.map((region) => ({
+    url: `/developers/${region}`,
+    changefreq: 'weekly',
+    priority: region === 'eastern-cape' ? 0.92 : 0.9,
+  }));
 
   const buyerIntentPaths = collectPathsFromTs(buyerIntentPath);
   const partnershipPaths = collectPathsFromTs(partnershipPath);
@@ -209,7 +231,7 @@ export function collectSitemapLinks() {
       changefreq: 'monthly',
       priority: 0.94,
     })),
-    { url: '/developers/eastern-cape', changefreq: 'weekly', priority: 0.92 },
+    ...developerHubLinks,
     { url: '/developers/south-africa', changefreq: 'weekly', priority: 0.9 },
     ...localPageLinks,
     { url: '/about', changefreq: 'monthly', priority: 0.9 },

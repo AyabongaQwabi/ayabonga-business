@@ -30,11 +30,12 @@ import {
   buildLocalPageTitle,
   buildLocalSchema,
   cityDisplayName,
-  easternCapeHubPath,
   getAllRoles,
   getCity,
+  getRegion,
   getRole,
   localPagePath,
+  regionHubPath,
   type RoleSlug,
 } from '../lib/local-developers';
 
@@ -46,24 +47,58 @@ const roleIcons: Record<RoleSlug, typeof Code2> = {
   'cloud-architect': Cloud,
 };
 
+const serviceGuidesByRole: Record<
+  RoleSlug,
+  { label: string; path: string }[]
+> = {
+  'software-developer': [
+    { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+    { label: 'Mobile app development', path: '/mobile-app-development-south-africa' },
+    { label: 'Software developers South Africa', path: '/software-developers-south-africa' },
+  ],
+  'software-engineer': [
+    { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+    { label: 'AI-ready bespoke software', path: '/ai-ready-bespoke-software' },
+    { label: 'Digital transformation', path: '/digital-transformation-south-africa' },
+  ],
+  'web-developer': [
+    { label: 'Web development South Africa', path: '/web-development-south-africa' },
+    { label: 'Web development company', path: '/web-development-company-south-africa' },
+    { label: 'Custom software development', path: '/custom-software-development-south-africa' },
+  ],
+  'web-designer': [
+    { label: 'Web development company', path: '/web-development-company-south-africa' },
+    { label: 'Web development South Africa', path: '/web-development-south-africa' },
+    { label: 'Website development pricing', path: '/website-development-pricing' },
+  ],
+  'cloud-architect': [
+    { label: 'AI system integration', path: '/ai-system-integration-south-africa' },
+    { label: 'Digital transformation', path: '/digital-transformation-south-africa' },
+    { label: 'AI software development', path: '/ai-software-development-company' },
+  ],
+};
+
 export default function LocalDeveloperPage() {
-  const { city: citySlug, role: roleSlug } = useParams();
+  const { region: regionSlug, city: citySlug, role: roleSlug } = useParams();
+  const region = regionSlug ? getRegion(regionSlug) : undefined;
   const city = citySlug ? getCity(citySlug) : undefined;
   const role = roleSlug ? getRole(roleSlug) : undefined;
 
-  if (!city || !role || city.region !== 'eastern-cape') {
-    return <Navigate to={easternCapeHubPath()} replace />;
+  if (!region || !city || !role || city.region !== region.slug) {
+    return <Navigate to={regionHubPath('eastern-cape')} replace />;
   }
 
+  const regionName = region.name;
   const pageTitle = buildLocalPageTitle(role, city);
   const pageDescription = buildLocalPageDescription(role, city);
   const keywords = buildLocalPageKeywords(role, city);
-  const canonicalPath = localPagePath(city.slug, role.slug);
+  const canonicalPath = localPagePath(city.slug, role.slug, region.slug);
   const canonical = absoluteUrl(canonicalPath);
   const faqs = buildLocalFaqs(role, city);
   const RoleIcon = roleIcons[role.slug];
   const ogTitle = `${pageTitle} | ${SITE_NAME}`;
   const otherRoles = getAllRoles().filter((r) => r.slug !== role.slug);
+  const hubPath = regionHubPath(region.slug);
 
   const faqSchema = {
     '@context': 'https://schema.org',
@@ -103,7 +138,9 @@ export default function LocalDeveloperPage() {
         <header className="mb-12 max-w-3xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium mb-6">
             <RoleIcon className="w-3.5 h-3.5" aria-hidden />
-            <span>{cityDisplayName(city)} · Eastern Cape</span>
+            <span>
+              {cityDisplayName(city)} · {regionName}
+            </span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-balance">
             {pageTitle}
@@ -127,7 +164,7 @@ export default function LocalDeveloperPage() {
           {[
             'Mobile-first for SA networks and load shedding realities',
             'Visible progress every few days, not months of silence',
-            'Queenstown-based, serving all of the Eastern Cape remotely',
+            `Queenstown-based, serving ${regionName} and South Africa remotely`,
             'Fixed-scope Phase 1 so you avoid endless hourly drift',
           ].map((item) => (
             <div
@@ -171,6 +208,22 @@ export default function LocalDeveloperPage() {
         </section>
 
         <section className="mb-14">
+          <h2 className="text-2xl font-bold mb-4">Service guides</h2>
+          <ul className="flex flex-wrap gap-2">
+            {serviceGuidesByRole[role.slug].map((link) => (
+              <li key={link.path}>
+                <Link
+                  to={link.path}
+                  className="inline-block text-sm px-3 py-1.5 rounded-md border border-border hover:border-primary/50 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mb-14">
           <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-4">
             Other roles in {city.name}
           </h2>
@@ -178,7 +231,7 @@ export default function LocalDeveloperPage() {
             {otherRoles.map((r) => (
               <li key={r.slug}>
                 <Link
-                  to={localPagePath(city.slug, r.slug)}
+                  to={localPagePath(city.slug, r.slug, region.slug)}
                   className="inline-block text-sm px-3 py-1.5 rounded-md border border-border hover:border-primary/50 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {r.label}
@@ -210,8 +263,8 @@ export default function LocalDeveloperPage() {
               <ChevronRight className="w-4 h-4 inline" />
             </li>
             <li>
-              <Link to={easternCapeHubPath()} className="hover:text-foreground">
-                Eastern Cape
+              <Link to={hubPath} className="hover:text-foreground">
+                {regionName}
               </Link>
             </li>
             <li aria-hidden>

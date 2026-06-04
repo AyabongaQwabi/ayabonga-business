@@ -23,6 +23,32 @@
         "cloud architect south africa",
         "senior web developer south africa"
       ]
+    },
+    "gauteng": {
+      "slug": "gauteng",
+      "name": "Gauteng",
+      "title": "Software Developers & Engineers in Gauteng",
+      "description": "Senior software developer, web developer, and cloud architect for Gauteng startups and SMMEs. Based in Queenstown, remote-first delivery to Johannesburg, Sandton, Pretoria, and nationwide.",
+      "hubKeywords": [
+        "software developers gauteng",
+        "software engineers johannesburg",
+        "web developer sandton",
+        "cloud architect pretoria",
+        "app developer gauteng"
+      ]
+    },
+    "kwazulu-natal": {
+      "slug": "kwazulu-natal",
+      "name": "KwaZulu-Natal",
+      "title": "Software Developers & Engineers in KwaZulu-Natal",
+      "description": "Senior product engineer for KZN businesses in Durban and beyond. Queenstown-based, remote-first builds with on-site discovery when your rollout needs it.",
+      "hubKeywords": [
+        "software developers kwazulu natal",
+        "software developers durban",
+        "web developer durban",
+        "app developer kzn",
+        "IT consultant durban"
+      ]
     }
   },
   "roles": {
@@ -126,6 +152,38 @@
       "region": "eastern-cape",
       "localIntro": "Port Alfred and Ndlambe tourism, property, and retail businesses often need booking flows, payments, and modern sites. I build lean systems that match seasonal traffic without bloated agency fees.",
       "nearbyProof": "Booking and marketplace patterns from ClinicPlus and Laundry Marketplace"
+    },
+    {
+      "slug": "johannesburg",
+      "name": "Johannesburg",
+      "alternateName": "Joburg",
+      "region": "gauteng",
+      "localIntro": "Johannesburg founders move fast, but agency quotes and junior benches slow them down. I work remote-first from Queenstown with the same senior engineer on architecture, APIs, and launch. You get WhatsApp-responsible delivery without renting a Sandton dev shop.",
+      "nearbyProof": "Laundry Marketplace, ClinicPlus booking architecture, Paystack-ready MVPs"
+    },
+    {
+      "slug": "sandton",
+      "name": "Sandton",
+      "alternateName": null,
+      "region": "gauteng",
+      "localIntro": "Sandton teams often need a senior builder for internal tools, client portals, or a credible MVP before procurement signs off. I am not a body-shop on the Gautrain corridor. You work directly with the engineer scoping and shipping your product.",
+      "nearbyProof": "Cloud architecture on GCP, AWS, and Azure; enterprise-grade auth and admin patterns"
+    },
+    {
+      "slug": "pretoria",
+      "name": "Pretoria",
+      "alternateName": "Tshwane",
+      "region": "gauteng",
+      "localIntro": "Pretoria and Tshwane mix government-adjacent compliance, research institutions, and growing SMME tech. I build systems with clear audit trails, role-based access, and documentation your stakeholders can follow. Remote-first from the Eastern Cape, with on-site workshops in Gauteng when discovery needs a whiteboard.",
+      "nearbyProof": "MIDA school digitisation patterns, edu-ready platforms, secure cloud deployments"
+    },
+    {
+      "slug": "durban",
+      "name": "Durban",
+      "alternateName": "eThekwini",
+      "region": "kwazulu-natal",
+      "localIntro": "Durban and eThekwini run on logistics, retail, tourism, and port-linked services. I help KZN operators ship booking flows, marketplaces, and WhatsApp-aware customer journeys without Cape Town agency overhead. Delivery is remote-first from Queenstown, tuned for SA mobile networks and seasonal traffic spikes.",
+      "nearbyProof": "Trip dispatch architecture, Laundry Marketplace, Queens Connect community AI patterns"
     }
   ]
 }

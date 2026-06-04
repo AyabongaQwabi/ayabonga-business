@@ -6,6 +6,21 @@
       "permanent": true
     },
     {
+      "source": "/ai-system-integration",
+      "destination": "/ai-system-integration-south-africa",
+      "permanent": true
+    },
+    {
+      "source": "/proptech-solutions",
+      "destination": "/solutions/proptech-solutions-south-africa",
+      "permanent": true
+    },
+    {
+      "source": "/bespoke-crm-systems",
+      "destination": "/bespoke-crm-systems-south-africa",
+      "permanent": true
+    },
+    {
       "source": "/blog",
       "destination": "/",
       "permanent": false

@@ -6,7 +6,7 @@ export const APP_DEVELOPMENT_COST_META_TITLE =
   'App Development Cost South Africa 2026 | ZAR Pricing Guide';
 
 export const APP_DEVELOPMENT_COST_META_DESCRIPTION =
-  '2026 ZAR ranges for mobile apps (MVP vs full), web apps, marketplaces, payments, WhatsApp automation, and post-launch retainers. Plan your budget before you hire in South Africa.';
+  'App development cost South Africa 2026: ZAR ranges for mobile MVPs, full products, web apps, and marketplaces. Compare quotes before you hire. Includes payments, WhatsApp automation, and retainers.';
 
 export const APP_DEVELOPMENT_COST_KEYWORDS = [
   'app development cost south africa',

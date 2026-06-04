@@ -37,6 +37,9 @@ export function HeroSection() {
   const visualRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && (window as Window & { __PRERENDER__?: boolean }).__PRERENDER__) {
+      return;
+    }
     if (headlineRef.current) animateHeroHeadline(headlineRef.current);
     const support: HTMLElement[] = [];
     if (subRef.current) support.push(subRef.current);
