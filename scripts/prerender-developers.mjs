@@ -1,54 +1,19 @@
 /**
- * Post-build: static HTML for /developers/* routes so crawlers get full titles, meta, and body copy.
- * Requires dist/ from `vite build`. Skips when SKIP_PRERENDER=1.
+ * Post-build: static HTML for all indexable routes so crawlers get page titles, meta, and body copy.
+ * Route list is shared with generate-sitemap.mjs. Skips when SKIP_PRERENDER=1.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import http from 'node:http';
+import { collectPrerenderRoutes } from './collect-indexable-routes.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 const distDir = path.join(root, 'dist');
-const localDataPath = path.join(root, 'src/data/local-developers.json');
 const PREVIEW_PORT = Number(process.env.PRERENDER_PORT || 4173);
 const PREVIEW_HOST = '127.0.0.1';
-
-const STATIC_PRERENDER_ROUTES = [
-  '/',
-  '/about',
-  '/privacy',
-  '/editorial',
-  '/services',
-  '/technical-cofounder',
-  '/pricing-strategy',
-  '/get-a-quote',
-  '/mvp-scope-checklist',
-  '/blog',
-  '/projects',
-  '/projects/espazza',
-  '/app-development-cost-south-africa',
-  '/mobile-app-development-south-africa',
-  '/custom-software-development-south-africa',
-  '/web-development-company-south-africa',
-  '/mvp-developer-south-africa',
-  '/whatsapp-ai-chatbot-south-africa',
-  '/best-app-developers-south-africa',
-];
-
-function collectDeveloperRoutes() {
-  const data = JSON.parse(fs.readFileSync(localDataPath, 'utf8'));
-  const routes = [...STATIC_PRERENDER_ROUTES, '/developers/eastern-cape', '/developers/south-africa'];
-  const ecCities = (data.cities || []).filter((c) => c.region === 'eastern-cape');
-  const roleSlugs = Object.keys(data.roles || {});
-  for (const city of ecCities) {
-    for (const role of roleSlugs) {
-      routes.push(`/developers/eastern-cape/${city.slug}/${role}`);
-    }
-  }
-  return routes;
-}
 
 function routeToHtmlPath(route) {
   const segments = route.replace(/^\//, '').split('/').filter(Boolean);
@@ -178,7 +143,7 @@ async function main() {
     process.exit(1);
   }
 
-  const routes = collectDeveloperRoutes();
+  const routes = collectPrerenderRoutes();
   let preview;
 
   try {
