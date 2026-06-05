@@ -11,7 +11,12 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '../lib/site-config';
-import { buildBreadcrumbSchema, buildOrganizationSchema } from '../lib/entity-schema';
+import {
+  buildBreadcrumbSchema,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from '../lib/entity-schema';
 
 const INDEX_TITLE = 'Insights for founders building software in South Africa';
 const INDEX_DESCRIPTION =
@@ -19,29 +24,28 @@ const INDEX_DESCRIPTION =
 
 export default function InsightIndexPage() {
   const canonical = absoluteUrl(INSIGHTS_INDEX_PATH);
-  const collectionSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      buildBreadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Insights', path: INSIGHTS_INDEX_PATH },
-      ]),
-      {
-        '@type': 'CollectionPage',
-        name: INDEX_TITLE,
-        description: INDEX_DESCRIPTION,
-        url: canonical,
-        inLanguage: 'en-ZA',
-        hasPart: insightPages.map((page) => ({
-          '@type': 'Article',
-          headline: page.h1,
-          url: absoluteUrl(page.path),
-          description: page.excerpt,
-        })),
-      },
-    ],
-  };
+  const collectionSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    buildBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Insights', path: INSIGHTS_INDEX_PATH },
+    ]),
+    {
+      '@type': 'CollectionPage',
+      '@id': `${canonical}#webpage`,
+      name: INDEX_TITLE,
+      description: INDEX_DESCRIPTION,
+      url: canonical,
+      inLanguage: 'en-ZA',
+      hasPart: insightPages.map((page) => ({
+        '@type': 'Article',
+        headline: page.h1,
+        url: absoluteUrl(page.path),
+        description: page.excerpt,
+      })),
+    },
+  ]);
 
   return (
     <>

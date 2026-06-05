@@ -15,7 +15,7 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '../lib/site-config';
-import { buildBreadcrumbSchema } from '../lib/entity-schema';
+import { buildBreadcrumbSchema, buildJsonLdGraph } from '../lib/entity-schema';
 
 const PAGE_TITLE = 'Case studies';
 const PAGE_DESCRIPTION =
@@ -27,27 +27,25 @@ export default function CaseStudyIndexPage() {
     { name: PAGE_TITLE, path: CASE_STUDIES_INDEX_PATH },
   ]);
 
-  const indexSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      breadcrumbSchema,
-      {
-        '@type': 'CollectionPage',
-        name: PAGE_TITLE,
-        description: PAGE_DESCRIPTION,
-        url: absoluteUrl(CASE_STUDIES_INDEX_PATH),
-        mainEntity: {
-          '@type': 'ItemList',
-          itemListElement: CASE_STUDIES.map((study, index) => ({
-            '@type': 'ListItem',
-            position: index + 1,
-            name: getCaseStudyTitle(study),
-            url: absoluteUrl(`${CASE_STUDIES_INDEX_PATH}/${study.slug}`),
+  const indexSchema = buildJsonLdGraph([
+    breadcrumbSchema,
+    {
+      '@type': 'CollectionPage',
+      '@id': `${absoluteUrl(CASE_STUDIES_INDEX_PATH)}#webpage`,
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: absoluteUrl(CASE_STUDIES_INDEX_PATH),
+      mainEntity: {
+        '@type': 'ItemList',
+        itemListElement: CASE_STUDIES.map((study, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: getCaseStudyTitle(study),
+          url: absoluteUrl(`${CASE_STUDIES_INDEX_PATH}/${study.slug}`),
           })),
         },
       },
-    ],
-  };
+  ]);
 
   return (
     <>

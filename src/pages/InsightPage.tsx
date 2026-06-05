@@ -16,12 +16,14 @@ import {
   WHATSAPP_URL,
 } from '../lib/site-config';
 import {
-  buildArticleSchema,
+  authorGraphNode,
+  buildArticleGraphNode,
   buildBreadcrumbSchema,
   buildFaqPageSchema,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
 
 function heroImageForInsight(path: string, override?: string): string {
@@ -76,23 +78,21 @@ export default function InsightPage() {
     { name: page.h1, path: page.path },
   ]);
   const faqSchema = page.faqs.length ? buildFaqPageSchema(page.faqs) : null;
-  const articleSchema = buildArticleSchema({
+  const articleSchema = buildArticleGraphNode({
     headline: page.h1,
     description: page.excerpt || page.metaDescription,
     canonical,
     datePublished: page.datePublished,
     articleSection: page.eyebrow.split('·')[0]?.trim(),
   });
-  const graphSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      authorPersonSchema({ url: absoluteUrl('/about') }),
-      articleSchema,
-      breadcrumbSchema,
-      ...(faqSchema ? [faqSchema] : []),
-    ],
-  };
+  const graphSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    articleSchema,
+    breadcrumbSchema,
+    ...(faqSchema ? [faqSchema] : []),
+  ]);
 
   return (
     <>

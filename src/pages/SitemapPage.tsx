@@ -11,7 +11,7 @@ import { partnershipLandingPages } from '../data/partnership-landing-pages';
 import { serviceLandingPages } from '../data/service-landing-pages';
 import pseoPages from '../data/pseo-pages.json';
 import { absoluteUrl, SITE_NAME } from '../lib/site-config';
-import { buildBreadcrumbSchema } from '../lib/entity-schema';
+import { buildBreadcrumbSchema, buildJsonLdGraph } from '../lib/entity-schema';
 
 const PAGE_TITLE = 'Sitemap';
 const PAGE_DESCRIPTION =
@@ -293,22 +293,20 @@ function GroupBlock({ group }: { group: SitemapGroup }) {
 export default function SitemapPage() {
   const canonical = absoluteUrl(PAGE_PATH);
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildBreadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: PAGE_TITLE, path: PAGE_PATH },
-      ]),
-      {
-        '@type': 'WebPage',
-        name: PAGE_TITLE,
-        description: PAGE_DESCRIPTION,
-        url: canonical,
-        inLanguage: 'en-ZA',
-      },
-    ],
-  };
+  const pageSchema = buildJsonLdGraph([
+    buildBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: PAGE_TITLE, path: PAGE_PATH },
+    ]),
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical}#webpage`,
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      url: canonical,
+      inLanguage: 'en-ZA',
+    },
+  ]);
 
   return (
     <>

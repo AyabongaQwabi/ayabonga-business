@@ -25,6 +25,7 @@ import {
 } from '../lib/site-config';
 import {
   buildLocalFaqs,
+  buildLocalFaqSchema,
   buildLocalPageDescription,
   buildLocalPageKeywords,
   buildLocalPageTitle,
@@ -38,6 +39,12 @@ import {
   regionHubPath,
   type RoleSlug,
 } from '../lib/local-developers';
+import {
+  authorGraphNode,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from '../lib/entity-schema';
 
 const roleIcons: Record<RoleSlug, typeof Code2> = {
   'software-developer': Code2,
@@ -100,15 +107,13 @@ export default function LocalDeveloperPage() {
   const otherRoles = getAllRoles().filter((r) => r.slug !== role.slug);
   const hubPath = regionHubPath(region.slug);
 
-  const faqSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.question,
-      acceptedAnswer: { '@type': 'Answer', text: f.answer },
-    })),
-  };
+  const pageJsonLd = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    buildLocalSchema(role, city, canonical),
+    buildLocalFaqSchema(role, city),
+  ]);
 
   return (
     <>
@@ -129,8 +134,7 @@ export default function LocalDeveloperPage() {
         <meta name="twitter:description" content={pageDescription} />
         <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
         <meta name="robots" content="index, follow" />
-        <script type="application/ld+json">{JSON.stringify(buildLocalSchema(role, city, canonical))}</script>
-        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
+        <script type="application/ld+json">{JSON.stringify(pageJsonLd)}</script>
       </Helmet>
 
       <PageShell mainClassName="max-w-5xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">

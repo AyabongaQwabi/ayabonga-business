@@ -24,8 +24,12 @@ import {
   DISQUS_SHORTNAME,
 } from '../lib/site-config';
 import {
-  buildBlogPostingSchema,
+  buildBlogPostingGraphNode,
   buildBreadcrumbSchema,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+  authorGraphNode,
 } from '../lib/entity-schema';
 
 export default function BlogPostPage() {
@@ -63,25 +67,25 @@ function BlogPostView({ post }: { post: BlogPost }) {
 
   const dateModifiedIso = parsePostDateForSchema(post.dateModified ?? '');
 
-  const articleJsonLd = useMemo(
+  const pageJsonLd = useMemo(
     () =>
-      buildBlogPostingSchema({
-        post,
-        canonical,
-        shareImageUrl,
-        dateModified: dateModifiedIso,
-      }),
-    [post, canonical, shareImageUrl, dateModifiedIso],
-  );
-
-  const breadcrumbJsonLd = useMemo(
-    () =>
-      buildBreadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Writing', path: '/blog' },
-        { name: post.title, path: `/blog/${post.slug}` },
+      buildJsonLdGraph([
+        buildOrganizationSchema(),
+        buildWebSiteSchema(),
+        authorGraphNode(),
+        buildBlogPostingGraphNode({
+          post,
+          canonical,
+          shareImageUrl,
+          dateModified: dateModifiedIso,
+        }),
+        buildBreadcrumbSchema([
+          { name: 'Home', path: '/' },
+          { name: 'Writing', path: '/blog' },
+          { name: post.title, path: `/blog/${post.slug}` },
+        ]),
       ]),
-    [post.slug, post.title],
+    [post, canonical, shareImageUrl, dateModifiedIso],
   );
 
   return (
@@ -116,12 +120,7 @@ function BlogPostView({ post }: { post: BlogPost }) {
           <meta name="twitter:site" content={TWITTER_HANDLE} />
           <meta name="twitter:creator" content={TWITTER_HANDLE} />
           <meta name="robots" content="index, follow, max-image-preview:large" />
-          <script type="application/ld+json">
-            {JSON.stringify(articleJsonLd)}
-          </script>
-          <script type="application/ld+json">
-            {JSON.stringify(breadcrumbJsonLd)}
-          </script>
+          <script type="application/ld+json">{JSON.stringify(pageJsonLd)}</script>
         </Helmet>
 
         <PageBreadcrumbs

@@ -26,6 +26,12 @@ import {
   type RegionSlug,
   type RoleSlug,
 } from '../lib/local-developers';
+import {
+  authorGraphNode,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from '../lib/entity-schema';
 
 function CityRoleLinks({
   city,
@@ -117,7 +123,16 @@ export default function DevelopersRegionHub({ regionSlug }: DevelopersRegionHubP
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
-        <script type="application/ld+json">{JSON.stringify(buildHubSchema(region, canonical))}</script>
+        <script type="application/ld+json">
+          {JSON.stringify(
+            buildJsonLdGraph([
+              buildOrganizationSchema(),
+              buildWebSiteSchema(),
+              authorGraphNode(),
+              buildHubSchema(region, canonical),
+            ]),
+          )}
+        </script>
       </Helmet>
 
       <PageShell mainClassName="max-w-6xl mx-auto flex-1 px-6 pt-[4.5rem] pb-12 md:pb-20">

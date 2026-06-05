@@ -23,11 +23,13 @@ import {
   WHATSAPP_URL,
 } from '../lib/site-config';
 import {
+  authorGraphNode,
   buildBreadcrumbSchema,
   buildFaqPageSchema,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
 
 export default function ServiceLandingPage() {
@@ -47,27 +49,26 @@ export default function ServiceLandingPage() {
     { name: page.h1, path: page.path },
   ]);
   const faqSchema = buildFaqPageSchema(page.faqs);
-  const serviceSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      authorPersonSchema({ url: absoluteUrl('/about') }),
-      {
-        '@type': 'Service',
-        name: page.h1,
-        description: page.metaDescription,
-        provider: { '@id': `${SITE_ORIGIN}/#organization` },
-        areaServed: {
-          '@type': 'Country',
-          name: 'South Africa',
-        },
-        serviceType: page.serviceType,
-        url: canonical,
+  const serviceSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    {
+      '@type': 'Service',
+      '@id': `${canonical}#service`,
+      name: page.h1,
+      description: page.metaDescription,
+      provider: { '@id': `${SITE_ORIGIN}/#organization` },
+      areaServed: {
+        '@type': 'Country',
+        name: 'South Africa',
       },
-      breadcrumbSchema,
-      faqSchema,
-    ],
-  };
+      serviceType: page.serviceType,
+      url: canonical,
+    },
+    breadcrumbSchema,
+    faqSchema,
+  ]);
 
   return (
     <>

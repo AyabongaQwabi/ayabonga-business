@@ -41,43 +41,45 @@ import {
   WHATSAPP_URL,
 } from '../lib/site-config';
 import {
+  authorGraphNode,
   buildBreadcrumbSchema,
   buildFaqPageSchema,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 
 const canonical = absoluteUrl(APP_DEVELOPMENT_COST_PATH);
 
-const pageSchema = {
-  '@context': 'https://schema.org',
-  '@graph': [
-    buildOrganizationSchema(),
-    authorPersonSchema({ url: absoluteUrl('/about') }),
-    {
-      '@type': 'WebPage',
-      name: APP_DEVELOPMENT_COST_H1,
-      description: APP_DEVELOPMENT_COST_META_DESCRIPTION,
-      url: canonical,
-      inLanguage: 'en-ZA',
-      isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
-    },
-    {
-      '@type': 'Service',
-      name: 'Mobile and web application development',
-      description: APP_DEVELOPMENT_COST_META_DESCRIPTION,
-      provider: { '@id': `${SITE_ORIGIN}/#organization` },
-      areaServed: { '@type': 'Country', name: 'South Africa' },
-      url: canonical,
-    },
-    buildBreadcrumbSchema([
-      { name: 'Home', path: '/' },
-      { name: 'Services', path: '/services' },
-      { name: APP_DEVELOPMENT_COST_H1, path: APP_DEVELOPMENT_COST_PATH },
-    ]),
-    buildFaqPageSchema(APP_DEVELOPMENT_COST_FAQS),
-  ],
-};
+const pageSchema = buildJsonLdGraph([
+  buildOrganizationSchema(),
+  buildWebSiteSchema(),
+  authorGraphNode(),
+  {
+    '@type': 'WebPage',
+    '@id': `${canonical}#webpage`,
+    name: APP_DEVELOPMENT_COST_H1,
+    description: APP_DEVELOPMENT_COST_META_DESCRIPTION,
+    url: canonical,
+    inLanguage: 'en-ZA',
+    isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
+  },
+  {
+    '@type': 'Service',
+    '@id': `${canonical}#service`,
+    name: 'Mobile and web application development',
+    description: APP_DEVELOPMENT_COST_META_DESCRIPTION,
+    provider: { '@id': `${SITE_ORIGIN}/#organization` },
+    areaServed: { '@type': 'Country', name: 'South Africa' },
+    url: canonical,
+  },
+  buildBreadcrumbSchema([
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: APP_DEVELOPMENT_COST_H1, path: APP_DEVELOPMENT_COST_PATH },
+  ]),
+  buildFaqPageSchema(APP_DEVELOPMENT_COST_FAQS),
+]);
 
 export default function AppDevelopmentCostSouthAfricaPage() {
   return (

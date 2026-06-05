@@ -23,10 +23,16 @@ import {
   PRICING_STRATEGY_PAGE,
   QUOTE_PAGE,
   SITE_NAME,
+  SITE_ORIGIN,
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
-import { buildBreadcrumbSchema, buildFaqPageSchema } from '../lib/entity-schema';
+import {
+  buildBreadcrumbSchema,
+  buildFaqPageSchema,
+  buildJsonLdGraph,
+  buildWebSiteSchema,
+} from '../lib/entity-schema';
 
 function ClusterRetainerCards({ page }: { page: PricingClusterPageConfig }) {
   return (
@@ -83,24 +89,24 @@ function ClusterRetainerCards({ page }: { page: PricingClusterPageConfig }) {
 function PricingClusterContent({ page }: { page: PricingClusterPageConfig }) {
   const canonical = absoluteUrl(page.path);
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebPage',
-        name: page.h1,
-        description: page.metaDescription,
-        url: canonical,
-        inLanguage: 'en-ZA',
-      },
-      buildBreadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Services', path: '/services' },
-        { name: page.h1, path: page.path },
-      ]),
-      buildFaqPageSchema(page.faqs),
-    ],
-  };
+  const pageSchema = buildJsonLdGraph([
+    buildWebSiteSchema(),
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical}#webpage`,
+      name: page.h1,
+      description: page.metaDescription,
+      url: canonical,
+      inLanguage: 'en-ZA',
+      isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
+    },
+    buildBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services' },
+      { name: page.h1, path: page.path },
+    ]),
+    buildFaqPageSchema(page.faqs),
+  ]);
 
   return (
     <>

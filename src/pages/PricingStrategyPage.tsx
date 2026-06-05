@@ -27,6 +27,7 @@ import {
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
+import { buildFaqPageSchema, buildJsonLdGraph } from '../lib/entity-schema';
 
 const PAGE_TITLE = 'Monthly retainer pricing for software you rely on';
 const PAGE_DESCRIPTION =
@@ -98,15 +99,16 @@ export default function PricingStrategyPage() {
         <meta name="twitter:site" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
         <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: PRICING_FAQ.map((item) => ({
-              '@type': 'Question',
-              name: item.question,
-              acceptedAnswer: { '@type': 'Answer', text: item.answer },
-            })),
-          })}
+          {JSON.stringify(
+            buildJsonLdGraph([
+              buildFaqPageSchema(
+                PRICING_FAQ.map((item) => ({
+                  question: item.question,
+                  answer: item.answer,
+                })),
+              ),
+            ]),
+          )}
         </script>
       </Helmet>
 

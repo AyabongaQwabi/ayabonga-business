@@ -15,10 +15,12 @@ import {
   WHATSAPP_URL,
 } from '../lib/site-config';
 import {
+  authorGraphNode,
   buildBreadcrumbSchema,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
 
 export default function IndustryPage() {
@@ -35,29 +37,28 @@ export default function IndustryPage() {
     { name: 'Industries', path: '/industries' },
     { name: page.name, path: page.path },
   ]);
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      authorPersonSchema({ url: absoluteUrl('/about') }),
-      {
-        '@type': 'WebPage',
-        name: page.h1,
-        description: page.metaDescription,
-        url: canonical,
-        isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
-        about: {
-          '@type': 'Thing',
-          name: page.name,
-        },
-        areaServed: {
-          '@type': 'Country',
-          name: 'South Africa',
-        },
+  const jsonLd = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    {
+      '@type': 'WebPage',
+      '@id': `${canonical}#webpage`,
+      name: page.h1,
+      description: page.metaDescription,
+      url: canonical,
+      isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
+      about: {
+        '@type': 'Thing',
+        name: page.name,
       },
-      breadcrumbSchema,
-    ],
-  };
+      areaServed: {
+        '@type': 'Country',
+        name: 'South Africa',
+      },
+    },
+    breadcrumbSchema,
+  ]);
 
   const relatedIndustries = page.relatedIndustrySlugs
     .map((relatedSlug) => getIndustryBySlug(relatedSlug))

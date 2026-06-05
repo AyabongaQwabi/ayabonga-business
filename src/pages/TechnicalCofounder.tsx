@@ -17,6 +17,7 @@ import {
   TWITTER_HANDLE,
   WHATSAPP_URL,
 } from '../lib/site-config';
+import { buildFaqPageSchema, buildJsonLdGraph } from '../lib/entity-schema';
 import { BuildToRetainerBridge } from '../components/BuildToRetainerBridge';
 import { PricingTable } from '../components/PricingTable';
 import { PageHero } from '../components/PageHero';
@@ -85,18 +86,16 @@ export default function TechnicalCofounderPage() {
         <meta name="twitter:creator" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
         <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'FAQPage',
-            mainEntity: TAAS_FAQ.map((item) => ({
-              '@type': 'Question',
-              name: item.question,
-              acceptedAnswer: {
-                '@type': 'Answer',
-                text: item.answer,
-              },
-            })),
-          })}
+          {JSON.stringify(
+            buildJsonLdGraph([
+              buildFaqPageSchema(
+                TAAS_FAQ.map((item) => ({
+                  question: item.question,
+                  answer: item.answer,
+                })),
+              ),
+            ]),
+          )}
         </script>
       </Helmet>
 

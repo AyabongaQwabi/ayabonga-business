@@ -24,10 +24,13 @@ import {
   TWITTER_HANDLE,
 } from '../lib/site-config';
 import {
+  authorGraphNode,
   buildBreadcrumbSchema,
+  buildCaseStudyArticleNode,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 import NotFound from './NotFound';
 
 const TESTIMONIAL_PLACEHOLDER = '[Client feedback coming soon]';
@@ -106,27 +109,18 @@ export default function CaseStudyPage() {
     { name: title, path: canonicalPath },
   ]);
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      authorPersonSchema({ url: absoluteUrl('/about') }),
-      breadcrumbSchema,
-      {
-        '@type': 'Article',
-        headline: title,
-        description: study.metaDescription,
-        url: canonical,
-        author: authorPersonSchema(),
-        publisher: buildOrganizationSchema(),
-        about: {
-          '@type': 'Organization',
-          name: study.clientName,
-        },
-        inLanguage: 'en-ZA',
-      },
-    ],
-  };
+  const pageSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    breadcrumbSchema,
+    buildCaseStudyArticleNode({
+      headline: title,
+      description: study.metaDescription,
+      canonical,
+      aboutName: study.clientName,
+    }),
+  ]);
 
   return (
     <>

@@ -1,5 +1,6 @@
 import data from '../data/local-developers.json';
-import { SITE_NAME } from './site-config';
+import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_NAME, SITE_ORIGIN } from './site-config';
+import { organizationRef, personRef } from './entity-schema';
 
 export type RegionSlug =
   | 'eastern-cape'
@@ -210,27 +211,18 @@ export function southAfricaHubPath(): string {
 export function buildLocalSchema(role: LocalRole, city: LocalCity, pageUrl: string) {
   const regionName = regionNameForCity(city);
   return {
-    '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
+    '@id': `${pageUrl}#service`,
     name: `${role.label}, ${city.name}, ${regionName}`,
     description: buildLocalPageDescription(role, city),
     url: pageUrl,
-    provider: {
-      '@type': 'Person',
-      name: SITE_NAME,
-      jobTitle: role.label,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: 'Queenstown',
-        addressRegion: 'Eastern Cape',
-        addressCountry: 'ZA',
-      },
-    },
+    image: DEFAULT_OG_IMAGE,
+    provider: personRef(),
     areaServed: {
       '@type': 'City',
       name: city.name,
       containedInPlace: {
-        '@type': 'State',
+        '@type': 'AdministrativeArea',
         name: regionName,
       },
     },
@@ -238,21 +230,42 @@ export function buildLocalSchema(role: LocalRole, city: LocalCity, pageUrl: stri
   };
 }
 
+export function buildLocalFaqSchema(role: LocalRole, city: LocalCity) {
+  const faqs = buildLocalFaqs(role, city);
+  const pageUrl = absoluteUrl(localPagePath(city.slug, role.slug, city.region));
+  return {
+    '@type': 'FAQPage',
+    '@id': `${pageUrl}#faq`,
+    mainEntity: faqs.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: { '@type': 'Answer', text: f.answer },
+    })),
+  };
+}
+
 export function buildHubSchema(region: LocalRegion, pageUrl: string) {
   const areaServed =
     region.slug === 'south-africa'
-      ? 'South Africa'
-      : `${region.name}, South Africa`;
+      ? { '@type': 'Country' as const, name: 'South Africa' }
+      : {
+          '@type': 'AdministrativeArea' as const,
+          name: region.name,
+          containedInPlace: { '@type': 'Country' as const, name: 'South Africa' },
+        };
   return {
-    '@context': 'https://schema.org',
     '@type': 'WebPage',
+    '@id': `${pageUrl}#webpage`,
     name: region.title,
     description: region.description,
     url: pageUrl,
+    isPartOf: { '@id': `${SITE_ORIGIN}/#website` },
     about: {
       '@type': 'ProfessionalService',
       name: `${SITE_NAME}, ${region.name}`,
+      provider: organizationRef(),
       areaServed,
     },
+    inLanguage: 'en-ZA',
   };
 }

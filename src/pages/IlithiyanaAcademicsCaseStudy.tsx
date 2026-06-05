@@ -12,10 +12,13 @@ import {
   TWITTER_HANDLE,
 } from '../lib/site-config';
 import {
+  authorGraphNode,
   buildBreadcrumbSchema,
+  buildCaseStudyArticleNode,
+  buildJsonLdGraph,
   buildOrganizationSchema,
+  buildWebSiteSchema,
 } from '../lib/entity-schema';
-import { authorPersonSchema } from '../lib/author-profile';
 
 const PAGE_TITLE = 'Ilithiyana Academics Case Study | Full Platform in 7 Days';
 const PAGE_DESCRIPTION =
@@ -122,24 +125,18 @@ export default function IlithiyanaAcademicsCaseStudy() {
     { name: 'Ilithiyana Academics', path: CANONICAL_PATH },
   ]);
 
-  const pageSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      authorPersonSchema({ url: absoluteUrl('/about') }),
-      breadcrumbSchema,
-      {
-        '@type': 'Article',
-        headline: PAGE_TITLE,
-        description: PAGE_DESCRIPTION,
-        url: canonical,
-        author: authorPersonSchema(),
-        publisher: buildOrganizationSchema(),
-        about: { '@type': 'Organization', name: 'Ilithiyana Academics' },
-        inLanguage: 'en-ZA',
-      },
-    ],
-  };
+  const pageSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    authorGraphNode(),
+    breadcrumbSchema,
+    buildCaseStudyArticleNode({
+      headline: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      canonical,
+      aboutName: 'Ilithiyana Academics',
+    }),
+  ]);
 
   return (
     <>

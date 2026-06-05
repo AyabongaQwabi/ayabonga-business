@@ -16,7 +16,13 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '../lib/site-config';
-import { authorPersonSchema } from '../lib/author-profile';
+import {
+  authorGraphNode,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+  personRef,
+} from '../lib/entity-schema';
 
 const BLOG_INDEX_TITLE = 'AI, cloud and product engineering for SA startups';
 const BLOG_INDEX_DESCRIPTION =
@@ -52,20 +58,25 @@ export default function BlogIndexPage() {
 
   const blogListingJsonLd = useMemo(() => {
     if (hasFilters) return null;
-    return {
-      '@context': 'https://schema.org',
-      '@type': 'Blog',
-      name: `Writing: ${SITE_NAME}`,
-      description: BLOG_INDEX_DESCRIPTION,
-      url: absoluteUrl('/blog'),
-      author: authorPersonSchema(),
-      blogPost: blogPosts.map((p) => ({
-        '@type': 'BlogPosting',
-        headline: p.title,
-        url: absoluteUrl(`/blog/${p.slug}`),
-        description: p.excerpt,
-      })),
-    };
+    return buildJsonLdGraph([
+      buildOrganizationSchema(),
+      buildWebSiteSchema(),
+      authorGraphNode(),
+      {
+        '@type': 'Blog',
+        '@id': `${absoluteUrl('/blog')}#blog`,
+        name: `Writing: ${SITE_NAME}`,
+        description: BLOG_INDEX_DESCRIPTION,
+        url: absoluteUrl('/blog'),
+        author: personRef(),
+        blogPost: blogPosts.map((p) => ({
+          '@type': 'BlogPosting',
+          headline: p.title,
+          url: absoluteUrl(`/blog/${p.slug}`),
+          description: p.excerpt,
+        })),
+      },
+    ]);
   }, [hasFilters]);
 
   return (

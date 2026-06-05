@@ -13,10 +13,12 @@ import { PageShell } from '../components/layout/PageShell';
 import {
   absoluteUrl,
   DEFAULT_OG_IMAGE,
+  SITE_ORIGIN,
   TWITTER_HANDLE,
 } from '../lib/site-config';
-import { authorPersonSchema } from '../lib/author-profile';
 import {
+  authorGraphNode,
+  buildJsonLdGraph,
   buildOrganizationSchema,
   buildWebSiteSchema,
 } from '../lib/entity-schema';
@@ -57,22 +59,19 @@ export default function HomePage() {
         <meta name="twitter:site" content={TWITTER_HANDLE} />
         <meta name="robots" content="index, follow" />
         <script type="application/ld+json">
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@graph': [
+          {JSON.stringify(
+            buildJsonLdGraph([
               buildOrganizationSchema(),
-              {
-                ...authorPersonSchema({ url: absoluteUrl('/about') }),
-                '@id': `${absoluteUrl('/')}#person`,
-              },
+              authorGraphNode(),
               buildWebSiteSchema(),
               {
                 '@type': 'ProfessionalService',
+                '@id': `${SITE_ORIGIN}/#professional-service`,
                 name: 'Qwabi Engineering, Software Development South Africa',
                 url: absoluteUrl('/'),
                 areaServed: { '@type': 'Country', name: 'South Africa' },
                 description: HOME_DESCRIPTION,
-                provider: { '@id': `${absoluteUrl('/')}#person` },
+                provider: { '@id': `${SITE_ORIGIN}/#person` },
                 serviceType: [
                   'Mobile app development',
                   'Web development',
@@ -80,8 +79,8 @@ export default function HomePage() {
                   'Ecommerce development',
                 ],
               },
-            ],
-          })}
+            ]),
+          )}
         </script>
       </Helmet>
 

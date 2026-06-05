@@ -11,7 +11,12 @@ import {
   SITE_NAME,
   TWITTER_HANDLE,
 } from '../lib/site-config';
-import { buildBreadcrumbSchema, buildOrganizationSchema } from '../lib/entity-schema';
+import {
+  buildBreadcrumbSchema,
+  buildJsonLdGraph,
+  buildOrganizationSchema,
+  buildWebSiteSchema,
+} from '../lib/entity-schema';
 
 const INDEX_TITLE = 'Software development by industry in South Africa';
 const INDEX_DESCRIPTION =
@@ -19,29 +24,28 @@ const INDEX_DESCRIPTION =
 
 export default function IndustryIndexPage() {
   const canonical = absoluteUrl(INDUSTRIES_INDEX_PATH);
-  const collectionSchema = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      buildOrganizationSchema(),
-      buildBreadcrumbSchema([
-        { name: 'Home', path: '/' },
-        { name: 'Industries', path: INDUSTRIES_INDEX_PATH },
-      ]),
-      {
-        '@type': 'CollectionPage',
-        name: INDEX_TITLE,
-        description: INDEX_DESCRIPTION,
-        url: canonical,
-        inLanguage: 'en-ZA',
-        hasPart: allIndustries.map((industry) => ({
-          '@type': 'WebPage',
-          name: industry.name,
-          url: absoluteUrl(industry.path),
-          description: industry.shortDescription,
-        })),
-      },
-    ],
-  };
+  const collectionSchema = buildJsonLdGraph([
+    buildOrganizationSchema(),
+    buildWebSiteSchema(),
+    buildBreadcrumbSchema([
+      { name: 'Home', path: '/' },
+      { name: 'Industries', path: INDUSTRIES_INDEX_PATH },
+    ]),
+    {
+      '@type': 'CollectionPage',
+      '@id': `${canonical}#webpage`,
+      name: INDEX_TITLE,
+      description: INDEX_DESCRIPTION,
+      url: canonical,
+      inLanguage: 'en-ZA',
+      hasPart: allIndustries.map((industry) => ({
+        '@type': 'WebPage',
+        name: industry.name,
+        url: absoluteUrl(industry.path),
+        description: industry.shortDescription,
+      })),
+    },
+  ]);
 
   return (
     <>
