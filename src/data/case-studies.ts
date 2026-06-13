@@ -314,6 +314,101 @@ export const CASE_STUDIES: CaseStudy[] = [
     metaDescription:
       'Occupational health management and bookings for ClinicPlus in Witbank. Built for mining-sector employers and compliance-minded clinic operations.',
   },
+  {
+    slug: 'dj-ntsira',
+    clientName: 'DJ Ntsira',
+    contactName: 'Lituko Siphe',
+    contactTitle: 'Artist',
+    location: 'Queenstown, Eastern Cape',
+    sector: 'Music and entertainment',
+    url: 'https://djntsira.qwabi.co.za',
+    projectSummary:
+      'Full artist platform for Gqom DJ Ntsira from Queenstown, including a music store with MP3 sales, stems, and bundles powered by Yoco payments, plus a gig booking system with tiered hourly rates, transport fee logic by distance, deposit rules, and anti-double-booking. Built as a pro-bono project to give an Eastern Cape artist a professional digital presence.',
+    challenge:
+      'DJ Ntsira had no online presence beyond social media. Fans could not buy music directly. Event organisers had no formal way to book him, get a quote, or pay a deposit. Every transaction happened informally through WhatsApp with no records and no system. The platform needed to handle bilingual content in isiXhosa and English, feel premium in a black and gold brand, and run without any ongoing manual input from the artist.',
+    whatWeBuilt: [
+      'Music store with MP3, stems, and bundle sales — audio preview per track before purchase, Yoco payment integration, and automated download link delivery via Resend email after payment confirmation',
+      'Gig booking system with tiered hourly rates, deposit percentage logic, transport fee calculation by distance from Queenstown, calendar-based availability, and anti-double-booking enforcement at the database level',
+      'Artist profile and biography section in bilingual isiXhosa and English',
+      'Social and streaming links hub connecting Spotify, Apple Music, YouTube, and SoundCloud',
+      'Admin view for the artist to see bookings, payment status, and download requests without touching code',
+      'Vercel SPA routing fix via vercel.json to prevent 404s on direct URL access',
+    ],
+    technologiesUsed: [
+      'React',
+      'Vite',
+      'TypeScript',
+      'Supabase (Postgres + Auth + Storage)',
+      'Yoco (payments)',
+      'Resend (transactional email)',
+      'Vercel',
+    ],
+    outcomes: [
+      'DJ Ntsira now has a professional artist platform that fans and event organisers can find and use without going through WhatsApp',
+      'Music buyers get a full preview-before-purchase experience and receive download links automatically after payment, with no manual fulfilment from the artist',
+      'Event organisers can submit a booking request, see a price estimate with transport fee included, and pay a deposit online, all inside one flow',
+      'Anti-double-booking logic at the database level means the artist never gets double-booked regardless of how many people are browsing the calendar at once',
+      'The platform is bilingual in isiXhosa and English, a deliberate choice to reflect where the artist is from and who his audience is',
+      'Pro-bono delivery allowed the project to move at real client quality without budget constraints blocking scope',
+    ],
+    testimonialKey: null,
+    relatedServices: [
+      '/custom-software-development-south-africa',
+      '/mobile-app-development-south-africa',
+    ],
+    metaTitle: 'DJ Ntsira Case Study | Gqom Artist Platform and Music Store',
+    metaDescription:
+      'How Qwabi Engineering built a full music store with Yoco payments, gig booking system, and bilingual isiXhosa and English platform for Queenstown Gqom DJ Ntsira.',
+  },
+  {
+    slug: 'fundibot',
+    clientName: 'Fundibot',
+    contactName: 'Ayabonga Qwabi',
+    contactTitle: 'Founder',
+    location: 'Queenstown, Eastern Cape',
+    sector: 'Education technology',
+    url: 'https://fundibot.qwabi.co.za',
+    projectSummary:
+      'A free, no-login platform helping South African matriculants find courses, check APS requirements across multiple institutional points systems, discover bursaries, and plan their careers. Built from 23+ scraped prospectuses, a custom Python enrichment pipeline, and structured JSON datasets powering seven interactive tools.',
+    challenge:
+      'South African Grade 12 learners have no single reliable source for course and admission data. University prospectuses are scattered PDFs in different formats, admission systems vary across institutions (APS, FPS, WPS, UWC Points), and Eastern Cape learners in particular have limited access to guidance counsellors or reliable internet. All existing solutions are either institutional silos or fee-gated services.',
+    whatWeBuilt: [
+      'Course and Institution Finder with province, qualification type, and APS filters',
+      'University Qualification Checker calculating APS, UCT FPS/WPS, and UWC Points simultaneously with banded admission results',
+      'What Could You Earn? salary predictor mapping subjects and marks to career fields, occupations, and real ZAR salary ranges across 154 occupations and 26 sectors',
+      'Predict My Future personalised career timeline from current grade to career milestones, drawing from occupation, institution, and employer datasets',
+      'Bursary and Funding Matcher with 976 bursaries and direct links, filtered by field of study and province, with NSFAS eligibility check',
+      'Institution Stats Dashboard visualising programme, province, and qualification type data with full source attribution',
+      'Smart enrichment pipeline (enrich_pipeline.py) detecting SA currency, admission requirements in multiple formats, qualification types, and TVET default entry requirements',
+    ],
+    technologiesUsed: [
+      'React',
+      'TypeScript',
+      'Python (enrich_pipeline.py)',
+      'pdfplumber',
+      'Tesseract OCR',
+      'Claude AI (extraction)',
+      'Claude in Chrome (bursary scraping)',
+      'Supabase',
+      'Vercel',
+    ],
+    outcomes: [
+      '976 bursaries with direct links scraped and structured from zabursaries.co.za',
+      '154 SA occupations mapped to subjects, career fields, and ZAR salary ranges',
+      '23+ prospectuses processed into structured JSON datasets powering all tools',
+      '75+ institutions targeted for coverage with Eastern Cape institutions fully enriched',
+      'Multiple admission points systems supported in parallel — standard APS, UCT FPS/WPS, UWC Code system',
+      'Platform is 100% free, requires no login, and is optimised for mobile learners on limited data',
+      'Inferred data flagged explicitly throughout — no silent data gaps presented as authoritative',
+    ],
+    testimonialKey: null,
+    relatedServices: [
+      '/custom-software-development-south-africa',
+    ],
+    metaTitle: 'Fundibot Case Study | College in Your Pocket',
+    metaDescription:
+      'How Qwabi Engineering built a free platform helping South African matriculants find courses, check APS requirements, and plan their futures — powered by 23+ scraped prospectuses and a custom enrichment pipeline.',
+  },
 ];
 
 export const CASE_STUDIES_INDEX_PATH = '/case-studies';

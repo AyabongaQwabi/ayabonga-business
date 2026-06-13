@@ -93,6 +93,18 @@ const SCREENSHOTS = '/images/screenshots';
 export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
   // —— Live / active ——
   {
+    id: 'fundibot',
+    title: 'Fundibot',
+    url: 'https://fundibot.qwabi.co.za',
+    status: 'in-progress',
+    visibility: 'public',
+    category: 'Education technology',
+    description:
+      'Free platform for South African matriculants. Course finder, APS checker, bursary matcher, salary predictor, and personalised career timeline. 23+ prospectuses scraped. 75+ institutions. No login required.',
+    tech: ['React', 'TypeScript', 'Python', 'Supabase', 'Vercel'],
+    homepageFeatured: false,
+  },
+  {
     id: 'clinicplus',
     title: 'ClinicPlus',
     url: 'https://clinicplusbookings.co.za/',
@@ -261,6 +273,20 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     tech: ['React', 'TypeScript'],
     imageUrl: `${SCREENSHOTS}/kingly.png`,
     imageAlt: 'Kingly',
+  },
+
+  {
+    id: 'dj-ntsira',
+    title: 'DJ Ntsira',
+    url: 'https://djntsira.qwabi.co.za',
+    status: 'live',
+    visibility: 'public',
+    category: 'Music · artist platform',
+    description:
+      'Artist platform for Gqom DJ Ntsira from Queenstown. Music store with Yoco payments and MP3 delivery, gig booking with transport fee logic, deposit rules, and anti-double-booking. Bilingual isiXhosa and English.',
+    tech: ['React', 'Vite', 'TypeScript', 'Supabase', 'Yoco', 'Resend', 'Vercel'],
+    homepageFeatured: true,
+    homepageOrder: 10,
   },
 
   // —— In progress (client) ——

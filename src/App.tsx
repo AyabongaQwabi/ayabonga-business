@@ -30,6 +30,7 @@ const ProjectsPage = lazy(() => import('./pages/ProjectsPage.tsx'));
 const CaseStudyIndexPage = lazy(() => import('./pages/CaseStudyIndexPage.tsx'));
 const CaseStudyPage = lazy(() => import('./pages/CaseStudyPage.tsx'));
 const IlithiyanaAcademicsCaseStudy = lazy(() => import('./pages/IlithiyanaAcademicsCaseStudy.tsx'));
+const FundibotCaseStudy = lazy(() => import('./pages/FundibotCaseStudy.tsx'));
 const BuyerIntentPage = lazy(() => import('./pages/BuyerIntentPage.tsx'));
 const InsightPage = lazy(() => import('./pages/InsightPage.tsx'));
 const PartnershipLandingPage = lazy(() => import('./pages/PartnershipLandingPage.tsx'));
@@ -141,6 +142,7 @@ export default function App() {
         <Route path="/projects/espazza" element={<EspazzaProject />} />
         <Route path="/case-studies" element={<CaseStudyIndexPage />} />
         <Route path="/case-studies/ilithiyana" element={<IlithiyanaAcademicsCaseStudy />} />
+        <Route path="/case-studies/fundibot" element={<FundibotCaseStudy />} />
         <Route path="/case-studies/:slug" element={<CaseStudyPage />} />
         <Route
           path="/software-development-pricing"
