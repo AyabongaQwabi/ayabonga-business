@@ -168,7 +168,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Personal portfolio and service site for a senior product engineer and cloud architect. Covers full-stack builds, technical leadership, and cloud architecture across GCP, AWS, and Azure. A record of shipped products from campus wallets to ride-hailing platforms.',
     tech: ['React', 'TypeScript', 'Vite'],
     homepageFeatured: true,
-    homepageOrder: 8,
+    homepageOrder: 10,
   },
   {
     id: 'trip',
@@ -199,7 +199,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description: 'Corporate web presence and systems delivery for the Namoota agency brand.',
     tech: ['Web'],
     homepageFeatured: true,
-    homepageOrder: 9,
+    homepageOrder: 11,
   },
   {
     id: 'umicandles',
@@ -212,7 +212,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Ecommerce storefront for handcrafted luxury candles. Sculptural pillar candles, personalised gift sets, and combo bundles for home decor and celebrations. Built and handed over; client operations paused.',
     tech: ['Web', 'Commerce'],
     homepageFeatured: true,
-    homepageOrder: 10,
+    homepageOrder: 8,
   },
   {
     id: 'utap',
@@ -243,7 +243,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description: 'Platform product built on the qwabi.co.za stack.',
     tech: ['React', 'TypeScript', 'Vercel'],
     homepageFeatured: true,
-    homepageOrder: 11,
+    homepageOrder: 9,
   },
 
   // —— Live / active ——
