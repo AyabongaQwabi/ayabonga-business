@@ -142,7 +142,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Artist platform for Gqom DJ Ntsira from Queenstown. Music store with Yoco payments and MP3 delivery, gig booking with transport fee logic, deposit rules, and anti-double-booking. Bilingual isiXhosa and English.',
     tech: ['React', 'Vite', 'TypeScript', 'Supabase', 'Yoco', 'Resend', 'Vercel'],
     homepageFeatured: true,
-    homepageOrder: 4,
+    homepageOrder: 6,
   },
   {
     id: 'lungi-the-strategist',
@@ -155,7 +155,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Branded ecommerce platform for a Durban-based strategist and retail brand. Built to feel like the person behind it, not a generic template. Clients navigate and buy with ease.',
     tech: ['Ecommerce', 'Web'],
     homepageFeatured: true,
-    homepageOrder: 5,
+    homepageOrder: 7,
   },
   {
     id: 'qwabi-portfolio',
@@ -168,7 +168,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Personal portfolio and service site for a senior product engineer and cloud architect. Covers full-stack builds, technical leadership, and cloud architecture across GCP, AWS, and Azure. A record of shipped products from campus wallets to ride-hailing platforms.',
     tech: ['React', 'TypeScript', 'Vite'],
     homepageFeatured: true,
-    homepageOrder: 6,
+    homepageOrder: 8,
   },
   {
     id: 'trip',
@@ -183,7 +183,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     imageUrl: `${SCREENSHOTS}/trip-website.png`,
     imageAlt: 'Trip marketing site',
     homepageFeatured: true,
-    homepageOrder: 7,
+    homepageOrder: 4,
     relatedLinks: [
       { label: 'Trip admin', url: 'https://tripadmin.qwabi.co.za/' },
       { label: 'Trip Media', url: 'https://media.qwabi.co.za/' },
@@ -199,7 +199,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     description: 'Corporate web presence and systems delivery for the Namoota agency brand.',
     tech: ['Web'],
     homepageFeatured: true,
-    homepageOrder: 8,
+    homepageOrder: 9,
   },
   {
     id: 'umicandles',
@@ -212,7 +212,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
       'Ecommerce storefront for handcrafted luxury candles. Sculptural pillar candles, personalised gift sets, and combo bundles for home decor and celebrations. Built and handed over; client operations paused.',
     tech: ['Web', 'Commerce'],
     homepageFeatured: true,
-    homepageOrder: 9,
+    homepageOrder: 10,
   },
   {
     id: 'utap',
@@ -227,7 +227,7 @@ export const PROJECT_CATALOG: ProjectCatalogEntry[] = [
     imageUrl: `${SCREENSHOTS}/utapadmin.png`,
     imageAlt: 'uTap admin',
     homepageFeatured: true,
-    homepageOrder: 10,
+    homepageOrder: 5,
     relatedLinks: [
       { label: 'Vendor portal', url: 'https://vendors.utaptech.co.za/' },
       { label: 'Admin', url: 'http://admin.utaptech.co.za/' },
