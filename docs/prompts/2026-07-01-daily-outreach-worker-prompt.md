@@ -8,10 +8,10 @@ Run automated outbound lead intelligence on `business.qwabi.co.za`: discover Sou
 
 **Exists**
 
-- Lead storage in Vercel Blob (`api/lib/leads/blobStore.ts`)
+- Lead storage in Vercel Blob (`api/_lib/leads/blobStore.ts`)
 - Admin UI for leads and templates (`src/pages/admin/`)
 - Resend integration for quote and nurture emails
-- Branded email layout (`api/lib/emailLayout.ts`, `api/lib/leads/outreachEmail.ts`)
+- Branded email layout (`api/_lib/emailLayout.ts`, `api/_lib/leads/outreachEmail.ts`)
 - Seed outbound leads (`src/data/lead-intelligence-seed.json`) mostly without emails
 
 **Missing (this work)**
@@ -27,9 +27,9 @@ Run automated outbound lead intelligence on `business.qwabi.co.za`: discover Sou
 **In scope**
 
 - `api/cron/outreach-daily.ts` + `vercel.json` cron (`0 6 * * *` UTC)
-- `api/lib/leads/outreachWorker.ts` orchestration
-- Discovery, enrichment, send libs under `api/lib/leads/`
-- Default templates in `api/lib/leads/defaultTemplates.ts` and `src/data/default-email-templates.json`
+- `api/_lib/leads/outreachWorker.ts` orchestration
+- Discovery, enrichment, send libs under `api/_lib/leads/`
+- Default templates in `api/_lib/leads/defaultTemplates.ts` and `src/data/default-email-templates.json`
 - Local dev route in `scripts/vite-plugin-local-api.mjs`
 
 **Out of scope**

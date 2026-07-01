@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { dispatchApiRequest } from './lib/routeApi';
-import { handleOptions, jsonResponse } from './lib/http';
+import { dispatchApiRequest } from './_lib/routeApi';
+import { handleOptions, jsonResponse } from './_lib/http';
 
 /** Catch-all /api/* — one serverless function for Hobby plan limits. */
 export default async function handler(req: VercelRequest, res: VercelResponse) {

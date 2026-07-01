@@ -130,11 +130,15 @@ function detectFunctions(files, vercelignore) {
 
     if (!file.startsWith('api/') || !API_FILE.test(file)) continue;
     if (file.startsWith('api/lib/')) {
-      skipped.push({ file, reason: 'api/lib helper (not a route entry)' });
+      functions.push({
+        file,
+        kind: 'Vercel /api (helper in api/lib — COUNTS)',
+        route: apiRouteFromFile(file) + ignoredNote,
+      });
       continue;
     }
     if (hasUnderscoreSegment(file)) {
-      skipped.push({ file, reason: 'underscore path (Vercel ignores)' });
+      skipped.push({ file, reason: 'underscore segment (Vercel ignores, e.g. api/_lib/)' });
       continue;
     }
     if (SKIP_API_BASENAMES.has(path.basename(file))) {
@@ -169,6 +173,14 @@ function printReport(functions, skipped) {
     });
   }
 
+  const underscoreHelpers = skipped.filter((s) => s.reason.includes('underscore'));
+  if (underscoreHelpers.length > 0) {
+    console.log(
+      `\nExcluded ${underscoreHelpers.length} file(s) under api/_…/ (Vercel underscore rule).`,
+    );
+    console.log('Move shared API code to api/_lib/, not api/lib/, or each file becomes a function.');
+  }
+
   if (skipped.length > 0 && process.env.VERCEL_FUNCTIONS_VERBOSE === '1') {
     console.log(`\nSkipped ${skipped.length} api/ paths (helpers/config):`);
     for (const s of skipped.slice(0, 20)) {
@@ -183,7 +195,7 @@ function printReport(functions, skipped) {
       `FAIL: ${functions.length} functions exceeds Hobby limit (${HOBBY_LIMIT}).`,
     );
     console.log(
-      'Remove or gitignore nested app/api/route.ts sandboxes before deploy.',
+      'Put helpers in api/_lib/ (underscore). api/lib/*.ts would each become a function.',
     );
     console.log(
       'Note: .vercelignore does not stop Git deploys from registering functions.',

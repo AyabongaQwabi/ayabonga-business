@@ -71,7 +71,7 @@ async function dispatchApi(server, pathname, req, res) {
   };
 
   try {
-    const { dispatchApiRequest } = await server.ssrLoadModule('/api/lib/routeApi.ts');
+    const { dispatchApiRequest } = await server.ssrLoadModule('/api/_lib/routeApi.ts');
     const result = await dispatchApiRequest(vercelReq);
     json(result.status, result.body);
   } catch (err) {
