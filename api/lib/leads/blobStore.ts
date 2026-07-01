@@ -126,8 +126,8 @@ export async function createLead(
     id: partial.id ?? randomUUID(),
     createdAt: now,
     updatedAt: now,
-    status: partial.status ?? 'new',
     ...partial,
+    status: partial.status ?? 'new',
   };
   return saveLead(lead);
 }

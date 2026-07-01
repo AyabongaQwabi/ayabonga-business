@@ -29,6 +29,13 @@ export type OutreachDraft = {
   lastSentAt?: string;
 };
 
+export type SendHistoryEntry = {
+  sentAt: string;
+  templateSlug: string;
+  email: string;
+  channel: 'email';
+};
+
 export type LeadRecord = {
   id: string;
   kind: LeadKind;
@@ -56,6 +63,8 @@ export type LeadRecord = {
   notes?: string;
   quoteSnapshot?: SendQuoteRequestBody;
   outreachDraft?: OutreachDraft;
+  sendHistory?: SendHistoryEntry[];
+  unsubscribedAt?: string;
   connectorType?: boolean;
 };
 

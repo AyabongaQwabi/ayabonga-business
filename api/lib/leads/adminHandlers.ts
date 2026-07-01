@@ -1,4 +1,3 @@
-import { Resend } from 'resend';
 import type { VercelRequest } from '@vercel/node';
 import {
   createAdminToken,
@@ -8,13 +7,12 @@ import {
 } from './auth';
 import {
   getLead,
-  getTemplate,
   listLeads,
   listTemplates,
   saveLead,
   saveTemplate,
 } from './blobStore';
-import { applyTemplate } from './mergeTemplate';
+import { sendOutreachToLead } from './sendOutreach';
 import type { EmailTemplate, LeadRecord, LeadStatus } from './types';
 import { defaultEmailTemplates } from './defaultTemplates';
 
@@ -222,101 +220,48 @@ async function handleSendLeadEmail(
   id: string,
   body: Record<string, unknown> | null,
 ): Promise<{ status: number; body: Record<string, unknown> }> {
-  console.log('[adminHandlers] handleSendLeadEmail called', { id, bodyKeys: body ? Object.keys(body) : [] });
-  const lead = await getLead(id);
-  if (!lead) {
-    console.warn('[adminHandlers] handleSendLeadEmail: Lead not found with ID', id);
-    return { status: 404, body: { error: 'Lead not found' } };
-  }
-
-  console.log('[adminHandlers] handleSendLeadEmail: Found lead', { id: lead.id, email: lead.email, status: lead.status });
-
-  if (!lead.email) {
-    console.warn('[adminHandlers] handleSendLeadEmail validation failed: Lead has no email address', { id });
-    return { status: 400, body: { error: 'Lead has no email address' } };
-  }
-  if (lead.status === 'lost') {
-    console.warn('[adminHandlers] handleSendLeadEmail validation failed: Lead status is lost', { id });
-    return { status: 400, body: { error: 'Lead is marked lost' } };
-  }
-
-  const resendKey = process.env.RESEND_API_KEY?.trim();
-  console.log('[adminHandlers] handleSendLeadEmail: Resend key configuration check:', {
-    hasResendKey: !!resendKey,
-    resendKeyLength: resendKey ? resendKey.length : 0,
-    fromEmail: FROM,
-  });
-
-  if (!resendKey) {
-    console.error('[adminHandlers] handleSendLeadEmail: RESEND_API_KEY is not configured or is empty.');
-    return { status: 503, body: { error: 'RESEND_API_KEY is not configured' } };
-  }
-
-  let subject: string;
-  let text: string;
-  let html: string | undefined;
+  const templateSlug = body?.templateSlug ? String(body.templateSlug) : undefined;
 
   if (body?.subject && body?.text) {
-    console.log('[adminHandlers] handleSendLeadEmail: Using explicit subject and text from request body.');
-    subject = String(body.subject);
-    text = String(body.text);
-    html = body.html ? String(body.html) : undefined;
-  } else if (body?.templateSlug) {
-    const templateSlug = String(body.templateSlug);
-    console.log('[adminHandlers] handleSendLeadEmail: Using template slug', templateSlug);
-    const template = await getTemplate(templateSlug);
-    if (!template) {
-      console.warn('[adminHandlers] handleSendLeadEmail: Template not found with slug', templateSlug);
-      return { status: 404, body: { error: 'Template not found' } };
-    }
-    console.log('[adminHandlers] handleSendLeadEmail: Found template', { slug: template.slug, subject: template.subject });
-    const merged = applyTemplate(template, lead);
-    subject = merged.subject;
-    text = merged.text;
-    html = merged.html;
-    console.log('[adminHandlers] handleSendLeadEmail: Successfully merged template with lead data.');
-  } else if (lead.outreachDraft?.subject && lead.outreachDraft?.text) {
-    console.log('[adminHandlers] handleSendLeadEmail: Using existing lead outreachDraft subject and text.');
-    subject = lead.outreachDraft.subject;
-    text = lead.outreachDraft.text;
-    html = lead.outreachDraft.html;
-  } else {
-    console.warn('[adminHandlers] handleSendLeadEmail validation failed: Provide templateSlug, subject+text or have existing outreachDraft.');
-    return {
-      status: 400,
-      body: { error: 'Provide templateSlug or subject+text' },
+    const lead = await getLead(id);
+    if (!lead) return { status: 404, body: { error: 'Lead not found' } };
+    if (!lead.email) return { status: 400, body: { error: 'Lead has no email address' } };
+
+    const { buildBrandedOutreachEmail, outreachPlainFooter } = await import('./outreachEmail');
+    const firstName =
+      lead.name?.split(' ')[0] || lead.company?.split(' ')[0] || 'there';
+    const subject = String(body.subject);
+    const text = String(body.text);
+    const html =
+      body.html ? String(body.html) : buildBrandedOutreachEmail({ firstName, bodyText: text, preheader: subject });
+
+    const resendKey = process.env.RESEND_API_KEY?.trim();
+    if (!resendKey) return { status: 503, body: { error: 'RESEND_API_KEY is not configured' } };
+
+    const { Resend } = await import('resend');
+    const resend = new Resend(resendKey);
+    const { error } = await resend.emails.send({
+      from: FROM,
+      to: [lead.email],
+      subject,
+      text: `${text}${outreachPlainFooter()}`,
+      html,
+    });
+    if (error) return { status: 400, body: { error: error.message || 'Send failed' } };
+
+    lead.outreachDraft = {
+      subject,
+      text,
+      html,
+      templateSlug,
+      lastSentAt: new Date().toISOString(),
     };
+    if (lead.status === 'new') lead.status = 'contacted';
+    await saveLead(lead);
+    return { status: 200, body: { ok: true, lead } };
   }
 
-  console.log('[adminHandlers] handleSendLeadEmail: Sending email via Resend API to:', lead.email, 'Subject:', subject);
-  const resend = new Resend(resendKey);
-  const { error } = await resend.emails.send({
-    from: FROM,
-    to: [lead.email],
-    subject,
-    text,
-    html,
-  });
-
-  if (error) {
-    console.error('[adminHandlers] handleSendLeadEmail: Resend email sending failed', error);
-    return { status: 400, body: { error: error.message || 'Send failed' } };
-  }
-
-  console.log('[adminHandlers] handleSendLeadEmail: Email sent successfully. Updating lead state...');
-  lead.outreachDraft = {
-    subject,
-    text,
-    html,
-    templateSlug: body?.templateSlug ? String(body.templateSlug) : undefined,
-    lastSentAt: new Date().toISOString(),
-  };
-  if (lead.status === 'new') {
-    console.log('[adminHandlers] handleSendLeadEmail: Changing lead status from new to contacted');
-    lead.status = 'contacted';
-  }
-  await saveLead(lead);
-  console.log('[adminHandlers] handleSendLeadEmail: Lead updated and saved successfully.');
-
-  return { status: 200, body: { ok: true, lead } };
+  const result = await sendOutreachToLead(id, { templateSlug });
+  if (!result.ok) return { status: result.status, body: { error: result.error } };
+  return { status: 200, body: { ok: true, lead: result.lead, templateSlug: result.templateSlug } };
 }

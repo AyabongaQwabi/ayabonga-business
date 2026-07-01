@@ -88,6 +88,23 @@ async function dispatchApi(server, pathname, req, res) {
       return;
     }
 
+    if (pathname === '/api/cron/outreach-daily' && (req.method === 'GET' || req.method === 'POST')) {
+      const secret = process.env.CRON_SECRET?.trim();
+      if (secret) {
+        const auth = req.headers.authorization;
+        if (auth !== `Bearer ${secret}`) {
+          json(401, { error: 'Unauthorized' });
+          return;
+        }
+      }
+      const { runDailyOutreachWorker } = await server.ssrLoadModule(
+        '/api/lib/leads/outreachWorker.ts',
+      );
+      const report = await runDailyOutreachWorker();
+      json(200, report);
+      return;
+    }
+
     if (pathname.startsWith('/api/admin')) {
       const { handleAdminRoute } = await server.ssrLoadModule(
         '/api/lib/leads/adminHandlers.ts',

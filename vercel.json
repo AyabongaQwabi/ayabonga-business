@@ -33,5 +33,16 @@
   ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
-  ]
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/outreach-daily",
+      "schedule": "0 6 * * *"
+    }
+  ],
+  "functions": {
+    "api/cron/outreach-daily.ts": {
+      "maxDuration": 300
+    }
+  }
 }

@@ -19,6 +19,7 @@ export type BrandedEmailOptions = {
   firstName: string;
   preheader?: string;
   bodyHtml: string;
+  logoUrl?: string;
   primaryCta?: { label: string; href: string };
   secondaryCta?: { label: string; href: string };
 };
@@ -37,6 +38,7 @@ function ctaButton(
 
 export function wrapBrandedEmail(options: BrandedEmailOptions): string {
   const firstName = escapeHtml(options.firstName || 'there');
+  const logoUrl = options.logoUrl || `${SITE_URL}/logo-wide.png`;
 
   const ctas = [
     options.primaryCta
@@ -69,8 +71,9 @@ export function wrapBrandedEmail(options: BrandedEmailOptions): string {
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
           <tr>
             <td style="background:${EMAIL_BRAND.navy};border-radius:16px 16px 0 0;padding:28px 28px 24px;border-bottom:3px solid ${EMAIL_BRAND.gold};">
-              <p style="margin:0 0 6px;font-family:Outfit,system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_BRAND.gold};">Ayabonga Qwabi</p>
-              <p style="margin:0;font-family:Outfit,system-ui,sans-serif;font-size:20px;font-weight:600;color:#f8fafc;line-height:1.3;">Technical co-founder as a service</p>
+              <img src="${logoUrl}" alt="Qwabi Engineering" width="200" style="display:block;max-width:200px;height:auto;margin:0 0 14px;border:0;" />
+              <p style="margin:0 0 6px;font-family:Outfit,system-ui,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${EMAIL_BRAND.gold};">Qwabi Engineering</p>
+              <p style="margin:0;font-family:Outfit,system-ui,sans-serif;font-size:18px;font-weight:600;color:#f8fafc;line-height:1.3;">Custom software and AI systems for South African teams</p>
             </td>
           </tr>
           <tr>

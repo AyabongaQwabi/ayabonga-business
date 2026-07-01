@@ -1,5 +1,13 @@
 [
   {
+    "slug": "sa-sme-custom-build",
+    "name": "SA SME custom software build",
+    "category": "direct",
+    "placeholders": ["firstName", "company", "whyNow", "yourName", "siteUrl"],
+    "subject": "Custom software for {{company}} (senior-led, SA-based)",
+    "text": "Hi {{firstName}},\n\nI noticed {{company}} is pushing a product or operations upgrade. I am {{yourName}}, senior product engineer based in Queenstown. I build custom software, mobile apps, and AI workflows for South African SMEs without agency overhead.\n\n{{whyNow}}\n\nRecent shipped work includes a full enrolment platform in 7 days (Ilithiyana Academics) and production systems for mining health, campus wallets, and bursary tooling. If you want a scoped estimate, the quote tool on the site takes about 3 minutes.\n\n{{yourName}}\n{{siteUrl}}"
+  },
+  {
     "slug": "warm-intro-ask",
     "name": "Warm intro ask (investor bridge)",
     "category": "intro_ask",
@@ -17,19 +25,19 @@
   },
   {
     "slug": "whatsapp-ai-partnership",
-    "name": "WhatsApp / AI partnership",
+    "name": "WhatsApp + AI systems",
     "category": "direct",
     "placeholders": ["firstName", "company", "whyNow", "yourName", "siteUrl"],
     "subject": "WhatsApp + LLM production work in SA",
-    "text": "Hi {{firstName}},\n\n{{whyNow}}\n\nI build production AI agents and WhatsApp-adjacent flows for SA businesses (Next.js, Supabase, guardrails for real user data and POPIA-sensitive patterns).\n\nIf you want a short call on how I would structure agent memory, handoff to humans, and deployment, I am happy to compare notes.\n\n{{yourName}}\n{{siteUrl}}"
+    "text": "Hi {{firstName}},\n\n{{whyNow}}\n\nI build production AI agents and WhatsApp-adjacent flows for SA businesses (Next.js, Supabase, guardrails for real user data and POPIA-sensitive patterns).\n\nIf you want a short call on agent memory, human handoff, and deployment, I am happy to compare notes.\n\n{{yourName}}\n{{siteUrl}}"
   },
   {
     "slug": "phase-1-sprint-offer",
-    "name": "Phase 1 sprint offer",
+    "name": "Phase 1 engineering sprint",
     "category": "direct",
     "placeholders": ["firstName", "company", "yourName", "siteUrl"],
     "subject": "Phase 1 engineering sprint (4-8 weeks)",
-    "text": "Hi {{firstName}},\n\nI run fixed-scope Phase 1 sprints for funded teams: architecture + build for one critical workflow (payments edge, agent MVP, marketplace admin, or integration hardening).\n\nTypical entry is R50k+ depending on scope. You keep the codebase and docs; no open-ended retainer required to start.\n\nWorth 20 minutes to see if {{company}} has a lane that fits this quarter?\n\n{{yourName}}\n{{siteUrl}}/technical-partnership-phase-1"
+    "text": "Hi {{firstName}},\n\nI run fixed-scope Phase 1 sprints for funded teams: architecture plus build for one critical workflow (payments edge, agent MVP, marketplace admin, or integration hardening).\n\nTypical entry is R50k+ depending on scope. You keep the codebase and docs. No open-ended retainer required to start.\n\nWorth 20 minutes to see if {{company}} has a lane that fits this quarter?\n\n{{yourName}}\n{{siteUrl}}/technical-partnership-phase-1"
   },
   {
     "slug": "follow-up-7d",
