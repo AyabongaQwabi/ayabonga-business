@@ -1,33 +1,12 @@
 import type { ReactNode } from 'react';
 import { BUSINESS_HERO_PEXELS, HERO_IMAGES } from '../lib/marketing-images';
 import { HeroImageFrame } from './HeroImageFrame';
+import { HeroMetricStrip } from './HeroMetricStrip';
 
 export const BUSINESS_HERO_LOCAL = HERO_IMAGES.businessHome;
 export { BUSINESS_HERO_PEXELS };
 
-const heroShellClass =
-  'relative overflow-hidden rounded-2xl border border-primary/15 bg-gradient-to-br from-[#0A192F] via-background to-secondary/80';
-
-function HeroShellDecorations() {
-  return (
-    <>
-      <div
-        className="pointer-events-none absolute -top-24 -right-16 h-64 w-64 rounded-full bg-primary/10 blur-3xl motion-reduce:blur-none"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-primary/5 blur-3xl motion-reduce:blur-none"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"
-        aria-hidden
-      />
-    </>
-  );
-}
-
-export type MarketingHeroLayout = 'image-right' | 'background';
+export type MarketingHeroLayout = 'image-right' | 'background' | 'statement';
 
 export interface MarketingHeroProps {
   layout?: MarketingHeroLayout;
@@ -35,12 +14,31 @@ export interface MarketingHeroProps {
   imageSrc?: string;
   imageFallbackSrc?: string;
   imageAlt?: string;
+  /** Apply navy/gold duotone on hero photography */
+  highContrastImage?: boolean;
   eyebrow?: ReactNode;
   title: ReactNode;
   description: ReactNode;
   children?: ReactNode;
   proofPoints?: ReactNode;
+  /** Show the shared real-metric strip (7 days, R50,400, etc.) */
+  showMetricStrip?: boolean;
   className?: string;
+}
+
+function MegaTitle({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className="font-display font-black text-text-primary text-balance"
+      style={{
+        fontSize: 'var(--type-display-hero)',
+        lineHeight: 'var(--leading-display)',
+        letterSpacing: '-0.04em',
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function MarketingHero({
@@ -49,22 +47,26 @@ export function MarketingHero({
   imageSrc = BUSINESS_HERO_LOCAL,
   imageFallbackSrc = BUSINESS_HERO_PEXELS,
   imageAlt = '',
+  highContrastImage = true,
   eyebrow,
   title,
   description,
   children,
   proofPoints,
+  showMetricStrip = false,
   className = '',
 }: MarketingHeroProps) {
-  if (!showImage) {
+  if (!showImage || layout === 'statement') {
     return (
       <section className={`pt-28 pb-16 md:pt-36 md:pb-20 ${className}`}>
-        <header className={heroShellClass}>
-          <HeroShellDecorations />
-          <div className="relative z-10 p-6 md:p-10 max-w-3xl">
+        <header className="relative">
+          <div className="max-w-4xl">
             {eyebrow ? <div className="mb-4">{eyebrow}</div> : null}
-            <div>{title}</div>
-            <div className="mt-6 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
+            <MegaTitle>{title}</MegaTitle>
+            <div
+              className="mt-6 text-text-secondary max-w-2xl"
+              style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
+            >
               {description}
             </div>
             {proofPoints ? <div className="mt-8">{proofPoints}</div> : null}
@@ -72,6 +74,11 @@ export function MarketingHero({
               <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">{children}</div>
             ) : null}
           </div>
+          {showMetricStrip ? (
+            <div className="mt-10 md:mt-12">
+              <HeroMetricStrip />
+            </div>
+          ) : null}
         </header>
       </section>
     );
@@ -80,7 +87,7 @@ export function MarketingHero({
   if (layout === 'background') {
     return (
       <section
-        className={`relative overflow-hidden rounded-3xl border border-border min-h-[420px] md:min-h-[480px] ${className}`}
+        className={`relative overflow-hidden min-h-[420px] md:min-h-[520px] ${className}`}
       >
         <div className="absolute inset-0" aria-hidden>
           <HeroImageFrame
@@ -90,49 +97,69 @@ export function MarketingHero({
             decorative
             fill
             priority
+            highContrast={highContrastImage}
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-[#0A192F]/95 via-[#0A192F]/88 to-[#0A192F]/70" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
         </div>
 
-        <div className="relative z-10 px-6 py-14 md:px-10 md:py-20 max-w-3xl">
+        <div className="relative z-10 px-4 sm:px-6 py-14 md:px-10 md:py-20 max-w-4xl">
           {eyebrow}
-          <div className="mt-4">{title}</div>
-          <div className="mt-6">{description}</div>
+          <div className="mt-4">
+            <MegaTitle>{title}</MegaTitle>
+          </div>
+          <div
+            className="mt-6 max-w-2xl text-text-secondary"
+            style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
+          >
+            {description}
+          </div>
           {proofPoints ? <div className="mt-8">{proofPoints}</div> : null}
           {children ? <div className="mt-10 flex flex-wrap gap-3">{children}</div> : null}
         </div>
+
+        {showMetricStrip ? (
+          <div className="relative z-10 mt-8 md:mt-12">
+            <HeroMetricStrip />
+          </div>
+        ) : null}
       </section>
     );
   }
 
   return (
     <section className={`pt-28 pb-16 md:pt-36 md:pb-20 ${className}`}>
-      <div className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-        <div>
-          {eyebrow}
-          <div className="mt-4">{title}</div>
-          <div className="mt-6">{description}</div>
-          {proofPoints ? <div className="mt-8">{proofPoints}</div> : null}
-          {children ? (
-            <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">{children}</div>
-          ) : null}
+      <div className="max-w-4xl">
+        {eyebrow}
+        <div className="mt-4">
+          <MegaTitle>{title}</MegaTitle>
         </div>
+        <div
+          className="mt-6 text-text-secondary max-w-2xl"
+          style={{ fontSize: 'var(--type-body-lg)', lineHeight: 'var(--leading-body)' }}
+        >
+          {description}
+        </div>
+        {proofPoints ? <div className="mt-8">{proofPoints}</div> : null}
+        {children ? (
+          <div className="mt-10 flex flex-col sm:flex-row flex-wrap gap-3">{children}</div>
+        ) : null}
+      </div>
 
-        <div className="relative group motion-reduce:transform-none">
-          <div
-            className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-primary/40 to-accent/40 blur opacity-30 group-hover:opacity-50 transition-opacity duration-300 motion-reduce:transition-none motion-reduce:opacity-30"
-            aria-hidden
-          />
-          <HeroImageFrame
-            src={imageSrc}
-            fallbackSrc={imageFallbackSrc}
-            alt={imageAlt}
-            aspect="3/2"
-            priority
-            frameClassName="rounded-2xl border border-white/10 shadow-2xl"
-          />
+      {showMetricStrip ? (
+        <div className="mt-10 md:mt-12">
+          <HeroMetricStrip />
         </div>
+      ) : null}
+
+      <div className="relative mt-10 md:mt-12 -mx-4 sm:-mx-6 overflow-hidden">
+        <HeroImageFrame
+          src={imageSrc}
+          fallbackSrc={imageFallbackSrc}
+          alt={imageAlt}
+          aspect="3/2"
+          priority
+          highContrast={highContrastImage}
+          frameClassName="rounded-none"
+        />
       </div>
     </section>
   );

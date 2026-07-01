@@ -1,12 +1,14 @@
-/** Default hero imagery by route path (local WebP under /public/images/heroes). */
+import { HERO_IMAGES as MARKETING_HERO_IMAGES, TEAM_IMAGES } from './marketing-images';
+
+/** Default hero imagery by route path (team photos + local heroes under /public). */
 export const HERO_IMAGES = {
-  appCost: '/images/heroes/app-development-cost.jpg',
-  mvpDeveloper: '/images/heroes/mvp-developer.jpg',
-  chooseDeveloper: '/images/heroes/mvp-developer.jpg',
-  customSoftware: '/images/heroes/custom-software.jpg',
-  servicesHub: '/images/heroes/services.jpg',
-  ayabongaDesk: '/images/heroes/technical-cofounder.jpg',
-  mobileApp: '/images/heroes/mobile-app.jpg',
+  appCost: MARKETING_HERO_IMAGES.costGuide,
+  mvpDeveloper: MARKETING_HERO_IMAGES.mvpDeveloper,
+  chooseDeveloper: MARKETING_HERO_IMAGES.mvpDeveloper,
+  customSoftware: MARKETING_HERO_IMAGES.customSoftware,
+  servicesHub: MARKETING_HERO_IMAGES.services,
+  ayabongaDesk: MARKETING_HERO_IMAGES.technicalCofounder,
+  mobileApp: MARKETING_HERO_IMAGES.mobileApp,
 } as const;
 
 const serviceHeroByPath: Record<string, string> = {
@@ -23,7 +25,7 @@ const serviceHeroByPath: Record<string, string> = {
   '/ai-software-development-company': HERO_IMAGES.mvpDeveloper,
   '/bespoke-ai-solutions': HERO_IMAGES.mvpDeveloper,
   '/ai-agent-development-south-africa': HERO_IMAGES.mvpDeveloper,
-  '/services/ai-powered-rapid-app-development': HERO_IMAGES.mvpDeveloper,
+  '/services/ai-powered-rapid-app-development': TEAM_IMAGES.teamArchitecture,
 };
 
 export function heroImageForServicePath(path: string, override?: string): string {
