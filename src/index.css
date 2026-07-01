@@ -29,6 +29,7 @@
     --color-info: #3b82f6;
 
     /* === TYPE SCALE === */
+    --type-display-mega: clamp(4rem, 11vw, 11rem);
     --type-display-hero: clamp(3.5rem, 9vw, 9rem);
     --type-display-lg: clamp(2.75rem, 6vw, 6rem);
     --type-display-md: clamp(2rem, 4vw, 4rem);
@@ -105,7 +106,9 @@
       scroll-behavior: auto !important;
     }
 
-    .hero-word {
+    .hero-word,
+    .hero-metric-block,
+    .hero-team-showcase {
       opacity: 1 !important;
       transform: none !important;
     }
