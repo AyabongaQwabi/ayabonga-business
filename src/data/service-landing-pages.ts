@@ -10,6 +10,7 @@ import {
   Layout,
   Network,
   Package,
+  ShieldCheck,
   ShoppingCart,
   Smartphone,
   Sparkles,
@@ -740,9 +741,9 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
     slug: 'ai-powered-rapid-app-development',
     path: '/services/ai-powered-rapid-app-development',
     metaTitle:
-      'AI-Powered Rapid App Development South Africa | Accelerated MVPs',
+      'Rapid AI App Development South Africa | Launch in 10 Days',
     metaDescription:
-      'Accelerated custom application and MVP development using documentation-driven AI engineering workflows. Shipped in 2-4 weeks with senior-led quality gates.',
+      'Need an app out fast? Rapid AI builds ship full platforms in as little as 10 working days. Documentation-driven engineering, not vibe coding. Senior engineers own every line.',
     keywords: [
       'ai app development',
       'rapid app development south africa',
@@ -750,15 +751,22 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       'mvp development south africa',
       'documentation driven development',
       'fast mvp build',
+      'launch app fast south africa',
+      'app in 10 days',
     ],
-    eyebrow: 'Accelerated Delivery · Qwabi Engineering',
-    h1: 'AI-Powered Rapid App Development',
+    eyebrow: 'Rapid AI Builds · For Founders in a Rush',
+    h1: 'Launch a Full App in 10 Days',
     heroSubhead:
-      'Build high-fidelity MVPs and bespoke business systems in weeks, not months. By combining senior-led software architecture with advanced AI-assisted engineering pipelines, we ship production-grade code at a fraction of standard timelines.',
+      'If you need to deploy fast, Rapid AI Builds get a full platform live in as little as 10 working days. This is not vibe coding, it is documentation-driven engineering: senior software engineers write the specs, direct the build, and review every line before it ships. If your deadline is real, we make it possible.',
     heroImage: HERO_IMAGES.mvpDeveloper,
     heroImageAlt: 'Senior software architect designing an AI-accelerated application architecture',
     serviceType: 'AI-Powered Rapid App Development',
     services: [
+      {
+        icon: ShieldCheck,
+        title: 'Documentation-Driven, Not Vibe-Coded',
+        copy: 'Every rapid build starts with a written spec: user flows, data models, and acceptance criteria. AI speeds up implementation. It does not replace the engineering judgment that keeps your app from breaking in production.',
+      },
       {
         icon: Cpu,
         title: 'AI-Assisted Boilerplate & Setup',
@@ -766,8 +774,8 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       },
       {
         icon: Zap,
-        title: 'Documentation-Driven Engineering',
-        copy: 'Rigid specs and clear PRDs are parsed directly into high-fidelity code. If you lack complete specs, our scoping phase prepares them so implementation is continuous and error-free.',
+        title: 'Rigid Specs, Continuous Build',
+        copy: 'Clear PRDs are parsed directly into high-fidelity code. If you lack complete specs, our scoping phase prepares them so implementation runs without interruption.',
       },
       {
         icon: ClipboardList,
@@ -868,6 +876,10 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
         question: 'Do we get support and updates after launch?',
         answer: 'Yes. Once shipped, rapid builds can seamlessly transition to our standard operational retainers or be handed over to your internal team with full documentation and clean repositories.',
       },
+      {
+        question: 'Is this just vibe coding with AI tools?',
+        answer: 'No. Vibe coding means prompting an AI with no spec and hoping the output holds together. Rapid AI builds start with a written PRD, data schema, and wireframes. AI accelerates typing the code. A senior engineer still designs the architecture, reviews every commit, and owns the parts that break in production if nobody is watching: auth, payments, and data integrity.',
+      },
     ],
     relatedLinks: [
       { label: 'Project scope estimator', path: '/get-a-quote' },
@@ -875,8 +887,8 @@ export const serviceLandingPages: ServiceLandingPageConfig[] = [
       { label: 'Custom software development', path: '/custom-software-development-south-africa' },
       { label: 'All engineering services', path: '/services' },
     ],
-    ctaHeadline: 'Have a clear specification ready to build?',
-    ctaSubhead: 'Share your brief on WhatsApp or run it through our rapid quote wizard to see if your app qualifies for an accelerated build.',
+    ctaHeadline: 'Need to launch fast?',
+    ctaSubhead: 'Send your deadline and the core problem your app solves on WhatsApp. We tell you honestly if a 10-day build is realistic and what it costs in ZAR.',
   },
   {
     slug: 'web-development-south-africa',
