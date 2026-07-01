@@ -77,7 +77,9 @@ function hasUnderscoreSegment(relPath) {
 
 function apiRouteFromFile(relPath) {
   const inner = relPath.replace(/^api\//, '').replace(API_FILE, '');
-  if (inner === '[...path]' || inner.startsWith('[...path].')) return '/api/*';
+  if (inner === 'index' || inner === '[...path]' || inner.startsWith('[...path].')) {
+    return '/api/* (router)';
+  }
   return `/api/${inner.replace(/\\/g, '/')}`;
 }
 
