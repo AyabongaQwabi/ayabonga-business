@@ -71,58 +71,9 @@ async function dispatchApi(server, pathname, req, res) {
   };
 
   try {
-    if (pathname === '/api/send' && req.method === 'POST') {
-      const mod = await server.ssrLoadModule('/api/lib/handleQuoteSend.ts');
-      const parsed = mod.parseQuoteSendBody(vercelReq.body);
-      const result = await mod.handleQuoteSend(parsed);
-      json(result.status, result.body);
-      return;
-    }
-
-    if (pathname === '/api/leads/capture' && req.method === 'POST') {
-      const mod = await server.ssrLoadModule('/api/lib/leads/captureLead.ts');
-      const { getClientIp } = await server.ssrLoadModule('/api/lib/http.ts');
-      const body = mod.parseCaptureBody(vercelReq.body);
-      const result = await mod.handleLeadCapture(body, { ip: getClientIp(vercelReq) });
-      json(result.status, result.body);
-      return;
-    }
-
-    if (pathname === '/api/cron/outreach-daily' && (req.method === 'GET' || req.method === 'POST')) {
-      const secret = process.env.CRON_SECRET?.trim();
-      if (secret) {
-        const auth = req.headers.authorization;
-        if (auth !== `Bearer ${secret}`) {
-          json(401, { error: 'Unauthorized' });
-          return;
-        }
-      }
-      const { runDailyOutreachWorker } = await server.ssrLoadModule(
-        '/api/lib/leads/outreachWorker.ts',
-      );
-      const report = await runDailyOutreachWorker();
-      json(200, report);
-      return;
-    }
-
-    if (pathname.startsWith('/api/admin')) {
-      const { handleAdminRoute } = await server.ssrLoadModule(
-        '/api/lib/leads/adminHandlers.ts',
-      );
-      const { getApiPath } = await server.ssrLoadModule('/api/lib/http.ts');
-      const segments = getApiPath(vercelReq).replace(/^admin\/?/, '').split('/').filter(Boolean);
-      const parsed =
-        vercelReq.body && typeof vercelReq.body === 'object'
-          ? vercelReq.body
-          : null;
-      const result = await handleAdminRoute(vercelReq, segments, parsed);
-      json(result.status, result.body);
-      return;
-    }
-
-    res.statusCode = 404;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Not found' }));
+    const { dispatchApiRequest } = await server.ssrLoadModule('/api/lib/routeApi.ts');
+    const result = await dispatchApiRequest(vercelReq);
+    json(result.status, result.body);
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.error(`[local-api] ${pathname} failed:`, err);
@@ -152,17 +103,13 @@ export function localApiPlugin() {
             `\n[local-api] Missing: ${hints.join(', ')}. Add to .env.local and restart.\n`,
           );
         } else if (process.env.NODE_ENV === 'development') {
-          console.log('[local-api] /api/send, /api/leads/capture, /api/admin/* ready\n');
+          console.log('[local-api] /api/* ready (send, leads, admin, cron)\n');
         }
       }
 
       server.middlewares.use(async (req, res, next) => {
         const pathname = req.url?.split('?')[0];
-        if (
-          pathname !== '/api/send' &&
-          pathname !== '/api/leads/capture' &&
-          !pathname?.startsWith('/api/admin')
-        ) {
+        if (!pathname?.startsWith('/api/')) {
           return next();
         }
 

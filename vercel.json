@@ -41,7 +41,7 @@
     }
   ],
   "functions": {
-    "api/cron/outreach-daily.ts": {
+    "api/[...path].ts": {
       "maxDuration": 300
     }
   }
