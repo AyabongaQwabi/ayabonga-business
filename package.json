@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:vercel": "vercel dev",
-    "build": "node scripts/list-vercel-functions.mjs && vite build && node scripts/prerender-developers.mjs && node scripts/generate-sitemap.mjs",
+    "build": "node scripts/bundle-api.mjs && node scripts/list-vercel-functions.mjs && vite build && node scripts/prerender-developers.mjs && node scripts/generate-sitemap.mjs",
+    "bundle:api": "node scripts/bundle-api.mjs",
     "vercel:functions": "node scripts/list-vercel-functions.mjs",
     "prerender:developers": "node scripts/prerender-developers.mjs",
     "lint": "eslint .",
@@ -52,6 +53,7 @@
     "@vercel/node": "^5.8.1",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
+    "esbuild": "^0.25.0",
     "eslint": "^9.9.1",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.11",

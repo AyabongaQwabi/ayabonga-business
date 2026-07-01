@@ -77,7 +77,12 @@ function hasUnderscoreSegment(relPath) {
 
 function apiRouteFromFile(relPath) {
   const inner = relPath.replace(/^api\//, '').replace(API_FILE, '');
-  if (inner === 'index' || inner === '[...path]' || inner.startsWith('[...path].')) {
+  if (
+    inner === 'index' ||
+    inner === '[...path]' ||
+    inner.startsWith('[...path].') ||
+    inner === '_entry'
+  ) {
     return '/api/* (router)';
   }
   return `/api/${inner.replace(/\\/g, '/')}`;
@@ -139,6 +144,18 @@ function detectFunctions(files, vercelignore) {
       });
       continue;
     }
+    if (file === 'api/_entry.ts' || file === 'api/_entry.js') {
+      if (!files.includes('api/index.js') && !fs.existsSync(path.join(root, 'api/index.js'))) {
+        functions.push({
+          file: 'api/index.js (from bundle)',
+          kind: 'Vercel /api',
+          route: '/api/* (router)' + ignoredNote,
+        });
+      }
+      skipped.push({ file, reason: 'bundle source (deployed as api/index.js)' });
+      continue;
+    }
+
     if (hasUnderscoreSegment(file)) {
       skipped.push({ file, reason: 'underscore segment (Vercel ignores, e.g. api/_lib/)' });
       continue;
@@ -153,6 +170,17 @@ function detectFunctions(files, vercelignore) {
       kind: 'Vercel /api',
       route: apiRouteFromFile(file) + ignoredNote,
     });
+  }
+
+  if (fs.existsSync(path.join(root, 'api/index.js'))) {
+    const already = functions.some((fn) => fn.file === 'api/index.js' || fn.file.includes('index.js'));
+    if (!already) {
+      functions.push({
+        file: 'api/index.js',
+        kind: 'Vercel /api',
+        route: '/api/* (router)',
+      });
+    }
   }
 
   return { functions, skipped };
