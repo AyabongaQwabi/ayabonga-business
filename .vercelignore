@@ -1,0 +1,5 @@
+# Skill sandboxes ship nested Next.js app/api routes — Vercel counts each as a
+# serverless function (Hobby limit: 12). Not part of business.qwabi.co.za.
+.cursor
+.agents
+.claude
