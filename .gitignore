@@ -31,4 +31,5 @@ dist-ssr
 # Nested skill sandboxes (Next.js app/api routes count as Vercel serverless functions)
 .agents/skills/openclaw-skills-write-my-blog/platform/
 .cursor/skills/openclaw-skills-write-my-blog/platform/
-./agents
+agents/.agents/skills/openclaw-skills-write-my-blog/platform/
+agents/.cursor/skills/openclaw-skills-write-my-blog/platform/

@@ -1,7 +1,11 @@
-# Skill sandboxes include Next.js app/api routes (each = 1 serverless function).
-# Also untracked via .gitignore — keep in sync.
+# Skill sandboxes ship Next.js app/api routes (each = 1 serverless function).
+# Git deploy ignores .vercelignore for function detection — keep out of git.
 .agents/skills/openclaw-skills-write-my-blog/platform
 .cursor/skills/openclaw-skills-write-my-blog/platform
+agents/.agents/skills/openclaw-skills-write-my-blog/platform
+agents/.cursor/skills/openclaw-skills-write-my-blog/platform
 .cursor
 .agents
+agents/.agents/skills/openclaw-skills-write-my-blog/platform
+agents/.cursor/skills/openclaw-skills-write-my-blog/platform
 .claude

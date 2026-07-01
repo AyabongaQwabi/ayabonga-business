@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:vercel": "vercel dev",
-    "build": "vite build && node scripts/prerender-developers.mjs && node scripts/generate-sitemap.mjs",
+    "build": "node scripts/list-vercel-functions.mjs && vite build && node scripts/prerender-developers.mjs && node scripts/generate-sitemap.mjs",
+    "vercel:functions": "node scripts/list-vercel-functions.mjs",
     "prerender:developers": "node scripts/prerender-developers.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
