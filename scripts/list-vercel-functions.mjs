@@ -110,6 +110,15 @@ function detectFunctions(files, vercelignore) {
   const functions = [];
   const skipped = [];
 
+  const buildOutputHandler = path.join(root, '.vercel/output/functions/api.func/index.js');
+  if (fs.existsSync(buildOutputHandler)) {
+    functions.push({
+      file: '.vercel/output/functions/api.func/index.js',
+      kind: 'Build Output API',
+      route: '/api/* (router)',
+    });
+  }
+
   for (const file of files) {
     const ignoredNote = matchesIgnore(file, vercelignore)
       ? ' (.vercelignore — may still count on Git deploy)'
