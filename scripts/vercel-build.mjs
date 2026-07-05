@@ -45,7 +45,7 @@ await esbuild.build({
   target: 'node20',
   format: 'cjs',
   outfile: path.join(funcDir, 'index.js'),
-  packages: 'external',
+  // Bundle npm deps — .func output has no project node_modules on Vercel.
   logLevel: 'info',
 });
 
