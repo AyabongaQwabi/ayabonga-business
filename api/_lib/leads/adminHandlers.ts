@@ -13,11 +13,10 @@ import {
   saveTemplate,
 } from './blobStore';
 import { sendOutreachToLead } from './sendOutreach';
+import { getSentEmail, listSentEmails, archiveSentEmail } from './sentEmailArchive';
+import { getResendFromAddress } from '../emailFrom';
 import type { EmailTemplate, LeadRecord, LeadStatus } from './types';
 import { defaultEmailTemplates } from './defaultTemplates';
-
-const FROM =
-  process.env.RESEND_FROM_EMAIL || 'Ayabonga Qwabi <onboarding@qwabi.co.za>';
 
 const STATUSES = new Set<LeadStatus>([
   'new',
@@ -141,6 +140,17 @@ export async function handleAdminRoute(
     return handlePutTemplate(b, body);
   }
 
+  if (a === 'sent-emails' && !b && req.method === 'GET') {
+    const entries = await listSentEmails(200);
+    return { status: 200, body: { entries } };
+  }
+
+  if (a === 'sent-emails' && b && req.method === 'GET') {
+    const record = await getSentEmail(b);
+    if (!record) return { status: 404, body: { error: 'Sent email not found' } };
+    return { status: 200, body: { record } };
+  }
+
   return { status: 404, body: { error: 'Not found' } };
 }
 
@@ -238,27 +248,56 @@ async function handleSendLeadEmail(
     const resendKey = process.env.RESEND_API_KEY?.trim();
     if (!resendKey) return { status: 503, body: { error: 'RESEND_API_KEY is not configured' } };
 
+    const from = getResendFromAddress();
+    const plainText = `${text}${outreachPlainFooter()}`;
     const { Resend } = await import('resend');
     const resend = new Resend(resendKey);
-    const { error } = await resend.emails.send({
-      from: FROM,
+    const { data, error } = await resend.emails.send({
+      from,
       to: [lead.email],
       subject,
-      text: `${text}${outreachPlainFooter()}`,
+      text: plainText,
       html,
     });
     if (error) return { status: 400, body: { error: error.message || 'Send failed' } };
 
+    const sentAt = new Date().toISOString();
+    const archived = await archiveSentEmail({
+      leadId: lead.id,
+      to: lead.email,
+      from,
+      subject,
+      text: plainText,
+      html,
+      templateSlug: templateSlug ?? 'custom',
+      channel: 'email',
+      resendMessageId: data?.id,
+      sentAt,
+    });
+
     lead.outreachDraft = {
       subject,
-      text,
+      text: plainText,
       html,
       templateSlug,
-      lastSentAt: new Date().toISOString(),
+      lastSentAt: sentAt,
     };
+    lead.sendHistory = [
+      ...(lead.sendHistory ?? []),
+      {
+        sentAt,
+        templateSlug: templateSlug ?? 'custom',
+        email: lead.email,
+        channel: 'email',
+        subject,
+        from,
+        archiveId: archived.id,
+        resendMessageId: data?.id,
+      },
+    ];
     if (lead.status === 'new') lead.status = 'contacted';
     await saveLead(lead);
-    return { status: 200, body: { ok: true, lead } };
+    return { status: 200, body: { ok: true, lead, archiveId: archived.id } };
   }
 
   const result = await sendOutreachToLead(id, { templateSlug });

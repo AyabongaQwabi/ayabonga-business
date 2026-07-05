@@ -1,12 +1,11 @@
 import { Resend } from 'resend';
+import { getResendFromAddress } from '../emailFrom';
 import { getLead, getTemplate, listTemplates, saveLead, saveTemplate } from './blobStore';
 import { applyTemplate } from './mergeTemplate';
 import { buildBrandedOutreachEmail, outreachPlainFooter } from './outreachEmail';
+import { archiveSentEmail } from './sentEmailArchive';
 import { defaultEmailTemplates } from './defaultTemplates';
 import type { EmailTemplate, LeadRecord } from './types';
-
-const FROM =
-  process.env.RESEND_FROM_EMAIL || 'Qwabi Engineering <onboarding@qwabi.co.za>';
 
 export function pickTemplateSlugForLead(lead: LeadRecord): string {
   const verticals = lead.verticals ?? [];
@@ -42,7 +41,7 @@ export function pickTemplateSlugForLead(lead: LeadRecord): string {
     return 'direct-founder-post-funding';
   }
 
-  if (lead.tier === 3 || lead.score && lead.score < 72) {
+  if (lead.tier === 3 || (lead.score && lead.score < 72)) {
     return 'sa-sme-custom-build';
   }
 
@@ -65,7 +64,7 @@ export async function ensureDefaultTemplates(): Promise<void> {
 }
 
 export type SendOutreachResult =
-  | { ok: true; lead: LeadRecord; templateSlug: string }
+  | { ok: true; lead: LeadRecord; templateSlug: string; archiveId: string }
   | { ok: false; status: number; error: string };
 
 export async function sendOutreachToLead(
@@ -100,10 +99,11 @@ export async function sendOutreachToLead(
       preheader: merged.subject,
     });
   const text = `${merged.text}${outreachPlainFooter()}`;
+  const from = getResendFromAddress();
 
   const resend = new Resend(resendKey);
-  const { error } = await resend.emails.send({
-    from: FROM,
+  const { data, error } = await resend.emails.send({
+    from,
     to: [lead.email],
     subject: merged.subject,
     text,
@@ -118,6 +118,19 @@ export async function sendOutreachToLead(
   }
 
   const sentAt = new Date().toISOString();
+  const archived = await archiveSentEmail({
+    leadId: lead.id,
+    to: lead.email,
+    from,
+    subject: merged.subject,
+    text,
+    html,
+    templateSlug,
+    channel: 'email',
+    resendMessageId: data?.id,
+    sentAt,
+  });
+
   lead.outreachDraft = {
     subject: merged.subject,
     text,
@@ -127,10 +140,19 @@ export async function sendOutreachToLead(
   };
   lead.sendHistory = [
     ...(lead.sendHistory ?? []),
-    { sentAt, templateSlug, email: lead.email, channel: 'email' },
+    {
+      sentAt,
+      templateSlug,
+      email: lead.email,
+      channel: 'email',
+      subject: merged.subject,
+      from,
+      archiveId: archived.id,
+      resendMessageId: data?.id,
+    },
   ];
   if (lead.status === 'new') lead.status = 'contacted';
   await saveLead(lead);
 
-  return { ok: true, lead, templateSlug };
+  return { ok: true, lead, templateSlug, archiveId: archived.id };
 }

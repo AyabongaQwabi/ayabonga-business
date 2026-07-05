@@ -7,9 +7,8 @@ import {
   scheduleAtDaysFromNow,
 } from './founderNurtureEmails';
 import { persistQuoteLead } from './leads/captureLead';
+import { getResendFromAddress } from './emailFrom';
 
-const FROM =
-  process.env.RESEND_FROM_EMAIL || 'Ayabonga Qwabi <onboarding@qwabi.co.za>';
 const NOTIFY_TO = process.env.NOTIFY_EMAIL || 'ayabonga@qwabi.co.za';
 const SITE_HOST =
   process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
@@ -125,7 +124,7 @@ async function scheduleNurtureEmails(
       scheduledAt,
     });
     const { error } = await resend.emails.send({
-      from: FROM,
+      from: getResendFromAddress(),
       to: [body.email],
       subject: item.subject,
       html: item.html,
@@ -211,12 +210,12 @@ export async function handleQuoteSend(
 
     const emailSubject = `Your project scope summary (${new URL(SITE_HOST).host})`;
     console.log('[handleQuoteSend] 2. Sending project scope summary email to client...', {
-      from: FROM,
+      from: getResendFromAddress(),
       to: body.email,
       subject: emailSubject,
     });
     const { error: quoteError } = await resend.emails.send({
-      from: FROM,
+      from: getResendFromAddress(),
       to: [body.email],
       subject: emailSubject,
       html: buildQuoteEmailHtml(body),
@@ -242,7 +241,7 @@ export async function handleQuoteSend(
     });
     const internal = buildInternalLeadEmail(body);
     const fromAddress =
-      FROM.match(/<([^>]+)>/)?.[1] || 'onboarding@qwabi.co.za';
+      getResendFromAddress().match(/<([^>]+)>/)?.[1] || 'aya@qwabi.co.za';
 
     const { error: internalError } = await resend.emails.send({
       from: `Quote tool <${fromAddress}>`,

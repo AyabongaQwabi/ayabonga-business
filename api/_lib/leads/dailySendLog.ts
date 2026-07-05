@@ -4,6 +4,9 @@ export type DailySendLogEntry = {
   leadId: string;
   email: string;
   templateSlug: string;
+  subject: string;
+  from: string;
+  archiveId?: string;
   sentAt: string;
 };
 

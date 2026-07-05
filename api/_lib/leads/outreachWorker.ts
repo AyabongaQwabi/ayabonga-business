@@ -150,6 +150,9 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
       leadId: lead.id,
       email: lead.email!,
       templateSlug: result.templateSlug,
+      subject: result.lead.outreachDraft?.subject ?? '',
+      from: result.lead.sendHistory?.at(-1)?.from ?? '',
+      archiveId: result.archiveId,
       sentAt: new Date().toISOString(),
     });
   }

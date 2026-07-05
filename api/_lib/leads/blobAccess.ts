@@ -4,5 +4,6 @@ import type { BlobAccessType } from '@vercel/blob';
 export function getBlobAccess(): BlobAccessType {
   const raw = process.env.BLOB_ACCESS?.trim().toLowerCase();
   if (raw === 'public' || raw === 'private') return raw;
-  return 'private';
+  // Default public — most Vercel Blob stores on Hobby are public.
+  return 'public';
 }

@@ -34,6 +34,10 @@ export type SendHistoryEntry = {
   templateSlug: string;
   email: string;
   channel: 'email';
+  subject: string;
+  from: string;
+  archiveId?: string;
+  resendMessageId?: string;
 };
 
 export type LeadRecord = {
