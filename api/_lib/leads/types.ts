@@ -1,4 +1,7 @@
 import type { FounderStage, SendQuoteRequestBody } from '../types';
+import type { OutreachCampaign } from './campaigns';
+
+export type { OutreachCampaign };
 
 export type LeadKind = 'inbound' | 'outbound';
 export type LeadStatus =
@@ -43,6 +46,8 @@ export type SendHistoryEntry = {
 export type LeadRecord = {
   id: string;
   kind: LeadKind;
+  /** cofounder = startup/founder track; cold = services sales track */
+  campaign?: OutreachCampaign;
   status: LeadStatus;
   createdAt: string;
   updatedAt: string;
@@ -77,6 +82,7 @@ export type LeadRecord = {
 export type LeadIndexEntry = {
   id: string;
   kind: LeadKind;
+  campaign?: OutreachCampaign;
   status: LeadStatus;
   name?: string;
   email?: string;

@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 import { createLead, getLeadsIndex } from './blobStore';
+import type { OutreachCampaign } from './campaigns';
+import { nextDiscoveryQuery } from './discoveryCursor';
 import { discoverEmailForWebsiteDetailed } from './emailEnrichment';
 import { apiLog } from '../apiLog';
-import { braveSearchApiKey, DISCOVERY_QUERIES } from './outreachConfig';
 import type { LeadRecord } from './types';
 
 export type SearchResult = {
@@ -16,13 +17,6 @@ export type DiscoveryResult = {
   results: SearchResult[];
 };
 
-function dedupeKey(company: string, url: string): string {
-  return createHash('sha256')
-    .update(`${company.toLowerCase()}|${url.toLowerCase()}`)
-    .digest('hex')
-    .slice(0, 16);
-}
-
 function companyFromTitle(title: string): string {
   const cleaned = title
     .replace(/\s*[-|–].*$/, '')
@@ -31,25 +25,28 @@ function companyFromTitle(title: string): string {
   return cleaned.slice(0, 80) || 'Unknown company';
 }
 
-function scoreFromSnippet(snippet: string, title: string): number {
-  let score = 55;
+function scoreFromSnippet(snippet: string, title: string, campaign: OutreachCampaign): number {
+  let score = campaign === 'cold' ? 50 : 55;
   const blob = `${title} ${snippet}`.toLowerCase();
   const signals = [
     ['software', 8],
     ['app', 6],
+    ['web', 5],
     ['platform', 6],
-    ['startup', 7],
+    ['startup', campaign === 'cofounder' ? 7 : 3],
+    ['business', campaign === 'cold' ? 6 : 2],
+    ['company', campaign === 'cold' ? 5 : 2],
     ['fintech', 7],
     ['ai', 5],
     ['marketplace', 6],
     ['south africa', 8],
     ['cape town', 5],
     ['johannesburg', 5],
-    ['founder', 6],
+    ['founder', campaign === 'cofounder' ? 6 : 2],
     ['ceo', 5],
-    ['cto', 5],
     ['development', 7],
     ['engineering', 6],
+    ['custom', 5],
   ] as const;
   for (const [word, pts] of signals) {
     if (blob.includes(word)) score += pts;
@@ -58,7 +55,8 @@ function scoreFromSnippet(snippet: string, title: string): number {
 }
 
 async function searchBrave(query: string): Promise<SearchResult[]> {
-  const key = braveSearchApiKey();
+  const key =
+    process.env.BRAVE_SEARCH_API_KEY?.trim() || process.env.BRAVE_API_KEY?.trim();
   if (!key) return [];
 
   const url = new URL('https://api.search.brave.com/res/v1/web/search');
@@ -68,10 +66,7 @@ async function searchBrave(query: string): Promise<SearchResult[]> {
   url.searchParams.set('search_lang', 'en');
 
   const res = await fetch(url, {
-    headers: {
-      Accept: 'application/json',
-      'X-Subscription-Token': key,
-    },
+    headers: { Accept: 'application/json', 'X-Subscription-Token': key },
   });
   if (!res.ok) return [];
 
@@ -81,11 +76,7 @@ async function searchBrave(query: string): Promise<SearchResult[]> {
 
   return (data.web?.results ?? [])
     .filter((r) => r.url && r.title)
-    .map((r) => ({
-      title: r.title!,
-      link: r.url!,
-      snippet: r.description ?? '',
-    }));
+    .map((r) => ({ title: r.title!, link: r.url!, snippet: r.description ?? '' }));
 }
 
 async function searchSerpApi(query: string): Promise<SearchResult[]> {
@@ -106,11 +97,7 @@ async function searchSerpApi(query: string): Promise<SearchResult[]> {
   };
   return (data.organic_results ?? [])
     .filter((r) => r.link && r.title)
-    .map((r) => ({
-      title: r.title!,
-      link: r.link!,
-      snippet: r.snippet ?? '',
-    }));
+    .map((r) => ({ title: r.title!, link: r.link!, snippet: r.snippet ?? '' }));
 }
 
 async function searchGoogleCse(query: string): Promise<SearchResult[]> {
@@ -132,14 +119,9 @@ async function searchGoogleCse(query: string): Promise<SearchResult[]> {
   };
   return (data.items ?? [])
     .filter((r) => r.link && r.title)
-    .map((r) => ({
-      title: r.title!,
-      link: r.link!,
-      snippet: r.snippet ?? '',
-    }));
+    .map((r) => ({ title: r.title!, link: r.link!, snippet: r.snippet ?? '' }));
 }
 
-/** Tries Brave (free tier) first, then SerpAPI, then Google CSE. */
 export async function runWebSearch(query: string): Promise<DiscoveryResult> {
   const providers = [
     { name: 'brave', search: searchBrave },
@@ -158,25 +140,30 @@ export async function runWebSearch(query: string): Promise<DiscoveryResult> {
   return { query, results: [] };
 }
 
-export function pickDiscoveryQuery(): string {
-  const day = Math.floor(Date.now() / 86_400_000);
-  return DISCOVERY_QUERIES[day % DISCOVERY_QUERIES.length];
-}
-
-export async function discoverLeadsFromSearch(maxNew = 15): Promise<{
+export async function discoverLeadsFromSearch(options: {
+  campaign: OutreachCampaign;
+  maxNew?: number;
+  query?: string;
+}): Promise<{
   created: LeadRecord[];
-  enriched: number;
+  skippedNoEmail: number;
   query: string;
 }> {
-  const query = pickDiscoveryQuery();
+  const maxNew = options.maxNew ?? 15;
+  const query = options.query ?? (await nextDiscoveryQuery(options.campaign));
   const { results } = await runWebSearch(query);
   const index = await getLeadsIndex();
-  const existingKeys = new Set(
-    index.entries.map((e) => `${(e.company ?? '').toLowerCase()}|${(e.email ?? '').toLowerCase()}`),
+  const existingEmails = new Set(
+    index.entries.map((e) => (e.email ?? '').toLowerCase()).filter(Boolean),
+  );
+  const existingUrls = new Set(
+    index.entries
+      .map((e) => e.sourcePage?.toLowerCase())
+      .filter(Boolean) as string[],
   );
 
   const created: LeadRecord[] = [];
-  let enriched = 0;
+  let skippedNoEmail = 0;
 
   for (const result of results) {
     if (created.length >= maxNew) break;
@@ -188,54 +175,63 @@ export async function discoverLeadsFromSearch(maxNew = 15): Promise<{
       continue;
     }
 
-    if (/linkedin\.com|facebook\.com|twitter\.com|x\.com|instagram\.com|wikipedia\.org/i.test(host)) {
+    if (/linkedin\.com|facebook\.com|twitter\.com|x\.com|instagram\.com|wikipedia\.org|youtube\.com/i.test(host)) {
       continue;
     }
 
-    const company = companyFromTitle(result.title);
-    const key = `${company.toLowerCase()}|`;
-    if (existingKeys.has(key)) continue;
+    const linkKey = result.link.toLowerCase();
+    if (existingUrls.has(linkKey)) continue;
 
-    let email: string | null = null;
+    const company = companyFromTitle(result.title);
     const enrichment = await discoverEmailForWebsiteDetailed(result.link);
-    email = enrichment.email;
-    if (email) enriched += 1;
-    else {
-      apiLog('outreach/discovery', 'lead without email', {
+    const email = enrichment.email;
+
+    if (!email) {
+      skippedNoEmail += 1;
+      apiLog('outreach/discovery', 'skipped (no email, not saved)', {
+        campaign: options.campaign,
         company,
         link: result.link,
         reason: enrichment.rejectedReason,
-        rawEmails: enrichment.rawCount,
-        pagesFetched: enrichment.pagesFetched,
-        foundButNotUsed: enrichment.allEmails,
+        rawCount: enrichment.rawCount,
       });
+      continue;
     }
 
-    const score = scoreFromSnippet(result.snippet, result.title);
+    const emailKey = email.toLowerCase();
+    if (existingEmails.has(emailKey)) continue;
+
     const altEmails = enrichment.allEmails.filter((e) => e !== email);
+    const score = scoreFromSnippet(result.snippet, result.title, options.campaign);
     const lead = await createLead({
       kind: 'outbound',
-      status: email ? 'qualified' : 'new',
-      name: undefined,
-      email: email ?? undefined,
+      campaign: options.campaign,
+      status: 'qualified',
+      email,
       alternativeEmails: altEmails.length ? altEmails : undefined,
       company,
-      role: undefined,
       score,
       tier: score >= 85 ? 1 : score >= 70 ? 2 : 3,
       verticals: inferVerticals(result.snippet + ' ' + result.title),
       whyNow: result.snippet.slice(0, 280) || `Found via search: ${query}`,
       sourcePage: result.link,
-      formType: 'discovery_search',
-      suggestedChannel: email ? 'email' : 'linkedin',
-      notes: `Auto-discovered ${new Date().toISOString().slice(0, 10)} · query: ${query}`,
+      formType: options.campaign === 'cold' ? 'discovery_cold' : 'discovery_cofounder',
+      suggestedChannel: 'email',
+      notes: `Auto-discovered ${new Date().toISOString().slice(0, 10)} · ${options.campaign} · ${query}`,
     });
 
-    existingKeys.add(`${company.toLowerCase()}|${(email ?? '').toLowerCase()}`);
+    existingEmails.add(emailKey);
+    existingUrls.add(linkKey);
     created.push(lead);
+    apiLog('outreach/discovery', 'saved lead', {
+      campaign: options.campaign,
+      company,
+      email,
+      allFound: enrichment.allEmails,
+    });
   }
 
-  return { created, enriched, query };
+  return { created, skippedNoEmail, query };
 }
 
 function inferVerticals(text: string): string[] {
@@ -252,6 +248,8 @@ function inferVerticals(text: string): string[] {
     proptech: 'proptech',
     retail: 'ecommerce',
     ecommerce: 'ecommerce',
+    mobile: 'mobile',
+    web: 'web',
   };
   const out = new Set<string>();
   for (const [needle, tag] of Object.entries(map)) {
@@ -259,4 +257,8 @@ function inferVerticals(text: string): string[] {
   }
   if (!out.size) out.add('software');
   return [...out];
+}
+
+export function hostDedupeKey(url: string): string {
+  return createHash('sha256').update(url.toLowerCase()).digest('hex').slice(0, 16);
 }

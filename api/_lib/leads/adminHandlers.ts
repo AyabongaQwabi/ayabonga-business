@@ -15,6 +15,7 @@ import {
 import { sendOutreachToLead } from './sendOutreach';
 import { getSentEmail, listSentEmails, archiveSentEmail } from './sentEmailArchive';
 import { getResendFromAddress } from '../emailFrom';
+import { OUTREACH_CC_EMAIL } from './campaigns';
 import type { EmailTemplate, LeadRecord, LeadStatus } from './types';
 import { defaultEmailTemplates } from './defaultTemplates';
 
@@ -255,6 +256,7 @@ async function handleSendLeadEmail(
     const { data, error } = await resend.emails.send({
       from,
       to: [lead.email],
+      cc: [OUTREACH_CC_EMAIL],
       subject,
       text: plainText,
       html,

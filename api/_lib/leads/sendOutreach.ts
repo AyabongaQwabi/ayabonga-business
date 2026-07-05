@@ -7,18 +7,36 @@ import { buildBrandedOutreachEmail, outreachPlainFooter } from './outreachEmail'
 import { archiveSentEmail } from './sentEmailArchive';
 import { outreachRecipientsForLead } from './outreachRecipients';
 import { defaultEmailTemplates } from './defaultTemplates';
+import { defaultColdTemplates } from './defaultColdTemplates';
+import { OUTREACH_CC_EMAIL } from './campaigns';
 import type { EmailTemplate, LeadRecord } from './types';
 
 export function pickTemplateSlugForLead(lead: LeadRecord): string {
-  const verticals = lead.verticals ?? [];
-  const why = (lead.whyNow ?? '').toLowerCase();
   const lastSent = lead.outreachDraft?.lastSentAt;
 
   if (lead.status === 'contacted' && lastSent) {
     const daysSince =
       (Date.now() - new Date(lastSent).getTime()) / 86_400_000;
-    if (daysSince >= 6) return 'follow-up-7d';
+    if (daysSince >= 6) {
+      return lead.campaign === 'cold' ? 'cold-follow-up-7d' : 'follow-up-7d';
+    }
   }
+
+  if (lead.campaign === 'cold') {
+    const verticals = lead.verticals ?? [];
+    const blob = `${lead.whyNow ?? ''} ${verticals.join(' ')}`.toLowerCase();
+    if (verticals.includes('mobile') || blob.includes('mobile app')) return 'cold-mobile-app';
+    if (verticals.includes('web') || blob.includes('web app') || blob.includes('website')) {
+      return 'cold-web-app';
+    }
+    if (verticals.includes('ai') || blob.includes('automation') || blob.includes(' ai ')) {
+      return 'cold-ai-integration';
+    }
+    return 'cold-custom-software';
+  }
+
+  const verticals = lead.verticals ?? [];
+  const why = (lead.whyNow ?? '').toLowerCase();
 
   if (lead.connectorType || lead.suggestedChannel?.toLowerCase().includes('intro')) {
     return 'warm-intro-ask';
@@ -53,15 +71,18 @@ export function pickTemplateSlugForLead(lead: LeadRecord): string {
 async function resolveTemplate(slug: string): Promise<EmailTemplate | null> {
   let template = await getTemplate(slug);
   if (template) return template;
-  const fallback = defaultEmailTemplates.find((t) => t.slug === slug);
-  return fallback ?? null;
+  return (
+    defaultEmailTemplates.find((t) => t.slug === slug) ??
+    defaultColdTemplates.find((t) => t.slug === slug) ??
+    null
+  );
 }
 
 export async function ensureDefaultTemplates(): Promise<void> {
   const existing = await listTemplates();
-  if (existing.length > 0) return;
-  for (const t of defaultEmailTemplates) {
-    await saveTemplate(t);
+  const slugs = new Set(existing.map((t) => t.slug));
+  for (const t of [...defaultEmailTemplates, ...defaultColdTemplates]) {
+    if (!slugs.has(t.slug)) await saveTemplate(t);
   }
 }
 
@@ -110,6 +131,7 @@ export async function sendOutreachToLead(
   apiLog('outreach/resend', 'sending', {
     leadId: lead.id,
     to: recipients,
+    cc: OUTREACH_CC_EMAIL,
     from,
     templateSlug,
     subject: merged.subject,
@@ -119,6 +141,7 @@ export async function sendOutreachToLead(
   const { data, error } = await resend.emails.send({
     from,
     to: recipients,
+    cc: [OUTREACH_CC_EMAIL],
     subject: merged.subject,
     text,
     html,

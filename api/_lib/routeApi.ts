@@ -3,7 +3,8 @@ import { apiLog, apiLogError, hasBearerAuth } from './apiLog';
 import { handleQuoteSend, parseQuoteSendBody } from './handleQuoteSend';
 import { handleLeadCapture, parseCaptureBody } from './leads/captureLead';
 import { handleAdminRoute } from './leads/adminHandlers';
-import { runDailyOutreachWorker } from './leads/outreachWorker';
+import { runOutreachWorker } from './leads/outreachWorker';
+import type { OutreachCampaign } from './leads/campaigns';
 import { getApiPath, getClientIp, parseJsonBody } from './http';
 
 export type ApiRouteResult = {
@@ -32,6 +33,45 @@ function isDevLogEnv(): boolean {
   return (
     process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview'
   );
+}
+
+async function handleOutreachCron(
+  req: VercelRequest,
+  method: string,
+  campaign: OutreachCampaign,
+  logTag: string,
+): Promise<ApiRouteResult> {
+  apiLog(logTag, 'hit', { method, campaign });
+  if (method !== 'GET' && method !== 'POST') {
+    return { status: 405, body: { error: 'Method not allowed' } };
+  }
+  if (!authorizeCron(req)) {
+    return { status: 401, body: { error: 'Unauthorized' } };
+  }
+  try {
+    apiLog(logTag, 'starting worker', { campaign });
+    const report = await runOutreachWorker(campaign);
+    apiLog(logTag, 'worker finished', {
+      campaign: report.campaign,
+      sent: report.sent,
+      attempted: report.attempted,
+      discovered: report.discovered,
+      skippedNoEmail: report.skippedNoEmail,
+      discoveryRounds: report.discoveryRounds,
+      queries: report.discoveryQueries,
+      errorCount: report.errors.length,
+    });
+    if (report.errors.length > 0) {
+      apiLog(logTag, 'worker warnings', { errors: report.errors });
+    }
+    return { status: 200, body: report as unknown as Record<string, unknown> };
+  } catch (error) {
+    apiLogError(logTag, 'worker failed', error, { campaign });
+    return {
+      status: 500,
+      body: { error: error instanceof Error ? error.message : 'Worker failed' },
+    };
+  }
 }
 
 /** Single router for all /api/* serverless traffic (Hobby plan function limit). */
@@ -70,40 +110,12 @@ export async function dispatchApiRequest(req: VercelRequest): Promise<ApiRouteRe
     return handleLeadCapture(body, { ip: getClientIp(req) });
   }
 
-  if (apiPath === 'cron/outreach-daily') {
-    apiLog('cron/outreach-daily', 'hit', { method });
-    if (method !== 'GET' && method !== 'POST') {
-      apiLog('cron/outreach-daily', 'method not allowed', { method });
-      return { status: 405, body: { error: 'Method not allowed' } };
-    }
-    if (!authorizeCron(req)) {
-      return { status: 401, body: { error: 'Unauthorized' } };
-    }
-    try {
-      apiLog('cron/outreach-daily', 'starting worker');
-      const report = await runDailyOutreachWorker();
-      apiLog('cron/outreach-daily', 'worker finished', {
-        sent: report.sent,
-        attempted: report.attempted,
-        skipped: report.skipped,
-        discovered: report.discovered,
-        enrichedExisting: report.enrichedExisting,
-        errorCount: report.errors.length,
-        enabled: report.enabled,
-      });
-      if (report.errors.length > 0) {
-        apiLog('cron/outreach-daily', 'worker warnings', { errors: report.errors });
-      }
-      return { status: 200, body: report as unknown as Record<string, unknown> };
-    } catch (error) {
-      apiLogError('cron/outreach-daily', 'worker failed', error);
-      return {
-        status: 500,
-        body: {
-          error: error instanceof Error ? error.message : 'Worker failed',
-        },
-      };
-    }
+  if (apiPath === 'cron/outreach-daily' || apiPath === 'cron/outreach-cofounder-daily') {
+    return handleOutreachCron(req, method, 'cofounder', 'cron/outreach-cofounder-daily');
+  }
+
+  if (apiPath === 'cron/outreach-cold-daily') {
+    return handleOutreachCron(req, method, 'cold', 'cron/outreach-cold-daily');
   }
 
   if (apiPath === 'admin' || apiPath.startsWith('admin/')) {

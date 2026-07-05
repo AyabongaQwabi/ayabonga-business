@@ -81,6 +81,7 @@ export function toIndexEntry(lead: LeadRecord): LeadIndexEntry {
   return {
     id: lead.id,
     kind: lead.kind,
+    campaign: lead.campaign,
     status: lead.status,
     name: lead.name,
     email: lead.email,
@@ -134,12 +135,14 @@ export async function createLead(
 
 export async function listLeads(filters?: {
   kind?: LeadRecord['kind'];
+  campaign?: LeadRecord['campaign'];
   status?: LeadRecord['status'];
   q?: string;
 }): Promise<LeadIndexEntry[]> {
   const index = await getLeadsIndex();
   let entries = [...index.entries];
   if (filters?.kind) entries = entries.filter((e) => e.kind === filters.kind);
+  if (filters?.campaign) entries = entries.filter((e) => e.campaign === filters.campaign);
   if (filters?.status) entries = entries.filter((e) => e.status === filters.status);
   if (filters?.q) {
     const q = filters.q.toLowerCase();

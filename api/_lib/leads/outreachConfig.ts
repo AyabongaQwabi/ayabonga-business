@@ -30,16 +30,3 @@ export function hasDiscoveryProvider(): boolean {
       (process.env.GOOGLE_CSE_API_KEY?.trim() && process.env.GOOGLE_CSE_ID?.trim()),
   );
 }
-
-export const DISCOVERY_QUERIES = [
-  'South Africa startup custom software development founder contact email',
-  'Cape Town fintech mobile app development CEO contact',
-  'Johannesburg SME business software platform founder',
-  'Durban ecommerce startup technical founder email',
-  'South Africa AI startup WhatsApp automation founder',
-  'Pretoria logistics marketplace software company contact',
-  'Eastern Cape business app development company',
-  'South Africa proptech startup engineering hiring',
-  'SA edtech platform custom software founder contact',
-  'South Africa healthtech app development startup CEO',
-] as const;
