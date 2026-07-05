@@ -1,4 +1,10 @@
 import type { EmailTemplate, LeadRecord } from './types';
+import { outreachCopyForTemplate } from './coldBuildIdeas';
+import {
+  sanitizeCompanyName,
+  sanitizeFirstName,
+  sanitizeWhyNow,
+} from './leadFieldSanitize';
 
 const SITE_URL =
   process.env.SITE_URL?.replace(/\/$/, '') || 'https://business.qwabi.co.za';
@@ -18,6 +24,8 @@ export type TemplateContext = {
   firstName: string;
   company: string;
   whyNow: string;
+  valueHook: string;
+  buildIdeas: string;
   yourName: string;
   siteUrl: string;
   name: string;
@@ -26,15 +34,21 @@ export type TemplateContext = {
   message: string;
 };
 
-export function buildTemplateContext(lead: LeadRecord): TemplateContext {
-  const firstName =
-    lead.name?.split(' ')[0] ||
-    lead.company?.split(' ')[0] ||
-    'there';
+export function buildTemplateContext(
+  lead: LeadRecord,
+  templateSlug?: string,
+): TemplateContext {
+  const company = sanitizeCompanyName(lead.company, lead.sourcePage);
+  const firstName = sanitizeFirstName(lead.name, company);
+  const whyNow = sanitizeWhyNow(lead.whyNow);
+  const cold = outreachCopyForTemplate(templateSlug, lead.verticals);
+
   return {
     firstName,
-    company: lead.company || 'your company',
-    whyNow: lead.whyNow || '',
+    company,
+    whyNow,
+    valueHook: cold.valueHook,
+    buildIdeas: cold.buildIdeas,
     yourName: YOUR_NAME,
     siteUrl: SITE_URL,
     name: lead.name || '',
@@ -54,6 +68,8 @@ export function mergePlaceholders(
     .replace(/\{\{\s*firstName\s*\}\}/g, ctx.firstName)
     .replace(/\{\{\s*company\s*\}\}/g, ctx.company)
     .replace(/\{\{\s*whyNow\s*\}\}/g, ctx.whyNow)
+    .replace(/\{\{\s*valueHook\s*\}\}/g, ctx.valueHook)
+    .replace(/\{\{\s*buildIdeas\s*\}\}/g, ctx.buildIdeas)
     .replace(/\{\{\s*yourName\s*\}\}/g, ctx.yourName)
     .replace(/\{\{\s*siteUrl\s*\}\}/g, ctx.siteUrl)
     .replace(/\{\{\s*name\s*\}\}/g, ctx.name)
@@ -80,7 +96,7 @@ export function applyTemplate(
   template: EmailTemplate,
   lead: LeadRecord,
 ): { subject: string; text: string; html?: string } {
-  const ctx = buildTemplateContext(lead);
+  const ctx = buildTemplateContext(lead, template.slug);
   const merged = {
     subject: mergePlaceholders(template.subject, ctx),
     text: mergePlaceholders(template.text, ctx),
@@ -104,8 +120,9 @@ export function applyTemplate(
 export function mergeDraftFields(
   lead: LeadRecord,
   fields: { subject?: string; text?: string },
+  templateSlug?: string,
 ): { subject: string; text: string; firstName: string } {
-  const ctx = buildTemplateContext(lead);
+  const ctx = buildTemplateContext(lead, templateSlug);
   return {
     firstName: ctx.firstName,
     subject: mergePlaceholders(fields.subject ?? '', ctx),
@@ -135,5 +152,9 @@ export function prepareOutreachContent(
     ? (input.draftText ?? input.template?.text ?? '')
     : (input.template?.text ?? input.draftText ?? '');
 
-  return mergeDraftFields(lead, { subject: rawSubject, text: rawText });
+  return mergeDraftFields(
+    lead,
+    { subject: rawSubject, text: rawText },
+    input.template?.slug,
+  );
 }

@@ -9,6 +9,7 @@ import { outreachRecipientsForLead } from './outreachRecipients';
 import { defaultEmailTemplates } from './defaultTemplates';
 import { defaultColdTemplates } from './defaultColdTemplates';
 import { OUTREACH_CC_EMAIL } from './campaigns';
+import { coldCopyForLead } from './coldBuildIdeas';
 import type { EmailTemplate, LeadRecord } from './types';
 
 export function pickTemplateSlugForLead(lead: LeadRecord): string {
@@ -32,7 +33,7 @@ export function pickTemplateSlugForLead(lead: LeadRecord): string {
     if (verticals.includes('ai') || blob.includes('automation') || blob.includes(' ai ')) {
       return 'cold-ai-integration';
     }
-    return 'cold-custom-software';
+    return coldCopyForLead(verticals).templateSlug;
   }
 
   const verticals = lead.verticals ?? [];
@@ -101,9 +102,15 @@ function mergeTemplateForLead(
 
 export async function ensureDefaultTemplates(): Promise<void> {
   const existing = await listTemplates();
-  const slugs = new Set(existing.map((t) => t.slug));
+  const bySlug = new Map(existing.map((t) => [t.slug, t]));
+
   for (const t of [...defaultEmailTemplates, ...defaultColdTemplates]) {
-    if (!slugs.has(t.slug)) await saveTemplate(t);
+    const blob = bySlug.get(t.slug);
+    const needsSeed =
+      !blob ||
+      (t.seedVersion != null &&
+        (blob.seedVersion == null || blob.seedVersion < t.seedVersion));
+    if (needsSeed) await saveTemplate(t);
   }
 }
 

@@ -8,6 +8,10 @@ import {
   buyerIndustryFromQuery,
   isSoftwareProviderResult,
 } from './competitorFilter';
+import {
+  sanitizeCompanyName,
+  sanitizeWhyNow,
+} from './leadFieldSanitize';
 import type { LeadRecord } from './types';
 
 export type SearchResult = {
@@ -21,12 +25,12 @@ export type DiscoveryResult = {
   results: SearchResult[];
 };
 
-function companyFromTitle(title: string): string {
+function companyFromTitle(title: string, link?: string): string {
   const cleaned = title
     .replace(/\s*[-|–].*$/, '')
     .replace(/\s*\|.*$/, '')
     .trim();
-  return cleaned.slice(0, 80) || 'Unknown company';
+  return sanitizeCompanyName(cleaned, link);
 }
 
 function scoreFromSnippet(
@@ -243,7 +247,7 @@ export async function discoverLeadsFromSearch(options: {
     const linkKey = result.link.toLowerCase();
     if (existingUrls.has(linkKey)) continue;
 
-    const company = companyFromTitle(result.title);
+    const company = companyFromTitle(result.title, result.link);
     const enrichment = await discoverEmailForWebsiteDetailed(result.link);
     const email = enrichment.email;
 
@@ -279,7 +283,9 @@ export async function discoverLeadsFromSearch(options: {
       score,
       tier: score >= 85 ? 1 : score >= 70 ? 2 : 3,
       verticals: industry,
-      whyNow: result.snippet.slice(0, 280) || `Found via search: ${query}`,
+      whyNow:
+        sanitizeWhyNow(result.snippet) ||
+        `South African ${industry[0] ?? 'business'} team found via outreach discovery`,
       sourcePage: result.link,
       formType: options.campaign === 'cold' ? 'discovery_cold' : 'discovery_cofounder',
       suggestedChannel: 'email',
@@ -312,7 +318,7 @@ function inferVerticals(
     pharmacy: 'pharmacy',
     chemist: 'pharmacy',
     legal: 'legal',
-    'law firm': 'legal',
+    'legal aid': 'legal',
     clinic: 'healthcare',
     medical: 'healthcare',
     dental: 'healthcare',

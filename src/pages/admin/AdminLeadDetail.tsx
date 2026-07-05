@@ -345,8 +345,8 @@ export default function AdminLeadDetail() {
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          Placeholders merge on send. Edit with {'{{firstName}}'}, {'{{company}}'}, {'{{whyNow}}'},
-          {' {{yourName}}'}, {'{{siteUrl}}'}.
+          Placeholders merge on send: {'{{firstName}}'}, {'{{company}}'}, {'{{valueHook}}'},
+          {' {{buildIdeas}}'}, {'{{yourName}}'}, {'{{siteUrl}}'}.
         </p>
 
         {mergedPreview ? (

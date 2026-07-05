@@ -115,6 +115,8 @@ export type EmailTemplate = {
   category: EmailTemplateCategory;
   placeholders: string[];
   updatedAt: string;
+  /** Code default version; blob copies refresh when this lags behind. */
+  seedVersion?: number;
 };
 
 export type LeadCaptureRequestBody = {
