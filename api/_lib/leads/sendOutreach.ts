@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { apiLog } from '../apiLog';
 import { getResendFromAddress } from '../emailFrom';
 import { getLead, getTemplate, listTemplates, saveLead, saveTemplate } from './blobStore';
 import { applyTemplate } from './mergeTemplate';
@@ -101,6 +102,14 @@ export async function sendOutreachToLead(
   const text = `${merged.text}${outreachPlainFooter()}`;
   const from = getResendFromAddress();
 
+  apiLog('outreach/resend', 'sending', {
+    leadId: lead.id,
+    to: lead.email,
+    from,
+    templateSlug,
+    subject: merged.subject,
+  });
+
   const resend = new Resend(resendKey);
   const { data, error } = await resend.emails.send({
     from,
@@ -114,8 +123,11 @@ export async function sendOutreachToLead(
   });
 
   if (error) {
+    apiLog('outreach/resend', 'error', { leadId: lead.id, message: error.message });
     return { ok: false, status: 400, error: error.message || 'Send failed' };
   }
+
+  apiLog('outreach/resend', 'ok', { leadId: lead.id, resendMessageId: data?.id });
 
   const sentAt = new Date().toISOString();
   const archived = await archiveSentEmail({

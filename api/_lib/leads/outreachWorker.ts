@@ -14,6 +14,7 @@ import {
 } from './outreachConfig';
 import { ensureDefaultTemplates, sendOutreachToLead } from './sendOutreach';
 import type { LeadRecord } from './types';
+import { apiLog, apiLogError } from '../apiLog';
 
 export type OutreachDailyReport = {
   date: string;
@@ -74,30 +75,54 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
     targetMax: OUTREACH_DAILY_MAX,
   };
 
+  apiLog('outreach/worker', 'start', {
+    date: dateKey,
+    enabled: report.enabled,
+    hasDiscovery: hasDiscoveryProvider(),
+    targetMin: OUTREACH_DAILY_MIN,
+    targetMax: OUTREACH_DAILY_MAX,
+    blobAccess: process.env.BLOB_ACCESS ?? '(default public)',
+    hasResendKey: Boolean(process.env.RESEND_API_KEY?.trim()),
+    hasBlobToken: Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim()),
+  });
+
   if (!report.enabled) {
     report.errors.push('Outreach disabled (set OUTREACH_ENABLED or configure Resend + Blob)');
+    apiLog('outreach/worker', 'disabled', { errors: report.errors });
     return report;
   }
 
   await ensureDefaultTemplates();
+  apiLog('outreach/worker', 'templates ready');
+
   const log = await getDailySendLog(dateKey);
+  apiLog('outreach/worker', 'daily log loaded', { alreadySentToday: log.sent.length });
 
   if (hasDiscoveryProvider()) {
     try {
+      apiLog('outreach/worker', 'discovery pass 1');
       const discovery = await discoverLeadsFromSearch(12);
       report.discovered = discovery.created.length;
       report.discoveryQuery = discovery.query;
       log.discovered += discovery.created.length;
       log.enriched += discovery.enriched;
+      apiLog('outreach/worker', 'discovery pass 1 done', {
+        query: discovery.query,
+        created: discovery.created.length,
+        enriched: discovery.enriched,
+      });
     } catch (err) {
-      report.errors.push(
-        `Discovery failed: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      const msg = `Discovery failed: ${err instanceof Error ? err.message : String(err)}`;
+      report.errors.push(msg);
+      apiLogError('outreach/worker', 'discovery pass 1 failed', err);
     }
+  } else {
+    apiLog('outreach/worker', 'no discovery provider configured');
   }
 
   report.enrichedExisting = await enrichLeadsMissingEmail(25);
   log.enriched += report.enrichedExisting;
+  apiLog('outreach/worker', 'email enrichment', { enriched: report.enrichedExisting });
 
   async function loadSendable() {
     const sentTodayIds = new Set(log.sent.map((s) => s.leadId));
@@ -110,9 +135,11 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
   }
 
   let sendable = await loadSendable();
+  apiLog('outreach/worker', 'sendable leads', { count: sendable.length });
 
   if (sendable.length < OUTREACH_DAILY_MIN && hasDiscoveryProvider()) {
     try {
+      apiLog('outreach/worker', 'discovery pass 2 (below min sendable)');
       const extra = await discoverLeadsFromSearch(15);
       report.discovered += extra.created.length;
       log.discovered += extra.created.length;
@@ -121,15 +148,22 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
       report.enrichedExisting += extraEnriched;
       log.enriched += extraEnriched;
       sendable = await loadSendable();
+      apiLog('outreach/worker', 'discovery pass 2 done', {
+        sendable: sendable.length,
+        discovered: extra.created.length,
+      });
     } catch (err) {
-      report.errors.push(
-        `Second discovery pass failed: ${err instanceof Error ? err.message : String(err)}`,
-      );
+      const msg = `Second discovery pass failed: ${err instanceof Error ? err.message : String(err)}`;
+      report.errors.push(msg);
+      apiLogError('outreach/worker', 'discovery pass 2 failed', err);
     }
   }
 
   for (const entry of sendable) {
-    if (log.sent.length >= OUTREACH_DAILY_MAX) break;
+    if (log.sent.length >= OUTREACH_DAILY_MAX) {
+      apiLog('outreach/worker', 'daily max reached', { max: OUTREACH_DAILY_MAX });
+      break;
+    }
 
     const lead = await getLead(entry.id);
     if (!lead?.email || wasSentToday(lead, dateKey)) {
@@ -138,14 +172,26 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
     }
 
     report.attempted += 1;
+    apiLog('outreach/send', 'attempt', {
+      leadId: lead.id,
+      email: lead.email,
+      company: lead.company,
+    });
     const result = await sendOutreachToLead(lead.id);
     if (!result.ok) {
       report.errors.push(`${lead.id}: ${result.error}`);
       log.errors.push(`${lead.id}: ${result.error}`);
+      apiLog('outreach/send', 'failed', { leadId: lead.id, error: result.error });
       continue;
     }
 
     report.sent += 1;
+    apiLog('outreach/send', 'sent', {
+      leadId: lead.id,
+      email: lead.email,
+      templateSlug: result.templateSlug,
+      archiveId: result.archiveId,
+    });
     log.sent.push({
       leadId: lead.id,
       email: lead.email!,
@@ -164,5 +210,11 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
   }
 
   await saveDailySendLog(log);
+  apiLog('outreach/worker', 'complete', {
+    sent: report.sent,
+    attempted: report.attempted,
+    skipped: report.skipped,
+    errors: report.errors.length,
+  });
   return report;
 }
