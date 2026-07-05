@@ -82,7 +82,8 @@ const config = {
   version: 3,
   routes: [
     { handle: 'filesystem' },
-    { src: '/api(?:/(.*))?', dest: '/api' },
+    { src: '/api/(.*)', dest: '/api?__path=$1' },
+    { src: '/api', dest: '/api' },
     { src: '/(.*)', dest: '/index.html' },
   ],
 };

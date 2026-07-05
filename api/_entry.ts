@@ -1,13 +1,18 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { dispatchApiRequest } from './_lib/routeApi';
-import { handleOptions, jsonResponse } from './_lib/http';
+import { handleOptions, jsonResponse, normalizeIncomingRequest } from './_lib/http';
 
-/** Bundled to api/index.js for Vercel (api/_lib is not deployed as separate files). */
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+/** Bundled to .vercel/output/functions/api.func for production. */
+export default async function handler(
+  req: IncomingMessage | VercelRequest,
+  res: ServerResponse | VercelResponse,
+) {
   try {
-    if (handleOptions(req, res)) return;
+    const normalized = await normalizeIncomingRequest(req);
+    if (handleOptions(normalized, res)) return;
 
-    const result = await dispatchApiRequest(req);
+    const result = await dispatchApiRequest(normalized);
     jsonResponse(res, result.status, result.body);
   } catch (error) {
     console.error('[api] Unhandled error:', error);
