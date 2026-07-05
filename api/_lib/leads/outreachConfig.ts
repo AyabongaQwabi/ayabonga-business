@@ -1,5 +1,58 @@
 /** Daily outreach volume and feature flags (env-backed). */
 
+import outreachSettings from './outreach-settings.json';
+
+export type OutreachSettings = {
+  discoveryTimeBudgetSeconds: number;
+  maxJobDurationSeconds: number;
+  discoveryMaxRounds: number;
+};
+
+const DEFAULT_SETTINGS: OutreachSettings = {
+  discoveryTimeBudgetSeconds: 200,
+  maxJobDurationSeconds: 290,
+  discoveryMaxRounds: 15,
+};
+
+function clampSeconds(value: unknown, fallback: number, min = 30, max = 600): number {
+  const n = typeof value === 'number' ? value : Number.parseInt(String(value ?? ''), 10);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.min(max, Math.max(min, Math.round(n)));
+}
+
+/** Loaded from outreach-settings.json — edit that file to tune cron timing. */
+export function getOutreachSettings(): OutreachSettings {
+  const raw = outreachSettings as Partial<OutreachSettings>;
+  return {
+    discoveryTimeBudgetSeconds: clampSeconds(
+      raw.discoveryTimeBudgetSeconds,
+      DEFAULT_SETTINGS.discoveryTimeBudgetSeconds,
+      30,
+      280,
+    ),
+    maxJobDurationSeconds: clampSeconds(
+      raw.maxJobDurationSeconds,
+      DEFAULT_SETTINGS.maxJobDurationSeconds,
+      60,
+      300,
+    ),
+    discoveryMaxRounds: clampSeconds(
+      raw.discoveryMaxRounds,
+      DEFAULT_SETTINGS.discoveryMaxRounds,
+      1,
+      50,
+    ),
+  };
+}
+
+export function discoveryTimeBudgetMs(): number {
+  return getOutreachSettings().discoveryTimeBudgetSeconds * 1000;
+}
+
+export function maxJobDurationMs(): number {
+  return getOutreachSettings().maxJobDurationSeconds * 1000;
+}
+
 export const OUTREACH_DAILY_MIN = Math.max(
   1,
   Number.parseInt(process.env.OUTREACH_DAILY_MIN || '12', 10) || 12,

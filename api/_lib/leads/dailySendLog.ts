@@ -17,6 +17,7 @@ export type DailySendLog = {
   sent: DailySendLogEntry[];
   discovered: number;
   skippedNoEmail: number;
+  skippedCompetitor: number;
   discoveryRounds: number;
   queriesUsed: string[];
   skipped: number;
@@ -44,6 +45,7 @@ export async function getDailySendLog(
     sent: [],
     discovered: 0,
     skippedNoEmail: 0,
+    skippedCompetitor: 0,
     discoveryRounds: 0,
     queriesUsed: [],
     skipped: 0,

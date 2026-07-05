@@ -3,39 +3,54 @@ export const OUTREACH_CC_EMAIL = 'ayassender@gmail.com';
 
 export type OutreachCampaign = 'cofounder' | 'cold';
 
-/** Technical cofounder / funded startup founder outreach. */
+/**
+ * Funded startups and product companies that need engineering help.
+ * Not software agencies or dev shops.
+ */
 export const COFOUNDER_DISCOVERY_QUERIES = [
-  'South Africa startup technical cofounder engineering founder contact email',
-  'Cape Town fintech startup CTO hiring contact email',
-  'Johannesburg SaaS founder needs senior engineer contact',
-  'Durban startup MVP production engineering founder email',
-  'South Africa AI startup founding engineer contact',
-  'Pretoria marketplace startup technical lead email',
-  'SA seed stage startup engineering partner founder contact',
-  'Eastern Cape startup product engineering cofounder email',
-  'South Africa proptech startup engineering hiring contact',
-  'SA healthtech startup technical founder contact email',
-  'South Africa edtech startup engineering lead contact',
-  'Cape Town logistics startup CTO contact email',
+  'South Africa fintech startup founder CEO contact email',
+  'Cape Town ecommerce startup founder contact email',
+  'Johannesburg marketplace startup founder contact',
+  'Durban health startup founder CEO email',
+  'Pretoria edtech startup founder contact email',
+  'SA logistics startup founder contact email',
+  'Eastern Cape agritech startup founder contact',
+  'South Africa proptech startup CEO contact email',
+  'Cape Town insurtech startup founder email',
+  'Johannesburg retail startup founder contact',
+  'SA seed stage startup hiring engineer founder email',
+  'South Africa WhatsApp business startup founder contact',
 ] as const;
 
-/** Cold outreach: companies that may buy app / web / custom software services. */
+/**
+ * Non-tech businesses that may need apps, web systems, or custom software built.
+ * Never search for "software development company" — that finds competitors.
+ */
 export const COLD_DISCOVERY_QUERIES = [
-  'South Africa company custom software development contact email',
-  'Cape Town web application development company contact email',
-  'Johannesburg mobile app development company email',
-  'Durban bespoke software development business contact',
-  'Pretoria SME needs software developer contact email',
-  'South Africa business digital transformation software contact',
-  'SA company website redesign web app development contact',
-  'Eastern Cape business app development company email',
-  'South Africa logistics company custom software contact',
-  'Cape Town retail business ecommerce app development contact',
-  'Johannesburg mining company software system contact email',
-  'SA healthcare clinic management software development contact',
-  'South Africa school administration software development contact',
-  'Durban hospitality booking app development company email',
-  'SA manufacturing inventory software development contact',
+  'South Africa construction company contact email',
+  'Cape Town pharmacy contact email',
+  'Johannesburg law firm contact email',
+  'Durban legal aid organisation contact email',
+  'Pretoria medical clinic contact email',
+  'South Africa dental practice contact email',
+  'Eastern Cape farming business contact email',
+  'SA restaurant group contact email',
+  'Cape Town hotel contact email',
+  'Johannesburg accounting firm contact email',
+  'Durban estate agency contact email',
+  'South Africa transport logistics company contact email',
+  'Pretoria private school contact email',
+  'SA manufacturing company contact email',
+  'Cape Town retail store contact email',
+  'Johannesburg mining services company contact email',
+  'South Africa NGO nonprofit contact email',
+  'Durban church organisation contact email',
+  'SA veterinary clinic contact email',
+  'Pretoria security company contact email',
+  'Cape Town beauty salon spa contact email',
+  'South Africa courier delivery company contact email',
+  'Eastern Cape guest lodge contact email',
+  'SA new small business contact email site:.co.za',
 ] as const;
 
 export function queriesForCampaign(campaign: OutreachCampaign): readonly string[] {

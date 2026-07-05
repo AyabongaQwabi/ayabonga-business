@@ -4,6 +4,10 @@ import type { OutreachCampaign } from './campaigns';
 import { nextDiscoveryQuery } from './discoveryCursor';
 import { discoverEmailForWebsiteDetailed } from './emailEnrichment';
 import { apiLog } from '../apiLog';
+import {
+  buyerIndustryFromQuery,
+  isSoftwareProviderResult,
+} from './competitorFilter';
 import type { LeadRecord } from './types';
 
 export type SearchResult = {
@@ -25,33 +29,70 @@ function companyFromTitle(title: string): string {
   return cleaned.slice(0, 80) || 'Unknown company';
 }
 
-function scoreFromSnippet(snippet: string, title: string, campaign: OutreachCampaign): number {
-  let score = campaign === 'cold' ? 50 : 55;
+function scoreFromSnippet(
+  snippet: string,
+  title: string,
+  campaign: OutreachCampaign,
+  query?: string,
+): number {
+  let score = campaign === 'cold' ? 52 : 58;
   const blob = `${title} ${snippet}`.toLowerCase();
-  const signals = [
-    ['software', 8],
-    ['app', 6],
-    ['web', 5],
-    ['platform', 6],
-    ['startup', campaign === 'cofounder' ? 7 : 3],
-    ['business', campaign === 'cold' ? 6 : 2],
-    ['company', campaign === 'cold' ? 5 : 2],
-    ['fintech', 7],
-    ['ai', 5],
-    ['marketplace', 6],
-    ['south africa', 8],
-    ['cape town', 5],
-    ['johannesburg', 5],
-    ['founder', campaign === 'cofounder' ? 6 : 2],
-    ['ceo', 5],
-    ['development', 7],
-    ['engineering', 6],
-    ['custom', 5],
-  ] as const;
-  for (const [word, pts] of signals) {
-    if (blob.includes(word)) score += pts;
+
+  if (campaign === 'cold') {
+    const buyerSignals = [
+      ['construction', 10],
+      ['pharmacy', 10],
+      ['clinic', 9],
+      ['law firm', 9],
+      ['legal', 7],
+      ['restaurant', 8],
+      ['hotel', 8],
+      ['school', 8],
+      ['farm', 8],
+      ['manufacturing', 9],
+      ['logistics', 9],
+      ['transport', 8],
+      ['retail', 8],
+      ['accounting', 8],
+      ['dental', 8],
+      ['mining', 7],
+      ['contact us', 6],
+      ['about us', 4],
+    ] as const;
+    for (const [word, pts] of buyerSignals) {
+      if (blob.includes(word)) score += pts;
+    }
+    const providerPenalty = [
+      'software development',
+      'app development',
+      'web development agency',
+      'digital agency',
+      'software solutions',
+    ] as const;
+    for (const phrase of providerPenalty) {
+      if (blob.includes(phrase)) score -= 25;
+    }
+  } else {
+    const signals = [
+      ['startup', 8],
+      ['founder', 7],
+      ['fintech', 7],
+      ['marketplace', 6],
+      ['platform', 5],
+      ['seed', 6],
+      ['series a', 6],
+      ['mvp', 5],
+      ['south africa', 8],
+      ['cape town', 5],
+      ['johannesburg', 5],
+    ] as const;
+    for (const [word, pts] of signals) {
+      if (blob.includes(word)) score += pts;
+    }
   }
-  return Math.min(score, 96);
+
+  if (query && buyerIndustryFromQuery(query)) score += 5;
+  return Math.max(20, Math.min(score, 96));
 }
 
 async function searchBrave(query: string): Promise<SearchResult[]> {
@@ -144,9 +185,11 @@ export async function discoverLeadsFromSearch(options: {
   campaign: OutreachCampaign;
   maxNew?: number;
   query?: string;
+  shouldAbort?: () => boolean;
 }): Promise<{
   created: LeadRecord[];
   skippedNoEmail: number;
+  skippedCompetitor: number;
   query: string;
 }> {
   const maxNew = options.maxNew ?? 15;
@@ -164,9 +207,27 @@ export async function discoverLeadsFromSearch(options: {
 
   const created: LeadRecord[] = [];
   let skippedNoEmail = 0;
+  let skippedCompetitor = 0;
 
   for (const result of results) {
     if (created.length >= maxNew) break;
+    if (options.shouldAbort?.()) {
+      apiLog('outreach/discovery', 'aborted (time budget)', {
+        campaign: options.campaign,
+        saved: created.length,
+      });
+      break;
+    }
+
+    if (isSoftwareProviderResult(result)) {
+      skippedCompetitor += 1;
+      apiLog('outreach/discovery', 'skipped (software provider / competitor)', {
+        campaign: options.campaign,
+        title: result.title,
+        link: result.link,
+      });
+      continue;
+    }
 
     let host = '';
     try {
@@ -202,7 +263,12 @@ export async function discoverLeadsFromSearch(options: {
     if (existingEmails.has(emailKey)) continue;
 
     const altEmails = enrichment.allEmails.filter((e) => e !== email);
-    const score = scoreFromSnippet(result.snippet, result.title, options.campaign);
+    const score = scoreFromSnippet(result.snippet, result.title, options.campaign, query);
+    const industry = inferVerticals(
+      result.snippet + ' ' + result.title,
+      query,
+      options.campaign,
+    );
     const lead = await createLead({
       kind: 'outbound',
       campaign: options.campaign,
@@ -212,7 +278,7 @@ export async function discoverLeadsFromSearch(options: {
       company,
       score,
       tier: score >= 85 ? 1 : score >= 70 ? 2 : 3,
-      verticals: inferVerticals(result.snippet + ' ' + result.title),
+      verticals: industry,
       whyNow: result.snippet.slice(0, 280) || `Found via search: ${query}`,
       sourcePage: result.link,
       formType: options.campaign === 'cold' ? 'discovery_cold' : 'discovery_cofounder',
@@ -231,31 +297,51 @@ export async function discoverLeadsFromSearch(options: {
     });
   }
 
-  return { created, skippedNoEmail, query };
+  return { created, skippedNoEmail, skippedCompetitor, query };
 }
 
-function inferVerticals(text: string): string[] {
+function inferVerticals(
+  text: string,
+  query: string | undefined,
+  campaign: OutreachCampaign,
+): string[] {
+  const fromQuery = query ? buyerIndustryFromQuery(query) : undefined;
   const blob = text.toLowerCase();
   const map: Record<string, string> = {
-    fintech: 'fintech',
-    payment: 'fintech',
+    construction: 'construction',
+    pharmacy: 'pharmacy',
+    chemist: 'pharmacy',
+    legal: 'legal',
+    'law firm': 'legal',
+    clinic: 'healthcare',
+    medical: 'healthcare',
+    dental: 'healthcare',
+    restaurant: 'hospitality',
+    hotel: 'hospitality',
+    lodge: 'hospitality',
+    farm: 'agriculture',
+    agriculture: 'agriculture',
+    school: 'education',
+    accounting: 'accounting',
+    estate: 'property',
+    property: 'property',
+    transport: 'logistics',
     logistics: 'logistics',
+    manufacturing: 'manufacturing',
+    retail: 'retail',
+    ngo: 'nonprofit',
+    nonprofit: 'nonprofit',
+    mining: 'mining',
+    fintech: 'fintech',
     marketplace: 'marketplace',
-    ai: 'ai',
-    whatsapp: 'whatsapp',
-    health: 'healthtech',
-    edu: 'edtech',
-    proptech: 'proptech',
-    retail: 'ecommerce',
-    ecommerce: 'ecommerce',
-    mobile: 'mobile',
-    web: 'web',
+    startup: 'startup',
   };
   const out = new Set<string>();
+  if (fromQuery) out.add(fromQuery);
   for (const [needle, tag] of Object.entries(map)) {
     if (blob.includes(needle)) out.add(tag);
   }
-  if (!out.size) out.add('software');
+  if (!out.size) out.add(campaign === 'cold' ? 'sme' : 'startup');
   return [...out];
 }
 

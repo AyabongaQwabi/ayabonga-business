@@ -1,4 +1,4 @@
-import { getLead, listLeads } from './blobStore';
+import { getLead, listLeads, saveLead } from './blobStore';
 import type { OutreachCampaign } from './campaigns';
 import { campaignLabel } from './campaigns';
 import { getDailySendLog, saveDailySendLog, todayKey } from './dailySendLog';
@@ -8,6 +8,9 @@ import {
   hasDiscoveryProvider,
   OUTREACH_DAILY_MAX,
   OUTREACH_DAILY_MIN,
+  discoveryTimeBudgetMs,
+  getOutreachSettings,
+  maxJobDurationMs,
 } from './outreachConfig';
 import { ensureDefaultTemplates, sendOutreachToLead } from './sendOutreach';
 import type { LeadRecord } from './types';
@@ -20,6 +23,7 @@ export type OutreachDailyReport = {
   discoveryQueries: string[];
   discovered: number;
   skippedNoEmail: number;
+  skippedCompetitor: number;
   discoveryRounds: number;
   attempted: number;
   sent: number;
@@ -28,10 +32,21 @@ export type OutreachDailyReport = {
   targetMin: number;
   targetMax: number;
   sendableCount?: number;
+  elapsedMs?: number;
+  stoppedEarly?: 'discovery_time_budget' | 'job_time_budget' | 'discovery_max_rounds';
 };
 
-const MAX_DISCOVERY_ROUNDS = 15;
-const DISCOVERY_TIME_BUDGET_MS = 240_000;
+function elapsedMs(startedAt: number): number {
+  return Date.now() - startedAt;
+}
+
+function discoveryBudgetExceeded(startedAt: number): boolean {
+  return elapsedMs(startedAt) >= discoveryTimeBudgetMs();
+}
+
+function jobBudgetExceeded(startedAt: number): boolean {
+  return elapsedMs(startedAt) >= maxJobDurationMs();
+}
 
 function wasSentToday(lead: LeadRecord, dateKey: string): boolean {
   const last = lead.outreachDraft?.lastSentAt;
@@ -66,16 +81,20 @@ async function discoverUntilMinSendable(
     return;
   }
 
+  const settings = getOutreachSettings();
+
   while (report.sendableCount! < OUTREACH_DAILY_MIN) {
-    if (log.discoveryRounds >= MAX_DISCOVERY_ROUNDS) {
+    if (log.discoveryRounds >= settings.discoveryMaxRounds) {
+      report.stoppedEarly = 'discovery_max_rounds';
       report.errors.push(
-        `Discovery stopped after ${MAX_DISCOVERY_ROUNDS} search rounds (${report.sendableCount} sendable, need ${OUTREACH_DAILY_MIN})`,
+        `Discovery stopped after ${settings.discoveryMaxRounds} search rounds (${report.sendableCount} sendable, need ${OUTREACH_DAILY_MIN})`,
       );
       break;
     }
-    if (Date.now() - startedAt > DISCOVERY_TIME_BUDGET_MS) {
+    if (discoveryBudgetExceeded(startedAt)) {
+      report.stoppedEarly = 'discovery_time_budget';
       report.errors.push(
-        `Discovery time budget reached (${report.sendableCount} sendable, need ${OUTREACH_DAILY_MIN})`,
+        `Discovery time budget reached (${settings.discoveryTimeBudgetSeconds}s, ${report.sendableCount} sendable). Sending available leads.`,
       );
       break;
     }
@@ -89,9 +108,14 @@ async function discoverUntilMinSendable(
     });
 
     try {
-      const discovery = await discoverLeadsFromSearch({ campaign, maxNew: 10 });
+      const discovery = await discoverLeadsFromSearch({
+        campaign,
+        maxNew: 10,
+        shouldAbort: () => discoveryBudgetExceeded(startedAt),
+      });
       report.discovered += discovery.created.length;
       report.skippedNoEmail += discovery.skippedNoEmail;
+      report.skippedCompetitor += discovery.skippedCompetitor;
       log.discovered += discovery.created.length;
       log.skippedNoEmail += discovery.skippedNoEmail;
       log.queriesUsed.push(discovery.query);
@@ -102,6 +126,7 @@ async function discoverUntilMinSendable(
         query: discovery.query,
         saved: discovery.created.length,
         skippedNoEmail: discovery.skippedNoEmail,
+        skippedCompetitor: discovery.skippedCompetitor,
       });
     } catch (err) {
       const msg = `Discovery failed: ${err instanceof Error ? err.message : String(err)}`;
@@ -135,6 +160,7 @@ export async function runOutreachWorker(
     discoveryQueries: [],
     discovered: 0,
     skippedNoEmail: 0,
+    skippedCompetitor: 0,
     discoveryRounds: 0,
     attempted: 0,
     sent: 0,
@@ -153,6 +179,7 @@ export async function runOutreachWorker(
     hasDiscovery: hasDiscoveryProvider(),
     targetMin: OUTREACH_DAILY_MIN,
     targetMax: OUTREACH_DAILY_MAX,
+    settings: getOutreachSettings(),
   });
 
   if (!report.enabled) {
@@ -183,6 +210,18 @@ export async function runOutreachWorker(
       apiLog('outreach/worker', 'daily max reached', { campaign, max: OUTREACH_DAILY_MAX });
       break;
     }
+    if (jobBudgetExceeded(startedAt)) {
+      report.stoppedEarly = 'job_time_budget';
+      report.errors.push(
+        `Job time budget reached (${getOutreachSettings().maxJobDurationSeconds}s). Stopped after ${log.sent.length} sends.`,
+      );
+      apiLog('outreach/worker', 'job time budget reached', {
+        campaign,
+        sent: log.sent.length,
+        elapsedMs: elapsedMs(startedAt),
+      });
+      break;
+    }
 
     const lead = await getLead(entry.id);
     if (!lead?.email || wasSentToday(lead, dateKey)) {
@@ -195,6 +234,12 @@ export async function runOutreachWorker(
     if (!result.ok) {
       report.errors.push(`${lead.id}: ${result.error}`);
       log.errors.push(`${lead.id}: ${result.error}`);
+      const failed = await getLead(lead.id);
+      if (failed) {
+        failed.lastSendError = result.error;
+        failed.lastSendAttemptAt = new Date().toISOString();
+        await saveLead(failed);
+      }
       continue;
     }
 
@@ -210,7 +255,7 @@ export async function runOutreachWorker(
     });
   }
 
-  if (log.sent.length < OUTREACH_DAILY_MIN) {
+  if (log.sent.length < OUTREACH_DAILY_MIN && !report.stoppedEarly) {
     report.errors.push(
       `Only ${log.sent.length} sends (min ${OUTREACH_DAILY_MIN}). ` +
         `${report.sendableCount} sendable after ${log.discoveryRounds} search rounds; ` +
@@ -219,6 +264,7 @@ export async function runOutreachWorker(
   }
 
   await saveDailySendLog(log);
+  report.elapsedMs = elapsedMs(startedAt);
   apiLog('outreach/worker', 'complete', report);
   return report;
 }
