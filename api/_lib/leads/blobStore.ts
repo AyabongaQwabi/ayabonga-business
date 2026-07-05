@@ -78,6 +78,7 @@ export async function saveLeadsIndex(index: LeadsIndex): Promise<void> {
 }
 
 export function toIndexEntry(lead: LeadRecord): LeadIndexEntry {
+  const lastHistory = lead.sendHistory?.at(-1);
   return {
     id: lead.id,
     kind: lead.kind,
@@ -91,6 +92,10 @@ export function toIndexEntry(lead: LeadRecord): LeadIndexEntry {
     sourcePage: lead.sourcePage,
     formType: lead.formType,
     updatedAt: lead.updatedAt,
+    lastSentAt: lead.outreachDraft?.lastSentAt ?? lastHistory?.sentAt,
+    sendCount: lead.sendHistory?.length ?? 0,
+    lastSendError: lead.lastSendError,
+    lastSendAttemptAt: lead.lastSendAttemptAt,
   };
 }
 
@@ -100,6 +105,16 @@ export async function upsertIndexEntry(lead: LeadRecord): Promise<void> {
   const i = index.entries.findIndex((e) => e.id === lead.id);
   if (i >= 0) index.entries[i] = entry;
   else index.entries.unshift(entry);
+  await saveLeadsIndex(index);
+}
+
+/** Refresh index send metadata without changing lead.updatedAt. */
+export async function syncLeadIndexSendFields(lead: LeadRecord): Promise<void> {
+  const index = await getLeadsIndex();
+  const i = index.entries.findIndex((e) => e.id === lead.id);
+  if (i < 0) return;
+  const entry = toIndexEntry(lead);
+  index.entries[i] = { ...index.entries[i], ...entry, updatedAt: index.entries[i].updatedAt };
   await saveLeadsIndex(index);
 }
 

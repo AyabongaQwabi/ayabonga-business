@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Loader2, Send } from 'lucide-react';
 import {
@@ -10,6 +10,11 @@ import {
   type LeadRecord,
   type LeadStatus,
 } from '../../lib/admin-api';
+import {
+  leadEmailStatus,
+  leadEmailStatusLabel,
+} from '../../lib/lead-email-status';
+import { previewOutreachContent } from '../../lib/merge-template';
 import { Button } from '../../components/ui/button';
 import { Label } from '../../components/ui/label';
 import { Skeleton } from '../../components/ui/skeleton';
@@ -72,6 +77,20 @@ export default function AdminLeadDetail() {
     void load();
   }, [load]);
 
+  const selectedTemplate = useMemo(
+    () => templates.find((t) => t.slug === templateSlug) ?? null,
+    [templates, templateSlug],
+  );
+
+  const mergedPreview = useMemo(() => {
+    if (!lead) return null;
+    return previewOutreachContent(lead, {
+      template: selectedTemplate,
+      draftSubject,
+      draftText,
+    });
+  }, [lead, selectedTemplate, draftSubject, draftText]);
+
   function applyTemplate(slug: string) {
     const t = templates.find((x) => x.slug === slug);
     if (!t) return;
@@ -114,6 +133,13 @@ export default function AdminLeadDetail() {
       });
       setLead(updated);
       setStatus(updated.status);
+      if (updated.outreachDraft?.subject) {
+        setDraftSubject(updated.outreachDraft.subject);
+      }
+      if (updated.outreachDraft?.text) {
+        const bodyOnly = updated.outreachDraft.text.split('\n\nAyabonga Qwabi')[0];
+        setDraftText(bodyOnly);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Send failed');
     } finally {
@@ -156,8 +182,30 @@ export default function AdminLeadDetail() {
         <div>
           <h1 className="text-2xl font-bold">{lead.name || lead.company || 'Lead'}</h1>
           <p className="text-sm text-muted-foreground">
-            {lead.email || 'No email'} · {lead.kind} · {lead.company || 'No company'}
+            {lead.email || 'No email'} · {lead.kind}
+            {lead.campaign ? ` · ${lead.campaign}` : ''} · {lead.company || 'No company'}
           </p>
+          <p className="text-sm mt-2">
+            <span className="font-medium">Outreach: </span>
+            {leadEmailStatusLabel(leadEmailStatus(lead))}
+            {lead.lastSentAt ? (
+              <span className="text-muted-foreground">
+                {' '}
+                · last sent {new Date(lead.lastSentAt).toLocaleString('en-ZA')}
+              </span>
+            ) : null}
+            {(lead.sendCount ?? 0) > 0 ? (
+              <span className="text-muted-foreground"> · {lead.sendCount} send(s)</span>
+            ) : null}
+          </p>
+          {lead.lastSendError ? (
+            <p className="text-sm text-destructive mt-1" role="alert">
+              Last send failed: {lead.lastSendError}
+              {lead.lastSendAttemptAt
+                ? ` (${new Date(lead.lastSendAttemptAt).toLocaleString('en-ZA')})`
+                : ''}
+            </p>
+          ) : null}
         </div>
         <select
           value={status}
@@ -297,9 +345,29 @@ export default function AdminLeadDetail() {
           />
         </div>
         <p className="text-xs text-muted-foreground">
-          Placeholders: {'{{firstName}}'}, {'{{company}}'}, {'{{whyNow}}'}, {'{{yourName}}'},{' '}
-          {'{{siteUrl}}'} (merged on send when using a template).
+          Placeholders merge on send. Edit with {'{{firstName}}'}, {'{{company}}'}, {'{{whyNow}}'},
+          {' {{yourName}}'}, {'{{siteUrl}}'}.
         </p>
+
+        {mergedPreview ? (
+          <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-2">
+            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Preview after merge
+            </p>
+            <p className="text-sm">
+              <span className="font-medium">Subject: </span>
+              {mergedPreview.subject || '(empty)'}
+            </p>
+            <pre className="text-xs whitespace-pre-wrap font-sans text-muted-foreground max-h-48 overflow-y-auto">
+              {mergedPreview.text || '(empty body)'}
+            </pre>
+            {mergedPreview.hasUnresolved ? (
+              <p className="text-xs text-destructive" role="alert">
+                Unresolved placeholders remain. Send will be blocked until these are fixed.
+              </p>
+            ) : null}
+          </div>
+        ) : null}
 
         <div className="flex flex-wrap gap-3">
           <Button
@@ -315,7 +383,12 @@ export default function AdminLeadDetail() {
             <AlertDialogTrigger asChild>
               <Button
                 type="button"
-                disabled={!lead.email || lead.status === 'lost' || sending}
+                disabled={
+                  !lead.email ||
+                  lead.status === 'lost' ||
+                  sending ||
+                  mergedPreview?.hasUnresolved
+                }
               >
                 <Send className="w-4 h-4 mr-2" aria-hidden />
                 Send email
@@ -324,9 +397,20 @@ export default function AdminLeadDetail() {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>Send this email?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This will send via Resend to <strong>{lead.email}</strong>. Subject:{' '}
-                  {draftSubject || '(empty)'}
+                <AlertDialogDescription asChild>
+                  <div className="space-y-2 text-sm text-muted-foreground">
+                    <p>
+                      Send via Resend to <strong className="text-foreground">{lead.email}</strong>
+                    </p>
+                    <p>
+                      <span className="font-medium text-foreground">Subject: </span>
+                      {mergedPreview?.subject || draftSubject || '(empty)'}
+                    </p>
+                    <p className="text-xs">
+                      Body opens with &quot;Hi {mergedPreview?.firstName ?? 'there'}&quot; and uses
+                      merged values, not raw {'{{placeholders}}'}.
+                    </p>
+                  </div>
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -345,6 +429,36 @@ export default function AdminLeadDetail() {
           </p>
         ) : null}
       </section>
+
+      {lead.sendHistory?.length ? (
+        <section className="rounded-xl border border-border p-5 space-y-3">
+          <h2 className="font-semibold">Send history</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="text-left text-muted-foreground">
+                <tr>
+                  <th className="pb-2 pr-4 font-medium">When</th>
+                  <th className="pb-2 pr-4 font-medium">To</th>
+                  <th className="pb-2 pr-4 font-medium">Subject</th>
+                  <th className="pb-2 pr-4 font-medium">Template</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...lead.sendHistory].reverse().map((entry, i) => (
+                  <tr key={`${entry.sentAt}-${i}`} className="border-t border-border">
+                    <td className="py-2 pr-4 whitespace-nowrap">
+                      {new Date(entry.sentAt).toLocaleString('en-ZA')}
+                    </td>
+                    <td className="py-2 pr-4">{entry.email}</td>
+                    <td className="py-2 pr-4">{entry.subject}</td>
+                    <td className="py-2 pr-4 text-muted-foreground">{entry.templateSlug}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
     </div>
   );
 }

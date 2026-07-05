@@ -13,6 +13,7 @@ export type LeadKind = 'inbound' | 'outbound';
 export type LeadIndexEntry = {
   id: string;
   kind: LeadKind;
+  campaign?: 'cofounder' | 'cold';
   status: LeadStatus;
   name?: string;
   email?: string;
@@ -22,6 +23,21 @@ export type LeadIndexEntry = {
   sourcePage?: string;
   formType?: string;
   updatedAt: string;
+  lastSentAt?: string;
+  sendCount?: number;
+  lastSendError?: string;
+  lastSendAttemptAt?: string;
+};
+
+export type SendHistoryEntry = {
+  sentAt: string;
+  templateSlug: string;
+  email: string;
+  channel: 'email';
+  subject: string;
+  from: string;
+  archiveId?: string;
+  resendMessageId?: string;
 };
 
 export type LeadRecord = LeadIndexEntry & {
@@ -43,6 +59,7 @@ export type LeadRecord = LeadIndexEntry & {
     templateSlug?: string;
     lastSentAt?: string;
   };
+  sendHistory?: SendHistoryEntry[];
   connectorType?: boolean;
 };
 

@@ -7,6 +7,11 @@ import {
   type LeadKind,
   type LeadStatus,
 } from '../../lib/admin-api';
+import {
+  leadEmailStatus,
+  leadEmailStatusLabel,
+  type LeadEmailStatus,
+} from '../../lib/lead-email-status';
 import { Skeleton } from '../../components/ui/skeleton';
 import { Button } from '../../components/ui/button';
 
@@ -20,6 +25,32 @@ const STATUS_OPTIONS: LeadStatus[] = [
   'won',
   'lost',
 ];
+
+const EMAIL_STATUS_CLASS: Record<LeadEmailStatus, string> = {
+  sent: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
+  failed: 'bg-destructive/15 text-destructive',
+  pending: 'bg-amber-500/15 text-amber-800 dark:text-amber-300',
+  no_email: 'bg-muted text-muted-foreground',
+};
+
+function EmailStatusBadge({ entry }: { entry: LeadIndexEntry }) {
+  const status = leadEmailStatus(entry);
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${EMAIL_STATUS_CLASS[status]}`}
+      title={
+        status === 'failed' && entry.lastSendError
+          ? entry.lastSendError
+          : entry.lastSentAt
+            ? `Last sent ${new Date(entry.lastSentAt).toLocaleString('en-ZA')}`
+            : leadEmailStatusLabel(status)
+      }
+    >
+      {leadEmailStatusLabel(status)}
+      {(entry.sendCount ?? 0) > 1 ? ` (${entry.sendCount})` : ''}
+    </span>
+  );
+}
 
 export default function AdminLeads() {
   const [tab, setTab] = useState<Tab>('all');
@@ -134,6 +165,7 @@ export default function AdminLeads() {
                 <th className="px-4 py-3 font-medium">Company</th>
                 <th className="px-4 py-3 font-medium">Kind</th>
                 <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium">Email</th>
                 <th className="px-4 py-3 font-medium">Score</th>
                 <th className="px-4 py-3 font-medium">Updated</th>
               </tr>
@@ -152,6 +184,9 @@ export default function AdminLeads() {
                   <td className="px-4 py-3 text-muted-foreground">{row.company || '—'}</td>
                   <td className="px-4 py-3 capitalize">{row.kind}</td>
                   <td className="px-4 py-3 capitalize">{row.status}</td>
+                  <td className="px-4 py-3">
+                    <EmailStatusBadge entry={row} />
+                  </td>
                   <td className="px-4 py-3">
                     {row.score != null ? (
                       <span>
