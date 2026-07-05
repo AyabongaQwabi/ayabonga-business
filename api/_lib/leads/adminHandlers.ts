@@ -11,11 +11,10 @@ import {
   listTemplates,
   saveLead,
   saveTemplate,
+  syncLeadIndexSendFields,
 } from './blobStore';
 import { sendOutreachToLead } from './sendOutreach';
-import { getSentEmail, listSentEmails, archiveSentEmail } from './sentEmailArchive';
-import { getResendFromAddress } from '../emailFrom';
-import { OUTREACH_CC_EMAIL } from './campaigns';
+import { getSentEmail, listSentEmails } from './sentEmailArchive';
 import type { EmailTemplate, LeadRecord, LeadStatus } from './types';
 import { defaultEmailTemplates } from './defaultTemplates';
 
@@ -108,7 +107,19 @@ export async function handleAdminRoute(
     const kind = req.query.kind as LeadRecord['kind'] | undefined;
     const status = req.query.status as LeadStatus | undefined;
     const q = typeof req.query.q === 'string' ? req.query.q : undefined;
-    const entries = await listLeads({ kind, status, q });
+    let entries = await listLeads({ kind, status, q });
+    const stale = entries
+      .filter((e) => e.sendCount === undefined && e.kind === 'outbound')
+      .slice(0, 40);
+    if (stale.length) {
+      await Promise.all(
+        stale.map(async (e) => {
+          const lead = await getLead(e.id);
+          if (lead) await syncLeadIndexSendFields(lead);
+        }),
+      );
+      entries = await listLeads({ kind, status, q });
+    }
     return { status: 200, body: { entries } };
   }
 
@@ -232,77 +243,30 @@ async function handleSendLeadEmail(
   body: Record<string, unknown> | null,
 ): Promise<{ status: number; body: Record<string, unknown> }> {
   const templateSlug = body?.templateSlug ? String(body.templateSlug) : undefined;
+  const draftSubject = body?.subject !== undefined ? String(body.subject) : undefined;
+  const draftText = body?.text !== undefined ? String(body.text) : undefined;
 
-  if (body?.subject && body?.text) {
-    const lead = await getLead(id);
-    if (!lead) return { status: 404, body: { error: 'Lead not found' } };
-    if (!lead.email) return { status: 400, body: { error: 'Lead has no email address' } };
-
-    const { buildBrandedOutreachEmail, outreachPlainFooter } = await import('./outreachEmail');
-    const firstName =
-      lead.name?.split(' ')[0] || lead.company?.split(' ')[0] || 'there';
-    const subject = String(body.subject);
-    const text = String(body.text);
-    const html =
-      body.html ? String(body.html) : buildBrandedOutreachEmail({ firstName, bodyText: text, preheader: subject });
-
-    const resendKey = process.env.RESEND_API_KEY?.trim();
-    if (!resendKey) return { status: 503, body: { error: 'RESEND_API_KEY is not configured' } };
-
-    const from = getResendFromAddress();
-    const plainText = `${text}${outreachPlainFooter()}`;
-    const { Resend } = await import('resend');
-    const resend = new Resend(resendKey);
-    const { data, error } = await resend.emails.send({
-      from,
-      to: [lead.email],
-      cc: [OUTREACH_CC_EMAIL],
-      subject,
-      text: plainText,
-      html,
-    });
-    if (error) return { status: 400, body: { error: error.message || 'Send failed' } };
-
-    const sentAt = new Date().toISOString();
-    const archived = await archiveSentEmail({
-      leadId: lead.id,
-      to: lead.email,
-      from,
-      subject,
-      text: plainText,
-      html,
-      templateSlug: templateSlug ?? 'custom',
-      channel: 'email',
-      resendMessageId: data?.id,
-      sentAt,
-    });
-
-    lead.outreachDraft = {
-      subject,
-      text: plainText,
-      html,
-      templateSlug,
-      lastSentAt: sentAt,
-    };
-    lead.sendHistory = [
-      ...(lead.sendHistory ?? []),
-      {
-        sentAt,
-        templateSlug: templateSlug ?? 'custom',
-        email: lead.email,
-        channel: 'email',
-        subject,
-        from,
-        archiveId: archived.id,
-        resendMessageId: data?.id,
-      },
-    ];
-    if (lead.status === 'new') lead.status = 'contacted';
-    await saveLead(lead);
-    return { status: 200, body: { ok: true, lead, archiveId: archived.id } };
+  if (!templateSlug && draftSubject === undefined && draftText === undefined) {
+    return { status: 400, body: { error: 'Provide a template or draft subject/body' } };
   }
 
-  const result = await sendOutreachToLead(id, { templateSlug });
-  if (!result.ok) return { status: result.status, body: { error: result.error } };
-  return { status: 200, body: { ok: true, lead: result.lead, templateSlug: result.templateSlug } };
+  const result = await sendOutreachToLead(id, {
+    templateSlug,
+    draftSubject,
+    draftText,
+  });
+
+  if (!result.ok) {
+    return { status: result.status, body: { error: result.error } };
+  }
+
+  return {
+    status: 200,
+    body: {
+      ok: true,
+      lead: result.lead,
+      templateSlug: result.templateSlug,
+      archiveId: result.archiveId,
+    },
+  };
 }

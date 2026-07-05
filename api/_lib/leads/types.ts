@@ -77,6 +77,9 @@ export type LeadRecord = {
   sendHistory?: SendHistoryEntry[];
   unsubscribedAt?: string;
   connectorType?: boolean;
+  /** Set when a send attempt fails; cleared on success. */
+  lastSendError?: string;
+  lastSendAttemptAt?: string;
 };
 
 export type LeadIndexEntry = {
@@ -92,6 +95,10 @@ export type LeadIndexEntry = {
   sourcePage?: string;
   formType?: string;
   updatedAt: string;
+  lastSentAt?: string;
+  sendCount?: number;
+  lastSendError?: string;
+  lastSendAttemptAt?: string;
 };
 
 export type LeadsIndex = {

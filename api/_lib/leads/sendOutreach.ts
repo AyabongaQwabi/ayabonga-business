@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { apiLog } from '../apiLog';
 import { getResendFromAddress } from '../emailFrom';
 import { getLead, getTemplate, listTemplates, saveLead, saveTemplate } from './blobStore';
-import { applyTemplate } from './mergeTemplate';
+import { applyTemplate, hasUnresolvedPlaceholders, prepareOutreachContent } from './mergeTemplate';
 import { buildBrandedOutreachEmail, outreachPlainFooter } from './outreachEmail';
 import { archiveSentEmail } from './sentEmailArchive';
 import { outreachRecipientsForLead } from './outreachRecipients';
@@ -69,13 +69,34 @@ export function pickTemplateSlugForLead(lead: LeadRecord): string {
 }
 
 async function resolveTemplate(slug: string): Promise<EmailTemplate | null> {
-  let template = await getTemplate(slug);
-  if (template) return template;
-  return (
+  const codeDefault =
     defaultEmailTemplates.find((t) => t.slug === slug) ??
     defaultColdTemplates.find((t) => t.slug === slug) ??
-    null
-  );
+    null;
+  const blob = await getTemplate(slug);
+  if (!blob) return codeDefault;
+  if (blob.html && hasUnresolvedPlaceholders(blob.html)) {
+    return { ...blob, html: undefined };
+  }
+  return blob;
+}
+
+function mergeTemplateForLead(
+  template: EmailTemplate,
+  lead: LeadRecord,
+  slug: string,
+): { subject: string; text: string; html?: string } {
+  let merged = applyTemplate(template, lead);
+  if (
+    hasUnresolvedPlaceholders(merged.subject) ||
+    hasUnresolvedPlaceholders(merged.text)
+  ) {
+    const fallback =
+      defaultEmailTemplates.find((t) => t.slug === slug) ??
+      defaultColdTemplates.find((t) => t.slug === slug);
+    if (fallback) merged = applyTemplate(fallback, lead);
+  }
+  return merged;
 }
 
 export async function ensureDefaultTemplates(): Promise<void> {
@@ -92,7 +113,12 @@ export type SendOutreachResult =
 
 export async function sendOutreachToLead(
   leadId: string,
-  options?: { templateSlug?: string; force?: boolean },
+  options?: {
+    templateSlug?: string;
+    force?: boolean;
+    draftSubject?: string;
+    draftText?: string;
+  },
 ): Promise<SendOutreachResult> {
   const lead = await getLead(leadId);
   if (!lead) return { ok: false, status: 404, error: 'Lead not found' };
@@ -109,22 +135,62 @@ export async function sendOutreachToLead(
   const resendKey = process.env.RESEND_API_KEY?.trim();
   if (!resendKey) return { ok: false, status: 503, error: 'RESEND_API_KEY is not configured' };
 
-  const templateSlug = options?.templateSlug ?? pickTemplateSlugForLead(lead);
-  const template = await resolveTemplate(templateSlug);
-  if (!template) {
-    return { ok: false, status: 404, error: `Template not found: ${templateSlug}` };
+  const hasDraft =
+    options?.draftSubject !== undefined || options?.draftText !== undefined;
+  const templateSlug =
+    options?.templateSlug ??
+    (hasDraft ? undefined : pickTemplateSlugForLead(lead)) ??
+    'custom';
+
+  let template: EmailTemplate | null = null;
+  if (templateSlug !== 'custom') {
+    template = await resolveTemplate(templateSlug);
+    if (!template) {
+      return { ok: false, status: 404, error: `Template not found: ${templateSlug}` };
+    }
   }
 
-  const merged = applyTemplate(template, lead);
-  const firstName =
-    lead.name?.split(' ')[0] || lead.company?.split(' ')[0] || 'there';
-  const html =
-    merged.html ??
-    buildBrandedOutreachEmail({
-      firstName,
-      bodyText: merged.text,
-      preheader: merged.subject,
-    });
+  if (!template && !hasDraft) {
+    return { ok: false, status: 400, error: 'No template or draft content to send' };
+  }
+
+  let merged = prepareOutreachContent(lead, {
+    template,
+    draftSubject: options?.draftSubject,
+    draftText: options?.draftText,
+  });
+
+  if (
+    template &&
+    templateSlug !== 'custom' &&
+    (hasUnresolvedPlaceholders(merged.subject) ||
+      hasUnresolvedPlaceholders(merged.text))
+  ) {
+    const fallback = mergeTemplateForLead(template, lead, templateSlug);
+    merged = {
+      firstName:
+        lead.name?.split(' ')[0] || lead.company?.split(' ')[0] || 'there',
+      subject: fallback.subject,
+      text: fallback.text,
+    };
+  }
+  if (hasUnresolvedPlaceholders(merged.subject) || hasUnresolvedPlaceholders(merged.text)) {
+    lead.lastSendError = 'Email still contains unresolved template placeholders after merge';
+    lead.lastSendAttemptAt = new Date().toISOString();
+    await saveLead(lead);
+    return {
+      ok: false,
+      status: 400,
+      error: lead.lastSendError,
+    };
+  }
+
+  const firstName = merged.firstName;
+  const html = buildBrandedOutreachEmail({
+    firstName,
+    bodyText: merged.text,
+    preheader: merged.subject,
+  });
   const text = `${merged.text}${outreachPlainFooter()}`;
   const from = getResendFromAddress();
 
@@ -152,6 +218,9 @@ export async function sendOutreachToLead(
 
   if (error) {
     apiLog('outreach/resend', 'error', { leadId: lead.id, message: error.message });
+    lead.lastSendError = error.message || 'Send failed';
+    lead.lastSendAttemptAt = new Date().toISOString();
+    await saveLead(lead);
     return { ok: false, status: 400, error: error.message || 'Send failed' };
   }
 
@@ -176,14 +245,14 @@ export async function sendOutreachToLead(
     subject: merged.subject,
     text,
     html,
-    templateSlug,
+    templateSlug: templateSlug === 'custom' ? undefined : templateSlug,
     lastSentAt: sentAt,
   };
   lead.sendHistory = [
     ...(lead.sendHistory ?? []),
     {
       sentAt,
-      templateSlug,
+      templateSlug: templateSlug === 'custom' ? 'custom' : templateSlug,
       email: toLine,
       channel: 'email',
       subject: merged.subject,
@@ -193,6 +262,8 @@ export async function sendOutreachToLead(
     },
   ];
   if (lead.status === 'new') lead.status = 'contacted';
+  lead.lastSendError = undefined;
+  lead.lastSendAttemptAt = sentAt;
   await saveLead(lead);
 
   return { ok: true, lead, templateSlug, archiveId: archived.id };
