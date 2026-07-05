@@ -207,15 +207,18 @@ export async function discoverLeadsFromSearch(maxNew = 15): Promise<{
         reason: enrichment.rejectedReason,
         rawEmails: enrichment.rawCount,
         pagesFetched: enrichment.pagesFetched,
+        foundButNotUsed: enrichment.allEmails,
       });
     }
 
     const score = scoreFromSnippet(result.snippet, result.title);
+    const altEmails = enrichment.allEmails.filter((e) => e !== email);
     const lead = await createLead({
       kind: 'outbound',
       status: email ? 'qualified' : 'new',
       name: undefined,
       email: email ?? undefined,
+      alternativeEmails: altEmails.length ? altEmails : undefined,
       company,
       role: undefined,
       score,

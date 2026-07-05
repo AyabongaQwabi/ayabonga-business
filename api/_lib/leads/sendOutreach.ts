@@ -5,6 +5,7 @@ import { getLead, getTemplate, listTemplates, saveLead, saveTemplate } from './b
 import { applyTemplate } from './mergeTemplate';
 import { buildBrandedOutreachEmail, outreachPlainFooter } from './outreachEmail';
 import { archiveSentEmail } from './sentEmailArchive';
+import { outreachRecipientsForLead } from './outreachRecipients';
 import { defaultEmailTemplates } from './defaultTemplates';
 import type { EmailTemplate, LeadRecord } from './types';
 
@@ -75,6 +76,10 @@ export async function sendOutreachToLead(
   const lead = await getLead(leadId);
   if (!lead) return { ok: false, status: 404, error: 'Lead not found' };
   if (!lead.email) return { ok: false, status: 400, error: 'Lead has no email address' };
+  const recipients = outreachRecipientsForLead(lead);
+  if (!recipients.length) {
+    return { ok: false, status: 400, error: 'Lead has no sendable email address' };
+  }
   if (lead.status === 'lost') return { ok: false, status: 400, error: 'Lead is marked lost' };
   if (lead.unsubscribedAt && !options?.force) {
     return { ok: false, status: 400, error: 'Lead unsubscribed' };
@@ -104,7 +109,7 @@ export async function sendOutreachToLead(
 
   apiLog('outreach/resend', 'sending', {
     leadId: lead.id,
-    to: lead.email,
+    to: recipients,
     from,
     templateSlug,
     subject: merged.subject,
@@ -113,7 +118,7 @@ export async function sendOutreachToLead(
   const resend = new Resend(resendKey);
   const { data, error } = await resend.emails.send({
     from,
-    to: [lead.email],
+    to: recipients,
     subject: merged.subject,
     text,
     html,
@@ -130,9 +135,10 @@ export async function sendOutreachToLead(
   apiLog('outreach/resend', 'ok', { leadId: lead.id, resendMessageId: data?.id });
 
   const sentAt = new Date().toISOString();
+  const toLine = recipients.join(', ');
   const archived = await archiveSentEmail({
     leadId: lead.id,
-    to: lead.email,
+    to: toLine,
     from,
     subject: merged.subject,
     text,
@@ -155,7 +161,7 @@ export async function sendOutreachToLead(
     {
       sentAt,
       templateSlug,
-      email: lead.email,
+      email: toLine,
       channel: 'email',
       subject: merged.subject,
       from,

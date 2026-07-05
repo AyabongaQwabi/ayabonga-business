@@ -3,7 +3,7 @@ import { apiLog } from '../apiLog';
 const EMAIL_RE =
   /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
 
-/** Never use these for outreach. */
+/** Only block addresses that cannot receive real outreach. */
 const HARD_BLOCKED_LOCALS = new Set([
   'noreply',
   'no-reply',
@@ -13,19 +13,8 @@ const HARD_BLOCKED_LOCALS = new Set([
   'legal',
   'unsubscribe',
   'mailer-daemon',
-]);
-
-/** Generic inboxes — usable when no personal email is found. */
-const GENERIC_LOCALS = new Set([
-  'info',
-  'hello',
-  'contact',
-  'sales',
-  'support',
-  'admin',
-  'enquiries',
-  'inquiries',
-  'office',
+  'postmaster',
+  'abuse',
 ]);
 
 const BLOCKED_DOMAINS = new Set([
@@ -37,22 +26,29 @@ const BLOCKED_DOMAINS = new Set([
   'google.com',
   'facebook.com',
   'linkedin.com',
+  'twitter.com',
+  'instagram.com',
+  'youtube.com',
 ]);
 
 export type EmailDiscoveryResult = {
   email: string | null;
+  /** All sendable addresses found (info@, contact@, personal, etc.). */
+  allEmails: string[];
   pagesFetched: number;
   rawCount: number;
   rejectedReason?: string;
 };
 
-function isValidEmailShape(email: string): boolean {
-  const [local, domain] = email.split('@');
+/** True for info@, contact@, hello@, sales@, and any other real inbox. */
+export function isOutreachSendableEmail(email: string): boolean {
+  const normalized = email.trim().toLowerCase();
+  const [local, domain] = normalized.split('@');
   if (!local || !domain) return false;
   if (BLOCKED_DOMAINS.has(domain)) return false;
   if (HARD_BLOCKED_LOCALS.has(local)) return false;
   if (local.includes('png') || local.includes('jpg') || local.includes('webp')) return false;
-  if (local.length > 48) return false;
+  if (local.length > 64) return false;
   return true;
 }
 
@@ -64,32 +60,42 @@ export function extractEmailsFromHtml(html: string): string[] {
   for (const match of html.matchAll(EMAIL_RE)) {
     found.add(match[0].toLowerCase());
   }
-  return [...found].filter(isValidEmailShape);
+  return [...found].filter(isOutreachSendableEmail);
 }
 
+/** Pick one primary inbox; all candidates including info@/contact@ are valid. */
 export function pickBestEmail(candidates: string[], siteHost?: string): string | null {
-  const unique = [...new Set(candidates.map((e) => e.toLowerCase()))].filter(isValidEmailShape);
+  const unique = [...new Set(candidates.map((e) => e.toLowerCase()))].filter(isOutreachSendableEmail);
   if (!unique.length) return null;
+
+  const host = siteHost?.replace(/^www\./, '').toLowerCase();
 
   const scored = unique
     .map((email) => {
       let score = 0;
       const [local, domain] = email.split('@');
-      const hostMatch =
-        siteHost &&
-        domain &&
-        siteHost.replace(/^www\./, '') === domain.replace(/^www\./, '');
-      if (hostMatch) score += 12;
-      if (GENERIC_LOCALS.has(local)) score += 4;
-      if (['founder', 'ceo', 'cto', 'director', 'owner'].some((p) => local.includes(p))) {
-        score += 8;
+      const domainNorm = domain.replace(/^www\./, '');
+      if (host && domainNorm === host) score += 20;
+      // Generic inboxes are first-class outreach targets for SMEs.
+      if (['info', 'contact', 'hello', 'sales', 'enquiries', 'inquiries', 'office', 'mail', 'email', 'team', 'support', 'admin', 'help', 'general', 'customerservice'].includes(local)) {
+        score += 10;
       }
-      if (local.includes('.') && !GENERIC_LOCALS.has(local)) score += 5;
-      return { email, score, generic: GENERIC_LOCALS.has(local) };
+      if (['founder', 'ceo', 'cto', 'director', 'owner'].some((p) => local.includes(p))) {
+        score += 6;
+      }
+      if (local.includes('.') && local.length > 3) score += 3;
+      return { email, score };
     })
     .sort((a, b) => b.score - a.score);
 
   return scored[0]?.email ?? null;
+}
+
+export function pickAllSendableEmails(candidates: string[], siteHost?: string): string[] {
+  const primary = pickBestEmail(candidates, siteHost);
+  const unique = [...new Set(candidates.map((e) => e.toLowerCase()))].filter(isOutreachSendableEmail);
+  if (!primary) return unique;
+  return [primary, ...unique.filter((e) => e !== primary)];
 }
 
 export async function fetchPageText(url: string, timeoutMs = 8000): Promise<string | null> {
@@ -126,10 +132,19 @@ export async function discoverEmailForWebsiteDetailed(
   try {
     host = new URL(siteUrl).hostname;
   } catch {
-    return { email: null, pagesFetched: 0, rawCount: 0, rejectedReason: 'invalid_url' };
+    return { email: null, allEmails: [], pagesFetched: 0, rawCount: 0, rejectedReason: 'invalid_url' };
   }
 
-  const paths = ['', '/contact', '/contact-us', '/about', '/about-us', '/team'];
+  const paths = [
+    '',
+    '/contact',
+    '/contact-us',
+    '/contactus',
+    '/about',
+    '/about-us',
+    '/team',
+    '/get-in-touch',
+  ];
   const rawEmails: string[] = [];
   let pagesFetched = 0;
 
@@ -139,12 +154,15 @@ export async function discoverEmailForWebsiteDetailed(
     if (!html) continue;
     pagesFetched += 1;
     rawEmails.push(...extractEmailsFromHtml(html));
-    if (rawEmails.length >= 5) break;
+    if (rawEmails.length >= 8) break;
   }
 
-  const email = pickBestEmail(rawEmails, host);
+  const allEmails = pickAllSendableEmails(rawEmails, host);
+  const email = allEmails[0] ?? null;
+
   return {
     email,
+    allEmails,
     pagesFetched,
     rawCount: rawEmails.length,
     rejectedReason:
@@ -168,6 +186,7 @@ export async function discoverEmailForWebsiteLogged(
       ...context,
       site: siteUrl,
       email: result.email,
+      allFound: result.allEmails,
       rawCount: result.rawCount,
       pagesFetched: result.pagesFetched,
     });

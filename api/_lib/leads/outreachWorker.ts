@@ -4,7 +4,7 @@ import {
   saveLead,
 } from './blobStore';
 import { getDailySendLog, saveDailySendLog, todayKey } from './dailySendLog';
-import { discoverEmailForWebsiteLogged } from './emailEnrichment';
+import { discoverEmailForWebsiteDetailed } from './emailEnrichment';
 import { discoverLeadsFromSearch } from './leadDiscovery';
 import {
   isOutreachEnabled,
@@ -39,8 +39,8 @@ function wasSentToday(lead: LeadRecord, dateKey: string): boolean {
   return Boolean(last && last.startsWith(dateKey));
 }
 
-async function enrichLeadsMissingEmail(limit = 20): Promise<number> {
-  const entries = await listLeads({ kind: 'outbound', status: 'new' });
+async function enrichLeadsMissingEmail(limit = 40): Promise<number> {
+  const entries = (await listLeads({ kind: 'outbound' })).filter((e) => !e.email);
   apiLog('outreach/enrich', 'batch start', { candidates: entries.length, limit });
   let enriched = 0;
   let failed = 0;
@@ -55,15 +55,29 @@ async function enrichLeadsMissingEmail(limit = 20): Promise<number> {
       });
       continue;
     }
-    const email = await discoverEmailForWebsiteLogged(lead.sourcePage, {
-      leadId: lead.id,
-      company: lead.company,
-    });
-    if (!email) {
+    const detailed = await discoverEmailForWebsiteDetailed(lead.sourcePage);
+    if (!detailed.email) {
       failed += 1;
+      apiLog('outreach/enrich', 'no email', {
+        leadId: lead.id,
+        company: lead.company,
+        site: lead.sourcePage,
+        pagesFetched: detailed.pagesFetched,
+        rawCount: detailed.rawCount,
+        reason: detailed.rejectedReason,
+        allFound: detailed.allEmails,
+      });
       continue;
     }
-    lead.email = email;
+    lead.email = detailed.email;
+    lead.alternativeEmails = detailed.allEmails.filter((e) => e !== detailed.email);
+    apiLog('outreach/enrich', 'found email', {
+      leadId: lead.id,
+      company: lead.company,
+      site: lead.sourcePage,
+      email: detailed.email,
+      allFound: detailed.allEmails,
+    });
     lead.status = 'qualified';
     lead.updatedAt = new Date().toISOString();
     await saveLead(lead);

@@ -48,6 +48,8 @@ export type LeadRecord = {
   updatedAt: string;
   name?: string;
   email?: string;
+  /** Other inboxes found on the same site (info@, sales@, etc.). */
+  alternativeEmails?: string[];
   company?: string;
   role?: string;
   linkedInUrl?: string;
