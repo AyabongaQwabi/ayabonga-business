@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { createLead, getLeadsIndex } from './blobStore';
-import { discoverEmailForWebsite } from './emailEnrichment';
+import { discoverEmailForWebsiteDetailed } from './emailEnrichment';
+import { apiLog } from '../apiLog';
 import { braveSearchApiKey, DISCOVERY_QUERIES } from './outreachConfig';
 import type { LeadRecord } from './types';
 
@@ -140,9 +141,19 @@ async function searchGoogleCse(query: string): Promise<SearchResult[]> {
 
 /** Tries Brave (free tier) first, then SerpAPI, then Google CSE. */
 export async function runWebSearch(query: string): Promise<DiscoveryResult> {
-  for (const search of [searchBrave, searchSerpApi, searchGoogleCse]) {
+  const providers = [
+    { name: 'brave', search: searchBrave },
+    { name: 'serpapi', search: searchSerpApi },
+    { name: 'google_cse', search: searchGoogleCse },
+  ] as const;
+
+  for (const { name, search } of providers) {
     const results = await search(query);
-    if (results.length) return { query, results };
+    if (results.length) {
+      apiLog('outreach/discovery', 'search provider', { provider: name, query, results: results.length });
+      return { query, results };
+    }
+    apiLog('outreach/discovery', 'search empty', { provider: name, query });
   }
   return { query, results: [] };
 }
@@ -185,8 +196,19 @@ export async function discoverLeadsFromSearch(maxNew = 15): Promise<{
     const key = `${company.toLowerCase()}|`;
     if (existingKeys.has(key)) continue;
 
-    let email = await discoverEmailForWebsite(result.link);
+    let email: string | null = null;
+    const enrichment = await discoverEmailForWebsiteDetailed(result.link);
+    email = enrichment.email;
     if (email) enriched += 1;
+    else {
+      apiLog('outreach/discovery', 'lead without email', {
+        company,
+        link: result.link,
+        reason: enrichment.rejectedReason,
+        rawEmails: enrichment.rawCount,
+        pagesFetched: enrichment.pagesFetched,
+      });
+    }
 
     const score = scoreFromSnippet(result.snippet, result.title);
     const lead = await createLead({

@@ -4,7 +4,7 @@ import {
   saveLead,
 } from './blobStore';
 import { getDailySendLog, saveDailySendLog, todayKey } from './dailySendLog';
-import { discoverEmailForWebsite } from './emailEnrichment';
+import { discoverEmailForWebsiteLogged } from './emailEnrichment';
 import { discoverLeadsFromSearch } from './leadDiscovery';
 import {
   isOutreachEnabled,
@@ -28,6 +28,10 @@ export type OutreachDailyReport = {
   errors: string[];
   targetMin: number;
   targetMax: number;
+  /** Outbound leads in index with a sendable email address. */
+  sendableCount?: number;
+  /** Outbound leads missing email (cannot send until enriched). */
+  missingEmailCount?: number;
 };
 
 function wasSentToday(lead: LeadRecord, dateKey: string): boolean {
@@ -37,14 +41,28 @@ function wasSentToday(lead: LeadRecord, dateKey: string): boolean {
 
 async function enrichLeadsMissingEmail(limit = 20): Promise<number> {
   const entries = await listLeads({ kind: 'outbound', status: 'new' });
+  apiLog('outreach/enrich', 'batch start', { candidates: entries.length, limit });
   let enriched = 0;
+  let failed = 0;
 
   for (const entry of entries.slice(0, limit)) {
     if (entry.email) continue;
     const lead = await getLead(entry.id);
-    if (!lead?.sourcePage) continue;
-    const email = await discoverEmailForWebsite(lead.sourcePage);
-    if (!email) continue;
+    if (!lead?.sourcePage) {
+      apiLog('outreach/enrich', 'skip: no sourcePage', {
+        leadId: entry.id,
+        company: entry.company,
+      });
+      continue;
+    }
+    const email = await discoverEmailForWebsiteLogged(lead.sourcePage, {
+      leadId: lead.id,
+      company: lead.company,
+    });
+    if (!email) {
+      failed += 1;
+      continue;
+    }
     lead.email = email;
     lead.status = 'qualified';
     lead.updatedAt = new Date().toISOString();
@@ -52,7 +70,40 @@ async function enrichLeadsMissingEmail(limit = 20): Promise<number> {
     enriched += 1;
   }
 
+  apiLog('outreach/enrich', 'batch done', { enriched, failed, scanned: Math.min(entries.length, limit) });
   return enriched;
+}
+
+async function summarizeOutboundPool(sentTodayIds: Set<string>) {
+  const candidates = await listLeads({ kind: 'outbound' });
+  const withEmail = candidates.filter((e) => Boolean(e.email));
+  const withoutEmail = candidates.filter((e) => !e.email);
+  const sendable = withEmail.filter(
+    (e) =>
+      (e.status === 'new' || e.status === 'qualified') && !sentTodayIds.has(e.id),
+  );
+  const byStatus: Record<string, number> = {};
+  for (const e of candidates) {
+    byStatus[e.status] = (byStatus[e.status] ?? 0) + 1;
+  }
+  return {
+    total: candidates.length,
+    withEmail: withEmail.length,
+    withoutEmail: withoutEmail.length,
+    sendable: sendable.length,
+    byStatus,
+    missingEmailSample: withoutEmail.slice(0, 5).map((e) => ({
+      id: e.id,
+      company: e.company,
+      status: e.status,
+    })),
+    sendableSample: sendable.slice(0, 3).map((e) => ({
+      id: e.id,
+      company: e.company,
+      email: e.email,
+      status: e.status,
+    })),
+  };
 }
 
 function rankLead(entry: { score?: number; tier?: number; updatedAt: string }): number {
@@ -98,6 +149,10 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
   const log = await getDailySendLog(dateKey);
   apiLog('outreach/worker', 'daily log loaded', { alreadySentToday: log.sent.length });
 
+  const sentTodayIds = new Set(log.sent.map((s) => s.leadId));
+  const poolBefore = await summarizeOutboundPool(sentTodayIds);
+  apiLog('outreach/worker', 'lead pool (before)', poolBefore);
+
   if (hasDiscoveryProvider()) {
     try {
       apiLog('outreach/worker', 'discovery pass 1');
@@ -109,7 +164,8 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
       apiLog('outreach/worker', 'discovery pass 1 done', {
         query: discovery.query,
         created: discovery.created.length,
-        enriched: discovery.enriched,
+        enrichedWithEmail: discovery.enriched,
+        withoutEmail: discovery.created.length - discovery.enriched,
       });
     } catch (err) {
       const msg = `Discovery failed: ${err instanceof Error ? err.message : String(err)}`;
@@ -124,22 +180,30 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
   log.enriched += report.enrichedExisting;
   apiLog('outreach/worker', 'email enrichment', { enriched: report.enrichedExisting });
 
-  async function loadSendable() {
-    const sentTodayIds = new Set(log.sent.map((s) => s.leadId));
-    const candidates = await listLeads({ kind: 'outbound' });
-    return candidates
+  async function loadSendableEntries() {
+    return (await listLeads({ kind: 'outbound' }))
       .filter((e) => Boolean(e.email))
       .filter((e) => e.status === 'new' || e.status === 'qualified')
       .filter((e) => !sentTodayIds.has(e.id))
       .sort((a, b) => rankLead(b) - rankLead(a));
   }
 
-  let sendable = await loadSendable();
-  apiLog('outreach/worker', 'sendable leads', { count: sendable.length });
+  let sendableEntries = await loadSendableEntries();
+  let poolStats = await summarizeOutboundPool(sentTodayIds);
+  report.sendableCount = poolStats.sendable;
+  report.missingEmailCount = poolStats.withoutEmail;
+  apiLog('outreach/worker', 'lead pool (after enrich)', poolStats);
+  apiLog('outreach/worker', 'sendable leads', {
+    count: sendableEntries.length,
+    sample: poolStats.sendableSample,
+  });
 
-  if (sendable.length < OUTREACH_DAILY_MIN && hasDiscoveryProvider()) {
+  if (sendableEntries.length < OUTREACH_DAILY_MIN && hasDiscoveryProvider()) {
     try {
-      apiLog('outreach/worker', 'discovery pass 2 (below min sendable)');
+      apiLog('outreach/worker', 'discovery pass 2 (below min sendable)', {
+        sendable: sendableEntries.length,
+        min: OUTREACH_DAILY_MIN,
+      });
       const extra = await discoverLeadsFromSearch(15);
       report.discovered += extra.created.length;
       log.discovered += extra.created.length;
@@ -147,10 +211,15 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
       const extraEnriched = await enrichLeadsMissingEmail(15);
       report.enrichedExisting += extraEnriched;
       log.enriched += extraEnriched;
-      sendable = await loadSendable();
+      sendableEntries = await loadSendableEntries();
+      poolStats = await summarizeOutboundPool(sentTodayIds);
+      report.sendableCount = poolStats.sendable;
+      report.missingEmailCount = poolStats.withoutEmail;
       apiLog('outreach/worker', 'discovery pass 2 done', {
-        sendable: sendable.length,
+        sendable: sendableEntries.length,
         discovered: extra.created.length,
+        enrichedInPass: extra.enriched,
+        pool: poolStats,
       });
     } catch (err) {
       const msg = `Second discovery pass failed: ${err instanceof Error ? err.message : String(err)}`;
@@ -159,7 +228,7 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
     }
   }
 
-  for (const entry of sendable) {
+  for (const entry of sendableEntries) {
     if (log.sent.length >= OUTREACH_DAILY_MAX) {
       apiLog('outreach/worker', 'daily max reached', { max: OUTREACH_DAILY_MAX });
       break;
@@ -204,9 +273,19 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
   }
 
   if (log.sent.length < OUTREACH_DAILY_MIN) {
+    const pool = await summarizeOutboundPool(sentTodayIds);
+    report.sendableCount = pool.sendable;
+    report.missingEmailCount = pool.withoutEmail;
     report.errors.push(
-      `Only ${log.sent.length} sends today (min ${OUTREACH_DAILY_MIN}). Add discovery API keys or enrich lead emails.`,
+      `Only ${log.sent.length} sends today (min ${OUTREACH_DAILY_MIN}). ` +
+        `${pool.withoutEmail} outbound leads have no email; ${pool.sendable} are sendable. ` +
+        'Discovery ran — scrape sites or seed leads with emails.',
     );
+    apiLog('outreach/worker', 'below daily minimum', {
+      sent: log.sent.length,
+      min: OUTREACH_DAILY_MIN,
+      pool,
+    });
   }
 
   await saveDailySendLog(log);
@@ -214,6 +293,8 @@ export async function runDailyOutreachWorker(): Promise<OutreachDailyReport> {
     sent: report.sent,
     attempted: report.attempted,
     skipped: report.skipped,
+    sendableCount: report.sendableCount,
+    missingEmailCount: report.missingEmailCount,
     errors: report.errors.length,
   });
   return report;

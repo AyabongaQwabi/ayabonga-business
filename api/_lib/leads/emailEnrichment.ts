@@ -1,22 +1,31 @@
+import { apiLog } from '../apiLog';
+
 const EMAIL_RE =
   /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/gi;
 
-const BLOCKED_LOCALS = new Set([
+/** Never use these for outreach. */
+const HARD_BLOCKED_LOCALS = new Set([
   'noreply',
   'no-reply',
   'donotreply',
-  'support',
-  'hello',
-  'info',
-  'contact',
-  'sales',
-  'admin',
+  'donot-reply',
   'privacy',
   'legal',
-  'careers',
-  'jobs',
-  'newsletter',
-  'marketing',
+  'unsubscribe',
+  'mailer-daemon',
+]);
+
+/** Generic inboxes — usable when no personal email is found. */
+const GENERIC_LOCALS = new Set([
+  'info',
+  'hello',
+  'contact',
+  'sales',
+  'support',
+  'admin',
+  'enquiries',
+  'inquiries',
+  'office',
 ]);
 
 const BLOCKED_DOMAINS = new Set([
@@ -25,7 +34,27 @@ const BLOCKED_DOMAINS = new Set([
   'wixpress.com',
   'wordpress.com',
   'squarespace.com',
+  'google.com',
+  'facebook.com',
+  'linkedin.com',
 ]);
+
+export type EmailDiscoveryResult = {
+  email: string | null;
+  pagesFetched: number;
+  rawCount: number;
+  rejectedReason?: string;
+};
+
+function isValidEmailShape(email: string): boolean {
+  const [local, domain] = email.split('@');
+  if (!local || !domain) return false;
+  if (BLOCKED_DOMAINS.has(domain)) return false;
+  if (HARD_BLOCKED_LOCALS.has(local)) return false;
+  if (local.includes('png') || local.includes('jpg') || local.includes('webp')) return false;
+  if (local.length > 48) return false;
+  return true;
+}
 
 export function extractEmailsFromHtml(html: string): string[] {
   const found = new Set<string>();
@@ -35,33 +64,31 @@ export function extractEmailsFromHtml(html: string): string[] {
   for (const match of html.matchAll(EMAIL_RE)) {
     found.add(match[0].toLowerCase());
   }
-  return [...found].filter(isLikelyBusinessEmail);
-}
-
-function isLikelyBusinessEmail(email: string): boolean {
-  const [local, domain] = email.split('@');
-  if (!local || !domain) return false;
-  if (BLOCKED_DOMAINS.has(domain)) return false;
-  if (local.includes('png') || local.includes('jpg')) return false;
-  if (BLOCKED_LOCALS.has(local)) return false;
-  if (local.length > 48) return false;
-  return true;
+  return [...found].filter(isValidEmailShape);
 }
 
 export function pickBestEmail(candidates: string[], siteHost?: string): string | null {
-  const scored = candidates
-    .filter(isLikelyBusinessEmail)
+  const unique = [...new Set(candidates.map((e) => e.toLowerCase()))].filter(isValidEmailShape);
+  if (!unique.length) return null;
+
+  const scored = unique
     .map((email) => {
       let score = 0;
       const [local, domain] = email.split('@');
-      if (siteHost && domain && siteHost.replace(/^www\./, '') === domain.replace(/^www\./, '')) {
-        score += 10;
+      const hostMatch =
+        siteHost &&
+        domain &&
+        siteHost.replace(/^www\./, '') === domain.replace(/^www\./, '');
+      if (hostMatch) score += 12;
+      if (GENERIC_LOCALS.has(local)) score += 4;
+      if (['founder', 'ceo', 'cto', 'director', 'owner'].some((p) => local.includes(p))) {
+        score += 8;
       }
-      if (local && !BLOCKED_LOCALS.has(local)) score += 3;
-      if (['founder', 'ceo', 'cto', 'hello', 'team'].some((p) => local.includes(p))) score += 2;
-      return { email, score };
+      if (local.includes('.') && !GENERIC_LOCALS.has(local)) score += 5;
+      return { email, score, generic: GENERIC_LOCALS.has(local) };
     })
     .sort((a, b) => b.score - a.score);
+
   return scored[0]?.email ?? null;
 }
 
@@ -88,23 +115,70 @@ export async function fetchPageText(url: string, timeoutMs = 8000): Promise<stri
 }
 
 export async function discoverEmailForWebsite(siteUrl: string): Promise<string | null> {
+  const result = await discoverEmailForWebsiteDetailed(siteUrl);
+  return result.email;
+}
+
+export async function discoverEmailForWebsiteDetailed(
+  siteUrl: string,
+): Promise<EmailDiscoveryResult> {
   let host: string | undefined;
   try {
     host = new URL(siteUrl).hostname;
   } catch {
-    return null;
+    return { email: null, pagesFetched: 0, rawCount: 0, rejectedReason: 'invalid_url' };
   }
 
-  const paths = ['', '/contact', '/about', '/team'];
-  const emails: string[] = [];
+  const paths = ['', '/contact', '/contact-us', '/about', '/about-us', '/team'];
+  const rawEmails: string[] = [];
+  let pagesFetched = 0;
 
   for (const path of paths) {
     const pageUrl = new URL(path, siteUrl).toString();
     const html = await fetchPageText(pageUrl);
     if (!html) continue;
-    emails.push(...extractEmailsFromHtml(html));
-    if (emails.length >= 3) break;
+    pagesFetched += 1;
+    rawEmails.push(...extractEmailsFromHtml(html));
+    if (rawEmails.length >= 5) break;
   }
 
-  return pickBestEmail(emails, host);
+  const email = pickBestEmail(rawEmails, host);
+  return {
+    email,
+    pagesFetched,
+    rawCount: rawEmails.length,
+    rejectedReason:
+      !email && rawEmails.length > 0
+        ? 'no_suitable_pick'
+        : !email && pagesFetched === 0
+          ? 'pages_unreachable'
+          : !email
+            ? 'no_emails_on_site'
+            : undefined,
+  };
+}
+
+export async function discoverEmailForWebsiteLogged(
+  siteUrl: string,
+  context: { leadId?: string; company?: string },
+): Promise<string | null> {
+  const result = await discoverEmailForWebsiteDetailed(siteUrl);
+  if (result.email) {
+    apiLog('outreach/enrich', 'found email', {
+      ...context,
+      site: siteUrl,
+      email: result.email,
+      rawCount: result.rawCount,
+      pagesFetched: result.pagesFetched,
+    });
+  } else {
+    apiLog('outreach/enrich', 'no email', {
+      ...context,
+      site: siteUrl,
+      pagesFetched: result.pagesFetched,
+      rawCount: result.rawCount,
+      reason: result.rejectedReason,
+    });
+  }
+  return result.email;
 }
