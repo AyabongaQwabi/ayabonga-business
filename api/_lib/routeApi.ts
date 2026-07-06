@@ -118,6 +118,34 @@ export async function dispatchApiRequest(req: VercelRequest): Promise<ApiRouteRe
     return handleOutreachCron(req, method, 'cold', 'cron/outreach-cold-daily');
   }
 
+  if (apiPath === 'cron/outreach-all-daily') {
+    apiLog('cron/outreach-all-daily', 'hit', { method });
+    if (method !== 'GET' && method !== 'POST') {
+      return { status: 405, body: { error: 'Method not allowed' } };
+    }
+    if (!authorizeCron(req)) {
+      return { status: 401, body: { error: 'Unauthorized' } };
+    }
+    const startedAt = Date.now();
+    const maxMs = 280_000;
+    try {
+      const cold = await runOutreachWorker('cold');
+      const reports: Record<string, unknown> = { cold };
+      if (Date.now() - startedAt < maxMs) {
+        reports.cofounder = await runOutreachWorker('cofounder');
+      } else {
+        reports.cofounderSkipped = 'Time budget exhausted after cold run';
+      }
+      return { status: 200, body: reports };
+    } catch (error) {
+      apiLogError('cron/outreach-all-daily', 'worker failed', error);
+      return {
+        status: 500,
+        body: { error: error instanceof Error ? error.message : 'Worker failed' },
+      };
+    }
+  }
+
   if (apiPath === 'admin' || apiPath.startsWith('admin/')) {
     const segments = apiPath.replace(/^admin\/?/, '').split('/').filter(Boolean);
     const parsed = parseJsonBody(req);

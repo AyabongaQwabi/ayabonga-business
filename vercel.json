@@ -38,12 +38,8 @@
   ],
   "crons": [
     {
-      "path": "/api/cron/outreach-cofounder-daily",
-      "schedule": "*/30 * * * *"
-    },
-    {
       "path": "/api/cron/outreach-cold-daily",
-      "schedule": "*/30 * * * *"
+      "schedule": "0 6 * * *"
     }
   ]
 }
