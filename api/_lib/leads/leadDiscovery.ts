@@ -8,10 +8,7 @@ import {
   buyerIndustryFromQuery,
   isSoftwareProviderResult,
 } from './competitorFilter';
-import {
-  sanitizeCompanyName,
-  sanitizeWhyNow,
-} from './leadFieldSanitize';
+import { sanitizeCompanyName } from './leadFieldSanitize';
 import type { LeadRecord } from './types';
 
 export type SearchResult = {
@@ -283,13 +280,14 @@ export async function discoverLeadsFromSearch(options: {
       score,
       tier: score >= 85 ? 1 : score >= 70 ? 2 : 3,
       verticals: industry,
-      whyNow:
-        sanitizeWhyNow(result.snippet) ||
-        `South African ${industry[0] ?? 'business'} team found via outreach discovery`,
+      // Search snippets are directory boilerplate, not conversation hooks.
+      // They live in notes for admin review and NEVER reach email copy;
+      // vertical-specific valueHook/buildIdeas carry the message instead.
+      whyNow: undefined,
       sourcePage: result.link,
       formType: options.campaign === 'cold' ? 'discovery_cold' : 'discovery_cofounder',
       suggestedChannel: 'email',
-      notes: `Auto-discovered ${new Date().toISOString().slice(0, 10)} · ${options.campaign} · ${query}`,
+      notes: `Auto-discovered ${new Date().toISOString().slice(0, 10)} · ${options.campaign} · ${query}\nSnippet: ${result.snippet.slice(0, 300)}`,
     });
 
     existingEmails.add(emailKey);

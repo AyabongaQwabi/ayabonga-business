@@ -83,6 +83,8 @@ export function mergePlaceholders(
     .replace(/\{whyNow\}/g, ctx.whyNow)
     .replace(/\{yourName\}/g, ctx.yourName)
     .replace(/\{siteUrl\}/g, ctx.siteUrl);
+  // Empty placeholders (e.g. whyNow) leave double blank lines; collapse them.
+  out = out.replace(/\n{3,}/g, '\n\n').trim();
   return out;
 }
 

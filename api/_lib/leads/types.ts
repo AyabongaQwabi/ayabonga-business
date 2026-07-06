@@ -94,11 +94,23 @@ export type LeadIndexEntry = {
   tier?: 1 | 2 | 3;
   sourcePage?: string;
   formType?: string;
+  createdAt?: string;
   updatedAt: string;
   lastSentAt?: string;
   sendCount?: number;
   lastSendError?: string;
   lastSendAttemptAt?: string;
+};
+
+export type LeadSortField = 'updated' | 'created' | 'score' | 'lastSent';
+
+export type LeadsListResult = {
+  entries: LeadIndexEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+  sort: LeadSortField;
+  order: 'asc' | 'desc';
 };
 
 export type LeadsIndex = {

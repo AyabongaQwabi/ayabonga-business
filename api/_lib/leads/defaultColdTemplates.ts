@@ -1,7 +1,7 @@
 import type { EmailTemplate } from './types';
 
 /** Bump when copy changes so ensureDefaultTemplates refreshes blob copies. */
-export const COLD_TEMPLATE_SEED_VERSION = 3;
+export const COLD_TEMPLATE_SEED_VERSION = 4;
 
 const STANDARD_COLD_BODY = `Hi {{firstName}},
 

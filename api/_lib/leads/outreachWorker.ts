@@ -62,7 +62,7 @@ async function loadSendableEntries(
   campaign: OutreachCampaign,
   sentTodayIds: Set<string>,
 ) {
-  return (await listLeads({ kind: 'outbound', campaign }))
+  return (await listLeads({ kind: 'outbound', campaign })).entries
     .filter((e) => Boolean(e.email))
     .filter((e) => e.status === 'new' || e.status === 'qualified')
     .filter((e) => !sentTodayIds.has(e.id))

@@ -10,6 +10,17 @@ export type LeadStatus =
 
 export type LeadKind = 'inbound' | 'outbound';
 
+export type LeadSortField = 'updated' | 'created' | 'score' | 'lastSent';
+
+export type LeadsListResponse = {
+  entries: LeadIndexEntry[];
+  total: number;
+  page: number;
+  pageSize: number;
+  sort: LeadSortField;
+  order: 'asc' | 'desc';
+};
+
 export type LeadIndexEntry = {
   id: string;
   kind: LeadKind;
@@ -22,6 +33,7 @@ export type LeadIndexEntry = {
   tier?: 1 | 2 | 3;
   sourcePage?: string;
   formType?: string;
+  createdAt?: string;
   updatedAt: string;
   lastSentAt?: string;
   sendCount?: number;
@@ -129,16 +141,21 @@ export async function fetchLeads(params?: {
   kind?: LeadKind;
   status?: LeadStatus;
   q?: string;
-}): Promise<LeadIndexEntry[]> {
+  page?: number;
+  pageSize?: number;
+  sort?: LeadSortField;
+  order?: 'asc' | 'desc';
+}): Promise<LeadsListResponse> {
   const qs = new URLSearchParams();
   if (params?.kind) qs.set('kind', params.kind);
   if (params?.status) qs.set('status', params.status);
   if (params?.q) qs.set('q', params.q);
+  if (params?.page) qs.set('page', String(params.page));
+  if (params?.pageSize) qs.set('pageSize', String(params.pageSize));
+  if (params?.sort) qs.set('sort', params.sort);
+  if (params?.order) qs.set('order', params.order);
   const query = qs.toString();
-  const data = await adminFetch<{ entries: LeadIndexEntry[] }>(
-    `leads${query ? `?${query}` : ''}`,
-  );
-  return data.entries;
+  return adminFetch<LeadsListResponse>(`leads${query ? `?${query}` : ''}`);
 }
 
 export async function fetchLead(id: string): Promise<LeadRecord> {

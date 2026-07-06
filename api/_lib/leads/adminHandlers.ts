@@ -15,7 +15,7 @@ import {
 } from './blobStore';
 import { sendOutreachToLead } from './sendOutreach';
 import { getSentEmail, listSentEmails } from './sentEmailArchive';
-import type { EmailTemplate, LeadRecord, LeadStatus } from './types';
+import type { EmailTemplate, LeadRecord, LeadStatus, LeadSortField } from './types';
 import { defaultEmailTemplates } from './defaultTemplates';
 
 const STATUSES = new Set<LeadStatus>([
@@ -107,8 +107,26 @@ export async function handleAdminRoute(
     const kind = req.query.kind as LeadRecord['kind'] | undefined;
     const status = req.query.status as LeadStatus | undefined;
     const q = typeof req.query.q === 'string' ? req.query.q : undefined;
-    let entries = await listLeads({ kind, status, q });
-    const stale = entries
+    const page = req.query.page ? Number.parseInt(String(req.query.page), 10) : 1;
+    const pageSize = req.query.pageSize
+      ? Number.parseInt(String(req.query.pageSize), 10)
+      : 25;
+    const sort = (typeof req.query.sort === 'string'
+      ? req.query.sort
+      : 'updated') as LeadSortField;
+    const order = req.query.order === 'asc' ? 'asc' : 'desc';
+
+    let result = await listLeads({
+      kind,
+      status,
+      q,
+      page,
+      pageSize,
+      sort,
+      order,
+    });
+
+    const stale = result.entries
       .filter((e) => e.sendCount === undefined && e.kind === 'outbound')
       .slice(0, 40);
     if (stale.length) {
@@ -118,9 +136,17 @@ export async function handleAdminRoute(
           if (lead) await syncLeadIndexSendFields(lead);
         }),
       );
-      entries = await listLeads({ kind, status, q });
+      result = await listLeads({
+        kind,
+        status,
+        q,
+        page,
+        pageSize,
+        sort,
+        order,
+      });
     }
-    return { status: 200, body: { entries } };
+    return { status: 200, body: result as unknown as Record<string, unknown> };
   }
 
   if (a === 'leads' && b && c === 'send' && req.method === 'POST') {

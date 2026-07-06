@@ -1,13 +1,16 @@
 import type { EmailTemplate } from './types';
 
+/** Bump when copy changes so ensureDefaultTemplates refreshes blob copies. */
+export const WARM_TEMPLATE_SEED_VERSION = 2;
+
 const rawTemplates = [
   {
     slug: 'sa-sme-custom-build',
     name: 'SA SME custom software build',
     category: 'direct',
     placeholders: ['firstName', 'company', 'whyNow', 'yourName', 'siteUrl'],
-    subject: 'Custom software for {{company}} (senior-led, SA-based)',
-    text: 'Hi {{firstName}},\n\nI noticed {{company}} is pushing a product or operations upgrade. I am {{yourName}}, senior product engineer based in Queenstown. I build custom software, mobile apps, and AI workflows for South African SMEs without agency overhead.\n\n{{whyNow}}\n\nRecent shipped work includes a full enrolment platform in 7 days (Ilithiyana Academics) and production systems for mining health, campus wallets, and bursary tooling. If you want a scoped estimate, the quote tool on the site takes about 3 minutes.\n\n{{yourName}}\n{{siteUrl}}',
+    subject: 'Custom software for {{company}}',
+    text: 'Hi {{firstName}},\n\nI am {{yourName}}, senior product engineer in Queenstown. I build custom software for South African SMEs: internal tools, customer portals, integrations, and production web systems. One engineer, no agency overhead.\n\n{{whyNow}}\n\nRecent work: a full enrolment platform shipped in 7 days (Ilithiyana Academics), occupational health systems for mining (ClinicPlus), and a campus payments app.\n\nIf you are replacing spreadsheets or manual workflows, I can scope a fixed Phase 1 build, typically from R50k depending on depth. Reply with one sentence on the bottleneck and I will send a one-page scope.\n\n{{yourName}}\n{{siteUrl}}/get-a-quote',
   },
   {
     slug: 'warm-intro-ask',
@@ -22,8 +25,8 @@ const rawTemplates = [
     name: 'Direct founder (post-funding)',
     category: 'direct',
     placeholders: ['firstName', 'company', 'whyNow', 'yourName', 'siteUrl'],
-    subject: '{{company}} scale-up engineering (post-seed)',
-    text: 'Hi {{firstName}},\n\n{{whyNow}}\n\nI am {{yourName}}, senior product engineer (payments, marketplaces, AI agents, SA production systems). I take founders from MVP to production without agency overhead.\n\nIf you are staffing engineering for the next phase, I can share a one-page view of how I structure Phase 1 sprints (typically R50k+ scope). Open to 15 minutes if useful.\n\n{{yourName}}\n{{siteUrl}}',
+    subject: 'Engineering for {{company}} after the raise',
+    text: 'Hi {{firstName}},\n\n{{whyNow}}\n\nI am {{yourName}}, senior product engineer. Payments, marketplaces, AI agents, and SA production systems. I take founders from MVP to production without agency overhead.\n\nIf you are staffing engineering for the next phase, I can share a one-page view of how I structure Phase 1 sprints, typically from R50k. Open to 15 minutes if useful.\n\n{{yourName}}\n{{siteUrl}}',
   },
   {
     slug: 'whatsapp-ai-partnership',
@@ -58,4 +61,5 @@ export const defaultEmailTemplates: EmailTemplate[] = rawTemplates.map((t) => ({
   category: t.category as EmailTemplate['category'],
   placeholders: [...t.placeholders],
   updatedAt: now,
+  seedVersion: WARM_TEMPLATE_SEED_VERSION,
 }));

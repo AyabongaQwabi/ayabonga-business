@@ -3,9 +3,11 @@ import { randomUUID } from 'node:crypto';
 import { getBlobAccess } from './blobAccess';
 import type {
   EmailTemplate,
+  LeadIndexEntry,
   LeadRecord,
   LeadsIndex,
-  LeadIndexEntry,
+  LeadSortField,
+  LeadsListResult,
 } from './types';
 
 const INDEX_PATH = 'meta/leads-index.json';
@@ -91,6 +93,7 @@ export function toIndexEntry(lead: LeadRecord): LeadIndexEntry {
     tier: lead.tier,
     sourcePage: lead.sourcePage,
     formType: lead.formType,
+    createdAt: lead.createdAt,
     updatedAt: lead.updatedAt,
     lastSentAt: lead.outreachDraft?.lastSentAt ?? lastHistory?.sentAt,
     sendCount: lead.sendHistory?.length ?? 0,
@@ -153,7 +156,19 @@ export async function listLeads(filters?: {
   campaign?: LeadRecord['campaign'];
   status?: LeadRecord['status'];
   q?: string;
-}): Promise<LeadIndexEntry[]> {
+  page?: number;
+  pageSize?: number;
+  sort?: LeadSortField;
+  order?: 'asc' | 'desc';
+}): Promise<LeadsListResult> {
+  const paginate = filters?.page !== undefined || filters?.pageSize !== undefined;
+  const pageSize = paginate
+    ? Math.min(Math.max(filters?.pageSize ?? 25, 1), 100)
+    : Number.MAX_SAFE_INTEGER;
+  const page = paginate ? Math.max(filters?.page ?? 1, 1) : 1;
+  const sort = filters?.sort ?? 'updated';
+  const order = filters?.order ?? 'desc';
+
   const index = await getLeadsIndex();
   let entries = [...index.entries];
   if (filters?.kind) entries = entries.filter((e) => e.kind === filters.kind);
@@ -168,8 +183,34 @@ export async function listLeads(filters?: {
         e.company?.toLowerCase().includes(q),
     );
   }
-  entries.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
-  return entries;
+
+  const dateKey = (iso?: string) => (iso ? new Date(iso).getTime() : 0);
+
+  entries.sort((a, b) => {
+    let cmp = 0;
+    switch (sort) {
+      case 'created':
+        cmp = dateKey(a.createdAt ?? a.updatedAt) - dateKey(b.createdAt ?? b.updatedAt);
+        break;
+      case 'lastSent':
+        cmp = dateKey(a.lastSentAt) - dateKey(b.lastSentAt);
+        break;
+      case 'score':
+        cmp = (a.score ?? 0) - (b.score ?? 0);
+        break;
+      case 'updated':
+      default:
+        cmp = dateKey(a.updatedAt) - dateKey(b.updatedAt);
+        break;
+    }
+    return order === 'asc' ? cmp : -cmp;
+  });
+
+  const total = entries.length;
+  const start = (page - 1) * pageSize;
+  const paged = entries.slice(start, start + pageSize);
+
+  return { entries: paged, total, page, pageSize, sort, order };
 }
 
 export async function getSeedVersion(): Promise<string | null> {

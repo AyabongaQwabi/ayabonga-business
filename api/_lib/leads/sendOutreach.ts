@@ -10,6 +10,7 @@ import { defaultEmailTemplates } from './defaultTemplates';
 import { defaultColdTemplates } from './defaultColdTemplates';
 import { OUTREACH_CC_EMAIL } from './campaigns';
 import { coldCopyForLead } from './coldBuildIdeas';
+import { sanitizeCompanyName, sanitizeFirstName } from './leadFieldSanitize';
 import type { EmailTemplate, LeadRecord } from './types';
 
 export function pickTemplateSlugForLead(lead: LeadRecord): string {
@@ -175,8 +176,11 @@ export async function sendOutreachToLead(
   ) {
     const fallback = mergeTemplateForLead(template, lead, templateSlug);
     merged = {
-      firstName:
-        lead.name?.split(' ')[0] || lead.company?.split(' ')[0] || 'there',
+      // Raw lead.name/company here caused "Hi 4," sends. Always sanitize.
+      firstName: sanitizeFirstName(
+        lead.name,
+        sanitizeCompanyName(lead.company, lead.sourcePage),
+      ),
       subject: fallback.subject,
       text: fallback.text,
     };
