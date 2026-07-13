@@ -3,12 +3,15 @@
 import outreachSettings from './outreach-settings.json';
 
 export type OutreachSettings = {
+  /** Master switch for cron + worker. Set false to pause outreach. */
+  enabled: boolean;
   discoveryTimeBudgetSeconds: number;
   maxJobDurationSeconds: number;
   discoveryMaxRounds: number;
 };
 
 const DEFAULT_SETTINGS: OutreachSettings = {
+  enabled: true,
   discoveryTimeBudgetSeconds: 200,
   maxJobDurationSeconds: 290,
   discoveryMaxRounds: 15,
@@ -24,6 +27,7 @@ function clampSeconds(value: unknown, fallback: number, min = 30, max = 600): nu
 export function getOutreachSettings(): OutreachSettings {
   const raw = outreachSettings as Partial<OutreachSettings>;
   return {
+    enabled: raw.enabled !== false,
     discoveryTimeBudgetSeconds: clampSeconds(
       raw.discoveryTimeBudgetSeconds,
       DEFAULT_SETTINGS.discoveryTimeBudgetSeconds,
@@ -64,6 +68,7 @@ export const OUTREACH_DAILY_MAX = Math.max(
 );
 
 export function isOutreachEnabled(): boolean {
+  if (!getOutreachSettings().enabled) return false;
   const flag = process.env.OUTREACH_ENABLED?.trim().toLowerCase();
   if (flag === 'false' || flag === '0') return false;
   return Boolean(process.env.RESEND_API_KEY?.trim() && process.env.BLOB_READ_WRITE_TOKEN?.trim());
