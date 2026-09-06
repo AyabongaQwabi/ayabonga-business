@@ -35,3 +35,5 @@ api/index.js
 .cursor/skills/openclaw-skills-write-my-blog/platform/
 agents/.agents/skills/openclaw-skills-write-my-blog/platform/
 agents/.cursor/skills/openclaw-skills-write-my-blog/platform/
+# Contentsquare wizard (generated)
+.cs-wizard/
